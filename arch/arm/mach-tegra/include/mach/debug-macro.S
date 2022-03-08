@@ -83,8 +83,8 @@
 		tst	\rx, #0x0000ff00
 		beq	1002f
 1001:		ldrb	\rd, [\rx, #UART_LSR << UART_SHIFT]
-		and	\rd, \rd, #UART_LSR_TEMT | UART_LSR_THRE
-		teq	\rd, #UART_LSR_TEMT | UART_LSR_THRE
+		and	\rd, \rd, #UART_LSR_THRE
+		teq	\rd, #UART_LSR_THRE
 		bne	1001b
 1002:
 		.endm
