@@ -37,8 +37,8 @@
 
 static atomic_t sd_brightness = ATOMIC_INIT(255);
 
-static struct regulator *surface_rt_lvds_reg;
 static struct regulator *surface_rt_lvds_vdd_panel;
+static struct regulator *surface_rt_lvds_vdd_bl = NULL;
 
 static tegra_dc_bl_output surface_rt_bl_output_measured = {
 	0, 4, 4, 4, 4, 5, 6, 7,
@@ -109,11 +109,11 @@ static struct platform_pwm_backlight_data surface_rt_backlight_data = {
 	.pwm_id		= 0,
 	.max_brightness	= 255,
 	.dft_brightness	= 40,
-	.pwm_period_ns	= 50000,
-	.init		= surface_rt_backlight_init,
+	.pwm_period_ns		= 50000,
+	.init			= surface_rt_backlight_init,
 	.notify		= surface_rt_backlight_notify,
 	/* Only toggle backlight on fb blank notifications for disp1 */
-	.check_fb	= surface_rt_disp1_check_fb,
+	.check_fb		= surface_rt_disp1_check_fb,
 };
 
 static struct platform_device surface_rt_backlight_device = {
@@ -133,17 +133,6 @@ static int surface_rt_panel_prepoweroff(void)
 
 static int surface_rt_panel_postpoweron(void)
 {
-	if (surface_rt_lvds_reg == NULL) {
-		surface_rt_lvds_reg = regulator_get(NULL, "vdd_lvds");
-		if (WARN_ON(IS_ERR(surface_rt_lvds_reg)))
-			pr_err("%s: couldn't get regulator vdd_lvds: %ld\n",
-				__func__, PTR_ERR(surface_rt_lvds_reg));
-		else
-			regulator_enable(surface_rt_lvds_reg);
-	}
-
-	mdelay(200);
-
 	gpio_set_value(surface_rt_lvds_shutdown, 1);
 
 	mdelay(50);
@@ -161,6 +150,15 @@ static int surface_rt_panel_enable(struct device *dev)
 		else
 			regulator_enable(surface_rt_lvds_vdd_panel);
 	}
+	
+	if (surface_rt_lvds_vdd_bl == NULL) {
+		surface_rt_lvds_vdd_bl = regulator_get(dev, "vdd_backlight");
+		if (WARN_ON(IS_ERR(surface_rt_lvds_vdd_bl)))
+			pr_err("%s: couldn't get regulator vdd_backlight: %ld\n",
+				__func__, PTR_ERR(surface_rt_lvds_vdd_bl));
+		else
+			regulator_enable(surface_rt_lvds_vdd_bl);
+	}
 
 	return 0;
 }
@@ -169,17 +167,17 @@ static int surface_rt_panel_disable(void)
 {
 	mdelay(5);
 
-	if (surface_rt_lvds_reg) {
-		regulator_disable(surface_rt_lvds_reg);
-		regulator_put(surface_rt_lvds_reg);
-		surface_rt_lvds_reg = NULL;
-	}
-
 	if (surface_rt_lvds_vdd_panel) {
 		regulator_disable(surface_rt_lvds_vdd_panel);
 		regulator_put(surface_rt_lvds_vdd_panel);
 		surface_rt_lvds_vdd_panel = NULL;
 	}
+	
+	if (surface_rt_lvds_vdd_bl) {
+		regulator_disable(surface_rt_lvds_vdd_bl);
+		regulator_put(surface_rt_lvds_vdd_bl);
+		surface_rt_lvds_vdd_bl = NULL;
+	}	
 
 	return 0;
 }
@@ -235,25 +233,25 @@ static struct tegra_fb_data surface_rt_fb_data = {
 #endif
 
 static struct tegra_dc_out surface_rt_disp1_out = {
-	.align		= TEGRA_DC_ALIGN_MSB,
-	.order		= TEGRA_DC_ORDER_RED_BLUE,
-	.parent_clk	= "pll_p",
-	.parent_clk_backup = "pll_d2_out0",
+	.align			= TEGRA_DC_ALIGN_MSB,
+	.order			= TEGRA_DC_ORDER_RED_BLUE,
+	.parent_clk		= "pll_p",
+	.parent_clk_backup 	= "pll_d2_out0",
 
-	.type		= TEGRA_DC_OUT_RGB,
-	.depth		= 18,
+	.type			= TEGRA_DC_OUT_RGB,
+	.depth			= 24,
 	.dither		= TEGRA_DC_ERRDIFF_DITHER,
 
-	.modes		= surface_rt_panel_modes,
-	.n_modes	= ARRAY_SIZE(surface_rt_panel_modes),
+	.modes			= surface_rt_panel_modes,
+	.n_modes		= ARRAY_SIZE(surface_rt_panel_modes),
 
-	.enable	= surface_rt_panel_enable,
-	.postpoweron	= surface_rt_panel_postpoweron,
-	.prepoweroff	= surface_rt_panel_prepoweroff,
-	.disable	= surface_rt_panel_disable,
+	.enable		= surface_rt_panel_enable,
+	.postpoweron		= surface_rt_panel_postpoweron,
+	.prepoweroff		= surface_rt_panel_prepoweroff,
+	.disable		= surface_rt_panel_disable,
 
-	.height		= 162,
-	.width		= 104,
+	.height		= 132,
+	.width			= 235,
 };
 
 #ifdef CONFIG_TEGRA_DC
