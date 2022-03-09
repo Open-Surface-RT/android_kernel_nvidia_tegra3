@@ -381,14 +381,14 @@ obj-${CONFIG_MACH_GROUPER}              += board-grouper-sdhci.o
 obj-${CONFIG_MACH_GROUPER}              += board-grouper-sensors.o
 obj-${CONFIG_MACH_GROUPER}              += board-touch-grouper-synaptics-spi.o
 
-obj-${CONFIG_MACH_SURFACE_RT}              += board-surface-rt.o
-obj-${CONFIG_MACH_SURFACE_RT}              += board-surface-rt-kbc.o
-obj-${CONFIG_MACH_SURFACE_RT}              += board-surface-rt-memory.o
-obj-${CONFIG_MACH_SURFACE_RT}              += board-surface-rt-panel.o
-obj-${CONFIG_MACH_SURFACE_RT}              += board-surface-rt-pinmux.o
-obj-${CONFIG_MACH_SURFACE_RT}              += board-surface-rt-power.o
-obj-${CONFIG_MACH_SURFACE_RT}              += board-surface-rt-sdhci.o
-obj-${CONFIG_MACH_SURFACE_RT}              += board-surface-rt-sensors.o
+obj-${CONFIG_MACH_SURFACE_RT} 		+= board-surface-rt.o
+obj-${CONFIG_MACH_SURFACE_RT} 		+= board-surface-rt-kbc.o
+obj-${CONFIG_MACH_SURFACE_RT} 		+= board-surface-rt-memory.o
+obj-${CONFIG_MACH_SURFACE_RT} 		+= board-surface-rt-panel.o
+obj-${CONFIG_MACH_SURFACE_RT} 		+= board-surface-rt-pinmux.o
+obj-${CONFIG_MACH_SURFACE_RT} 		+= board-surface-rt-power.o
+obj-${CONFIG_MACH_SURFACE_RT} 		+= board-surface-rt-sdhci.o
+obj-${CONFIG_MACH_SURFACE_RT} 		+= board-surface-rt-sensors.o
 
 obj-${CONFIG_ARCH_ACER_T30}             += board-acer-t30.o
 obj-${CONFIG_ARCH_ACER_T30}             += board-acer-t30-kbc.o
