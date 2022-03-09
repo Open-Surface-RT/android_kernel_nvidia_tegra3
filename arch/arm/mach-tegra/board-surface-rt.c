@@ -186,8 +186,8 @@ static struct platform_device *debug_uarts[] = {
 static void __init uart_debug_init(void)
 {
 	int debug_port_id;
-
-	debug_port_id = uart_console_debug_init(0);
+	return;
+	debug_port_id = uart_console_debug_init(2);
 	if (debug_port_id < 0)
 		return;
 
@@ -302,8 +302,6 @@ static struct platform_device tegra_rtc_device = {
 	.resource = tegra_rtc_resources,
 	.num_resources = ARRAY_SIZE(tegra_rtc_resources),
 };
-
-
 
 static struct platform_device *surface_rt_devices[] __initdata = {
 	&tegra_pmu_device,
@@ -474,15 +472,15 @@ static void __init tegra_surface_rt_init(void)
 	surface_rt_uart_init();
 	platform_add_devices(surface_rt_devices, ARRAY_SIZE(surface_rt_devices));
 	tegra_ram_console_debug_init();
-	//surface_rt_sdhci_init();
-	//surface_rt_regulator_init();
+	surface_rt_sdhci_init();
+	surface_rt_regulator_init();
 	surface_rt_suspend_init();
 	surface_rt_keys_init();
-	//surface_rt_panel_init();
+	surface_rt_panel_init();
 	//surface_rt_sensors_init();
 	surface_rt_pins_state_init();
 	//surface_rt_emc_init(); // need to fix first
-	//tegra_release_bootloader_fb();
+	tegra_release_bootloader_fb();
 #ifdef CONFIG_TEGRA_WDT_RECOVERY
 	tegra_wdt_recovery_init();
 #endif
