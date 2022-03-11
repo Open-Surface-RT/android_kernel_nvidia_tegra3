@@ -1406,7 +1406,7 @@ static int tegra3_pll_clk_wait_for_lock(struct clk *c, u32 lock_reg, u32 lock_bi
 			return 0;
 		}
 	}
-	pr_err("Timed out waiting for lock bit on pll %s", c->name);
+	pr_err("Timed out waiting for lock bit on pll %s\n", c->name);
 	return -1;
 #endif
 	udelay(c->u.pll.lock_delay);
