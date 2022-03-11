@@ -240,7 +240,7 @@ static struct tegra_dc_out surface_rt_disp1_out = {
 
 	.type			= TEGRA_DC_OUT_RGB,
 	.depth			= 24,
-	.dither		= TEGRA_DC_ERRDIFF_DITHER,
+	//.dither		= TEGRA_DC_ERRDIFF_DITHER,
 
 	.modes			= surface_rt_panel_modes,
 	.n_modes		= ARRAY_SIZE(surface_rt_panel_modes),
