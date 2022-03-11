@@ -45,11 +45,16 @@
 #define PMC_CTRL		0x0
 #define PMC_CTRL_INTR_LOW	(1 << 17)
 
+static struct regulator_consumer_supply tps6591x_vddctrl_supply_0[] = {
+	REGULATOR_SUPPLY("vdd_cpu_pmu", NULL),
+	REGULATOR_SUPPLY("vdd_cpu", NULL),
+	REGULATOR_SUPPLY("vdd_sys", NULL),
+};
 
 static struct regulator_consumer_supply tps6591x_ldo5_supply_0[] = {
 	REGULATOR_SUPPLY("vddio_sdmmc", "sdhci-tegra.0"),
 };
-/*
+
 static struct regulator_consumer_supply tps6591x_ldo7_supply_0[] = {
 	REGULATOR_SUPPLY("avdd_plla_p_c_s", NULL),
 	REGULATOR_SUPPLY("avdd_pllm", NULL),
@@ -57,7 +62,6 @@ static struct regulator_consumer_supply tps6591x_ldo7_supply_0[] = {
 	REGULATOR_SUPPLY("avdd_pllu_d2", NULL),
 	REGULATOR_SUPPLY("avdd_pllx", NULL),
 };
-*/
 
 #define TPS_PDATA_INIT(_name, _sname, _minmv, _maxmv, _supply_reg, _always_on, \
 	_boot_on, _apply_uv, _init_uV, _init_enable, _init_apply, _ectrl, _flags) \
@@ -88,8 +92,10 @@ static struct regulator_consumer_supply tps6591x_ldo7_supply_0[] = {
 		.flags = _flags,					\
 	}
 
+
+TPS_PDATA_INIT(vddctrl, 0,      600,  1400, 0, 1, 1, 0, -1, 0, 0, EXT_CTRL_EN1, 0);
 TPS_PDATA_INIT(ldo5, 0,    	 1800, 3300, 0, 1, 0, 0, 2800, 0, 1, 0, 0);
-//TPS_PDATA_INIT(ldo7, 0,         1200, 1200, 0, 1, 1, 1, -1, 0, 0, EXT_CTRL_SLEEP_OFF, LDO_LOW_POWER_ON_SUSPEND);
+TPS_PDATA_INIT(ldo7, 0,         1200, 1200, 0, 1, 1, 1, -1, 0, 0, EXT_CTRL_SLEEP_OFF, LDO_LOW_POWER_ON_SUSPEND);
 
 #if defined(CONFIG_RTC_DRV_TPS6591x)
 static struct tps6591x_rtc_platform_data rtc_data = {
@@ -120,7 +126,9 @@ static struct tps6591x_rtc_platform_data rtc_data = {
 	}
 
 static struct tps6591x_subdev_info tps_devs_t30[] = {
+	TPS_REG(VDDCTRL, vddctrl, 0),
 	TPS_REG(LDO_5, ldo5, 0),
+	TPS_REG(LDO_7, ldo7, 0),
 #if defined(CONFIG_RTC_DRV_TPS6591x)
 	TPS_RTC_REG(),
 #endif
@@ -300,14 +308,10 @@ FIXED_REG(1, en_vdd_bl,		en_vdd_bl,	NULL,	0,      0,      TEGRA_GPIO_PDD0,	true,
  */
 #define ADD_FIXED_REG(_name)	(&fixed_reg_##_name##_dev)
 
-#define SURFACE_RT_GPIO_REG			\
-	ADD_FIXED_REG(en_vdd_pnl1),		\
-	ADD_FIXED_REG(en_vdd_bl),
-
-
 /* Fixed regulator devices for Surface RT */
 static struct platform_device *fixed_reg_devs_surface_rt[] = {
-	SURFACE_RT_GPIO_REG
+	ADD_FIXED_REG(en_vdd_pnl1),
+	ADD_FIXED_REG(en_vdd_bl),
 };
 
 int __init surface_rt_fixed_regulator_init(void)
