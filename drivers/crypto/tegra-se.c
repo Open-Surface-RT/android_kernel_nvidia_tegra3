@@ -2603,7 +2603,7 @@ static int tegra_se_probe(struct platform_device *pdev)
 	}
 #endif
 
-	dev_info(se_dev->dev, "%s: complete", __func__);
+	dev_info(se_dev->dev, "%s: complete\n", __func__);
 	return 0;
 
 clean:
