@@ -479,7 +479,7 @@ static void __init tegra_surface_rt_init(void)
 	surface_rt_panel_init();
 	//surface_rt_sensors_init();
 	surface_rt_pins_state_init();
-	//surface_rt_emc_init(); // need to fix first
+	surface_rt_emc_init(); // need to fix first
 	tegra_release_bootloader_fb();
 #ifdef CONFIG_TEGRA_WDT_RECOVERY
 	tegra_wdt_recovery_init();
@@ -487,10 +487,21 @@ static void __init tegra_surface_rt_init(void)
 	tegra_register_fuse();
 }
 
+static void __init tegra_surface_rt_reserve(void)
+{
+#ifdef CONFIG_NVMAP_CONVERT_CARVEOUT_TO_IOVMM
+	/* 800*1280*4*2 = 8192000 bytes */
+	tegra_reserve(0, SZ_16M, SZ_16M);
+#else
+	tegra_reserve(SZ_128M, SZ_16M, 0);
+#endif
+}
+
 MACHINE_START(SURFACE_RT, "surface-rt")
 	.atag_offset	= 0x100,
 	.soc 		= &tegra_soc_desc,
 	.map_io	= tegra_map_common_io,
+	.reserve	= tegra_surface_rt_reserve,
 	.init_early	= tegra30_init_early,
 	.init_irq	= tegra_init_irq,
 	.handle_irq 	= gic_handle_irq,
