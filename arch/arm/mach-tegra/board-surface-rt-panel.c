@@ -37,7 +37,7 @@
 
 static atomic_t sd_brightness = ATOMIC_INIT(255);
 
-static struct regulator *surface_rt_lvds_vdd_panel;
+static struct regulator *surface_rt_lvds_vdd_panel = NULL;
 static struct regulator *surface_rt_lvds_vdd_bl = NULL;
 
 static tegra_dc_bl_output surface_rt_bl_output_measured = {
