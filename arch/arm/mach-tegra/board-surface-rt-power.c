@@ -51,6 +51,14 @@ static struct regulator_consumer_supply tps6591x_vddctrl_supply_0[] = {
 	REGULATOR_SUPPLY("vdd_sys", NULL),
 };
 
+static struct regulator_consumer_supply tps6591x_ldo1_supply_0[] = {
+	REGULATOR_SUPPLY("vdd_bridge", NULL),
+};
+
+static struct regulator_consumer_supply tps6591x_ldo3_supply_0[] = {
+	REGULATOR_SUPPLY("tCoverPower", NULL),
+};
+
 static struct regulator_consumer_supply tps6591x_ldo5_supply_0[] = {
 	REGULATOR_SUPPLY("vddio_sdmmc", "sdhci-tegra.0"),
 };
@@ -93,9 +101,11 @@ static struct regulator_consumer_supply tps6591x_ldo7_supply_0[] = {
 	}
 
 
-TPS_PDATA_INIT(vddctrl, 0,      600,  1400, 0, 1, 1, 0, -1, 0, 0, EXT_CTRL_EN1, 0);
-TPS_PDATA_INIT(ldo5, 0,    	 1800, 3300, 0, 1, 0, 0, 2800, 0, 1, 0, 0);
-TPS_PDATA_INIT(ldo7, 0,         1200, 1200, 0, 1, 1, 1, -1, 0, 0, EXT_CTRL_SLEEP_OFF, LDO_LOW_POWER_ON_SUSPEND);
+TPS_PDATA_INIT(vddctrl, 0, 	600,  1400, 0, 1, 1, 0, -1, 0, 0, EXT_CTRL_EN1, 0);
+TPS_PDATA_INIT(ldo1, 0, 	1800, 1800, 0, 1, 0, 0, 1800, 1, 1, 0, 0);
+TPS_PDATA_INIT(ldo3, 0, 	2800, 2800, 0, 1, 0, 0, 2800, 1, 1, 0, 0);
+TPS_PDATA_INIT(ldo5, 0, 	1800, 3300, 0, 1, 0, 0, 2800, 0, 1, 0, 0);
+TPS_PDATA_INIT(ldo7, 0, 	1200, 1200, 0, 1, 1, 1, -1, 0, 0, EXT_CTRL_SLEEP_OFF, LDO_LOW_POWER_ON_SUSPEND);
 
 #if defined(CONFIG_RTC_DRV_TPS6591x)
 static struct tps6591x_rtc_platform_data rtc_data = {
@@ -127,6 +137,8 @@ static struct tps6591x_rtc_platform_data rtc_data = {
 
 static struct tps6591x_subdev_info tps_devs_t30[] = {
 	TPS_REG(VDDCTRL, vddctrl, 0),
+	TPS_REG(LDO_1, ldo1, 0),
+	TPS_REG(LDO_3, ldo3, 0),
 	TPS_REG(LDO_5, ldo5, 0),
 	TPS_REG(LDO_7, ldo7, 0),
 #if defined(CONFIG_RTC_DRV_TPS6591x)
@@ -254,6 +266,16 @@ static struct regulator_consumer_supply fixed_reg_en_vdd_bl_supply[] = {
 	REGULATOR_SUPPLY("vdd_backlight", NULL),
 };
 
+/* CAM1_LDO_EN from AP GPIO KB_ROW6 R06*/
+static struct regulator_consumer_supply fixed_reg_cam1_ldo_en_supply[] = {
+	REGULATOR_SUPPLY("vdd_2v8_cam1", NULL),
+};
+
+/* CAM2_LDO_EN from AP GPIO KB_ROW7 R07*/
+static struct regulator_consumer_supply fixed_reg_cam2_ldo_en_supply[] = {
+	REGULATOR_SUPPLY("vdd_2v8_cam2", NULL),
+};
+
 /* Macro for defining fixed regulator sub device data */
 #define FIXED_SUPPLY(_name) "fixed_reg_"#_name
 #define FIXED_REG_OD(_id, _var, _name, _in_supply, _always_on,		\
@@ -299,9 +321,11 @@ static struct regulator_consumer_supply fixed_reg_en_vdd_bl_supply[] = {
 		_gpio_nr, _active_high, _boot_state, _millivolts, false)
 
 
-/* common to most of boards*/
 FIXED_REG(0, en_vdd_pnl1,		en_vdd_pnl1,	NULL,	0,      0,      TEGRA_GPIO_PDD2,	true,	1, 3300);
 FIXED_REG(1, en_vdd_bl,		en_vdd_bl,	NULL,	0,      0,      TEGRA_GPIO_PDD0,	true,	1, 5000);
+
+FIXED_REG(2, cam1_ldo_en,		cam1_ldo_en,	NULL,	0,      0,      TEGRA_GPIO_PR6,	true,	0, 2800);
+FIXED_REG(3, cam2_ldo_en,		cam2_ldo_en,	NULL,	0,      0,      TEGRA_GPIO_PR7,	true,	0, 2800);
 
 /*
  * Creating the fixed/gpio-switch regulator device tables for different boards
@@ -312,6 +336,8 @@ FIXED_REG(1, en_vdd_bl,		en_vdd_bl,	NULL,	0,      0,      TEGRA_GPIO_PDD0,	true,
 static struct platform_device *fixed_reg_devs_surface_rt[] = {
 	ADD_FIXED_REG(en_vdd_pnl1),
 	ADD_FIXED_REG(en_vdd_bl),
+	ADD_FIXED_REG(cam1_ldo_en),
+	ADD_FIXED_REG(cam2_ldo_en),
 };
 
 int __init surface_rt_fixed_regulator_init(void)
