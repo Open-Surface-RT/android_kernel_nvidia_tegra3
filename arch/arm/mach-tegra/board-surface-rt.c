@@ -373,7 +373,7 @@ static struct tegra_usb_platform_data tegra_udc_pdata = {
 	.op_mode = TEGRA_USB_OPMODE_DEVICE,
 	.u_data.dev = {
 		.vbus_pmu_irq = 0,
-		.vbus_gpio = -1,
+		.vbus_gpio = TEGRA_GPIO_PDD6,
 		.charging_supported = false,
 		.remote_wakeup_supported = false,
 	},
@@ -396,7 +396,7 @@ static struct tegra_usb_platform_data tegra_ehci1_utmi_pdata = {
 	.phy_intf = TEGRA_USB_PHY_INTF_UTMI,
 	.op_mode = TEGRA_USB_OPMODE_HOST,
 	.u_data.host = {
-		.vbus_gpio = -1,
+		.vbus_gpio = TEGRA_GPIO_PDD6,
 		.hot_plug = true,
 		.remote_wakeup_supported = true,
 		.power_off_on_suspend = true,
