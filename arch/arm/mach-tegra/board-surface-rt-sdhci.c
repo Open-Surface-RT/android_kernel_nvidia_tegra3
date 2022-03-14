@@ -102,8 +102,8 @@ static struct platform_device tegra_sdhci_device3 = {
 
 int __init surface_rt_sdhci_init(void)
 {
-	platform_device_register(&tegra_sdhci_device0);
 	platform_device_register(&tegra_sdhci_device3);
+	platform_device_register(&tegra_sdhci_device0);
 
 	return 0;
 }
