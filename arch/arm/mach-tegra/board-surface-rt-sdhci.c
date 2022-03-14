@@ -54,8 +54,8 @@ static struct resource sdhci_resource3[] = {
 
 static struct tegra_sdhci_platform_data tegra_sdhci_platform_data0 = {
 	.cd_gpio = TEGRA_GPIO_PI5,
-	.wp_gpio = TEGRA_GPIO_PT3,
-	.power_gpio = -1,
+	.wp_gpio = -1,
+	.power_gpio = TEGRA_GPIO_PD7,
 	.tap_delay = 0x0F,
 	.ddr_clk_limit = 41000000,
 /*	.is_voltage_switch_supported = true,
