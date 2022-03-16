@@ -51,6 +51,14 @@ static struct regulator_consumer_supply tps6591x_vddctrl_supply_0[] = {
 	REGULATOR_SUPPLY("vdd_sys", NULL),
 };
 
+static struct regulator_consumer_supply tps6591x_vio_supply_0[] = {
+	REGULATOR_SUPPLY("vdd_gen1v8", NULL),
+	REGULATOR_SUPPLY("avdd_usb_pll", "tegra-udc.0"),
+	REGULATOR_SUPPLY("avdd_usb_pll", "tegra-ehci.0"),
+	REGULATOR_SUPPLY("avdd_usb_pll", "tegra-ehci.1"),
+	REGULATOR_SUPPLY("avdd_usb_pll", "tegra-ehci.2"),
+};
+
 static struct regulator_consumer_supply tps6591x_ldo1_supply_0[] = {
 	REGULATOR_SUPPLY("vdd_bridge", NULL),
 };
@@ -106,6 +114,7 @@ TPS_PDATA_INIT(ldo1, 0, 	1800, 1800, 0, 1, 0, 0, 1800, 1, 1, 0, 0);
 TPS_PDATA_INIT(ldo3, 0, 	2800, 2800, 0, 1, 0, 0, 2800, 1, 1, 0, 0);
 TPS_PDATA_INIT(ldo5, 0, 	1800, 3300, 0, 1, 0, 0, 2800, 0, 1, 0, 0);
 TPS_PDATA_INIT(ldo7, 0, 	1200, 1200, 0, 1, 1, 1, -1, 0, 0, EXT_CTRL_SLEEP_OFF, LDO_LOW_POWER_ON_SUSPEND);
+TPS_PDATA_INIT(vio,  0, 	1800, 1800, 0, 1, 1, 0, -1, 0, 0, 0, 0);
 
 #if defined(CONFIG_RTC_DRV_TPS6591x)
 static struct tps6591x_rtc_platform_data rtc_data = {
@@ -137,6 +146,7 @@ static struct tps6591x_rtc_platform_data rtc_data = {
 
 static struct tps6591x_subdev_info tps_devs_t30[] = {
 	TPS_REG(VDDCTRL, vddctrl, 0),
+	TPS_REG(VIO, vio, 0),
 	TPS_REG(LDO_1, ldo1, 0),
 	TPS_REG(LDO_3, ldo3, 0),
 	TPS_REG(LDO_5, ldo5, 0),
