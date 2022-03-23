@@ -59,6 +59,7 @@ int __init surface_rt_regulator_init(void);
 void __init surface_rt_tps6591x_regulator_init(void);
 int __init surface_rt_suspend_init(void);
 void __init surface_rt_tsensor_init(void);
+void __init surface_rt_i2c_hid_init(void);
 
 
 #define SURFACE_RT_TEMP_ALERT_GPIO		TEGRA_GPIO_PS3

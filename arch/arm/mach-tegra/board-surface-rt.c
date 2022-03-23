@@ -434,7 +434,6 @@ static void surface_rt_usb_init(void)
 static void surface_rt_usb_init(void) { }
 #endif
 
-
 void surface_rt_booting_info(void)
 {
 	static void __iomem *pmc = IO_ADDRESS(TEGRA_PMC_BASE);
@@ -485,6 +484,7 @@ static void __init tegra_surface_rt_init(void)
 	tegra_wdt_recovery_init();
 #endif
 	tegra_register_fuse();
+	surface_rt_i2c_hid_init();
 }
 
 static void __init tegra_surface_rt_reserve(void)
