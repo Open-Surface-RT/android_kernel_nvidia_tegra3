@@ -358,8 +358,13 @@ static int i2c_check_client_addr_validity(const struct i2c_client *client)
 			return -EINVAL;
 	} else {
 		/* 7-bit address, reject the general call address */
+#if defined(CONFIG_MACH_SURFACE_RT)
+		if (client->addr > 0x7f)
+			return -EINVAL;
+#else
 		if (client->addr == 0x00 || client->addr > 0x7f)
 			return -EINVAL;
+#endif
 	}
 	return 0;
 }
@@ -380,8 +385,13 @@ static int i2c_check_addr_validity(unsigned short addr)
 	 *  0x78-0x7b  10-bit slave addressing
 	 *  0x7c-0x7f  Reserved for future purposes
 	 */
+#if defined(CONFIG_MACH_SURFACE_RT)
+	if ((0x00 < addr && addr < 0x08) || addr > 0x77)
+		return -EINVAL;
+#else
 	if (addr < 0x08 || addr > 0x77)
 		return -EINVAL;
+#endif
 	return 0;
 }
 
