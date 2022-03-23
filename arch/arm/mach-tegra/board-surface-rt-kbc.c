@@ -40,7 +40,7 @@ static struct gpio_keys_button surface_rt_keys[] = {
 	[0] = GPIO_KEY(KEY_POWER, PV0, 1),
 	[1] = GPIO_KEY(KEY_VOLUMEUP, PS7, 0),
 	[2] = GPIO_KEY(KEY_VOLUMEDOWN, PS6, 0),
-	[3] = GPIO_KEY(KEY_LEFTMETA, PS5, 1),
+	[3] = GPIO_KEY(KEY_HOME, PS5, 1),
 };
 
 static struct gpio_keys_platform_data surface_rt_keys_platform_data = {
