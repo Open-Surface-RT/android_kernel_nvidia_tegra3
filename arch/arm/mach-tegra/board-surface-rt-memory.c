@@ -2363,10 +2363,10 @@ static struct tegra30_emc_pdata *surface_rt_get_emc_data(void)
 
 	pr_debug("%s: mem_bootstrap_ad4=%u mem_bootstrap_ad5=%u\n", __func__,
 			mem_bootstrap_ad4, mem_bootstrap_ad5);
-	
-	ram_code = (mem_bootstrap_ad5 << 1) & mem_bootstrap_ad4;
+
+	ram_code = (mem_bootstrap_ad5 << 1) | mem_bootstrap_ad4;
 	printk("RAM Code: %d\n", ram_code);	
-	
+
 	if (ram_code == 0)
 		return &ram_chip_code0;
 	else if (ram_code == 1)
@@ -2375,7 +2375,7 @@ static struct tegra30_emc_pdata *surface_rt_get_emc_data(void)
 		return &ram_chip_code2;
 	else if (ram_code == 3)
 		return &ram_chip_code3;
-	
+
 	// fall back	
 	return &ram_chip_code0;
 }
