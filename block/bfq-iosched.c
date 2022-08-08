@@ -4189,7 +4189,7 @@ static int __init bfq_init(void)
 	device_speed_thresh[1] = (R_fast[1] + R_slow[1]) / 2;
 
 	elv_register(&iosched_bfq);
-	pr_info("BFQ I/O-scheduler: v7r8");
+	pr_info("BFQ I/O-scheduler: v7r8\r\n");
 
 	return 0;
 }
