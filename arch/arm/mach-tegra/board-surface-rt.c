@@ -71,6 +71,8 @@
 
 static __initdata struct tegra_clk_init_table surface_rt_clk_init_table[] = {
 	/* name		parent		rate		enabled */
+	{ "pll_p",		NULL,		0,		false},
+	{ "pll_c",		NULL,		0,		false},
 	{ "pll_m",		NULL,		0,		false},
 	{ "hda",		"pll_p",	108000000,	false},
 	{ "hda2codec_2x", 	"pll_p",	48000000,	false},
@@ -471,8 +473,8 @@ static void __init tegra_surface_rt_init(void)
 	surface_rt_uart_init();
 	platform_add_devices(surface_rt_devices, ARRAY_SIZE(surface_rt_devices));
 	tegra_ram_console_debug_init();
-	surface_rt_sdhci_init();
 	surface_rt_regulator_init();
+	surface_rt_sdhci_init();
 	surface_rt_suspend_init();
 	surface_rt_keys_init();
 	surface_rt_panel_init();
@@ -491,9 +493,9 @@ static void __init tegra_surface_rt_reserve(void)
 {
 #ifdef CONFIG_NVMAP_CONVERT_CARVEOUT_TO_IOVMM
 	/* 800*1280*4*2 = 8192000 bytes */
-	tegra_reserve(0, SZ_16M, SZ_16M);
+	tegra_reserve(SZ_128M, SZ_32M, SZ_32M);
 #else
-	tegra_reserve(SZ_128M, SZ_16M, 0);
+	tegra_reserve(SZ_128M, SZ_32M, SZ_32M);
 #endif
 }
 
