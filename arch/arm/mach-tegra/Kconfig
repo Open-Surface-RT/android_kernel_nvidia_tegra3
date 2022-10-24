@@ -363,11 +363,7 @@ config MACH_GROUPER
        help
          Support for NVIDIA grouper development platform
 
-config MACH_SURFACE_RT
-       bool "surface rt board"
-       depends on ARCH_TEGRA_3x_SOC
-       help
-         Support for Microsoft Surface RT
+source "arch/arm/mach-tegra/microsoft-surface-rt/Kconfig"
 
 comment "Acer Tegra Platform options"
 

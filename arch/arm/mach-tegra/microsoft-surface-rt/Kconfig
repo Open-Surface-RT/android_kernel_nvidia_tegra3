@@ -1,0 +1,5 @@
+config MACH_SURFACE_RT
+       bool "surface rt board"
+       depends on ARCH_TEGRA_3x_SOC
+       help
+         Support for Microsoft Surface RT
