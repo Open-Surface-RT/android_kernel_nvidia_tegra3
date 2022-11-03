@@ -23,7 +23,7 @@
 #include <mach/iomap.h>
 #include <mach/sdhci.h>
 
-#include "gpio-names.h"
+#include "../gpio-names.h"
 #include "board-surface-rt.h"
 
 static struct resource sdhci_resource0[] = {

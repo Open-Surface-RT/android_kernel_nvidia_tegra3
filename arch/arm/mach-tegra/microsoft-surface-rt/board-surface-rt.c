@@ -58,16 +58,16 @@
 #include <mach/usb_phy.h>
 #include <mach/tegra_fiq_debugger.h>
 
-#include "board.h"
-#include "board-common.h"
-#include "clock.h"
+#include "../board.h"
+#include "../board-common.h"
+#include "../clock.h"
 #include "board-surface-rt.h"
-#include "devices.h"
-#include "gpio-names.h"
-#include "fuse.h"
-#include "pm.h"
-#include "wdt-recovery.h"
-#include "common.h"
+#include "../devices.h"
+#include "../gpio-names.h"
+#include "../fuse.h"
+#include "../pm.h"
+#include "../wdt-recovery.h"
+#include "../common.h"
 
 static __initdata struct tegra_clk_init_table surface_rt_clk_init_table[] = {
 	/* name		parent		rate		enabled */

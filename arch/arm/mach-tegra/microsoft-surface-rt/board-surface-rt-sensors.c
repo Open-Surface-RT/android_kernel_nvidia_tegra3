@@ -28,7 +28,7 @@
 #include <mach/edp.h>
 #include <asm/mach-types.h>
 #include "board-surface-rt.h"
-#include "cpu-tegra.h"
+#include "../cpu-tegra.h"
 
 #include <mach/pinmux-tegra30.h>
 

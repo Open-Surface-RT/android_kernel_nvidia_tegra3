@@ -27,10 +27,10 @@
 #include <mach/iomap.h>
 #include <mach/dc.h>
 
-#include "board.h"
+#include "../board.h"
 #include "board-surface-rt.h"
-#include "devices.h"
-#include "tegra3_host1x_devices.h"
+#include "../devices.h"
+#include "../tegra3_host1x_devices.h"
 
 /* surface-rt default display board pins */
 #define surface_rt_lvds_shutdown	TEGRA_GPIO_PB2

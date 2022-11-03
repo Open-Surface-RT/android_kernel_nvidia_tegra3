@@ -16,18 +16,18 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-#include "board.h"
-#include "board-common.h"
-#include "clock.h"
+#include "../board.h"
+#include "../board-common.h"
+#include "../clock.h"
 #include "board-surface-rt.h"
-#include "devices.h"
-#include "gpio-names.h"
-#include "fuse.h"
-#include "pm.h"
-#include "wdt-recovery.h"
-#include "common.h"
+#include "../devices.h"
+#include "../gpio-names.h"
+#include "../fuse.h"
+#include "../pm.h"
+#include "../wdt-recovery.h"
+#include "../common.h"
 #include "board-surface-rt.h"
-#include "gpio-names.h"
+#include "../gpio-names.h"
 #include <linux/gpio.h>
 #include <linux/i2c.h>
 #include <linux/i2c/i2c-hid.h>

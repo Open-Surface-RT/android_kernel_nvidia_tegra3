@@ -20,8 +20,8 @@
 #include <linux/platform_data/tegra_emc.h>
 
 #include "board-surface-rt.h"
-#include "tegra3_emc.h"
-#include "devices.h"
+#include "../tegra3_emc.h"
+#include "../devices.h"
 
 static const struct tegra30_emc_table ram_dvfs_code0[] = {
 	{

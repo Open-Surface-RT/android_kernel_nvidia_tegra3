@@ -21,7 +21,7 @@
 #define _MACH_TEGRA_BOARD_SURFACE_RT_H
 
 #include <mach/irqs.h>
-#include "gpio-names.h"
+#include "../gpio-names.h"
 
 /* External peripheral act as gpio */
 /* TPS6591x GPIOs */
