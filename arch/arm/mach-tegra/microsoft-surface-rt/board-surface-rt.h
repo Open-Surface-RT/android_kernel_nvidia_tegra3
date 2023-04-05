@@ -21,6 +21,7 @@
 #define _MACH_TEGRA_BOARD_SURFACE_RT_H
 
 #include <mach/irqs.h>
+#include <linux/mfd/tps6591x.h>
 #include "../gpio-names.h"
 
 /* External peripheral act as gpio */
@@ -30,6 +31,13 @@
 #define TPS6591X_GPIO_6		(TPS6591X_GPIO_BASE + TPS6591X_GPIO_GP6)
 #define TPS6591X_GPIO_7		(TPS6591X_GPIO_BASE + TPS6591X_GPIO_GP7)
 #define TPS6591X_GPIO_8		(TPS6591X_GPIO_BASE + TPS6591X_GPIO_GP8)
+#define TPS6591X_GPIO_END	(TPS6591X_GPIO_BASE + TPS6591X_GPIO_NR)
+
+/* WM8962 GPIOs */
+#define SURFACE_RT_GPIO_WM8962(_x_)		(TPS6591X_GPIO_END + (_x_))
+#define SURFACE_RT_GPIO_WM8962_END		SURFACE_RT_GPIO_WM8962(6)
+
+
 
 /* Audio-related GPIOs */
 #define TEGRA_GPIO_CDC_IRQ		TEGRA_GPIO_PW3
@@ -64,6 +72,6 @@ void __init surface_rt_i2c_hid_init(void);
 
 #define SURFACE_RT_TEMP_ALERT_GPIO		TEGRA_GPIO_PS3
 
-#define EN_HSIC_GPIO			TEGRA_GPIO_PR7
+//#define EN_HSIC_GPIO			TEGRA_GPIO_PR7
 
 #endif

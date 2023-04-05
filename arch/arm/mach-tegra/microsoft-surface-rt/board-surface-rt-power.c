@@ -52,23 +52,91 @@ static struct regulator_consumer_supply tps6591x_vddctrl_supply_0[] = {
 };
 
 static struct regulator_consumer_supply tps6591x_vio_supply_0[] = {
+	REGULATOR_SUPPLY("avdd_osc", NULL),
+	REGULATOR_SUPPLY("vddio_sys", NULL),
 	REGULATOR_SUPPLY("vdd_gen1v8", NULL),
 	REGULATOR_SUPPLY("avdd_usb_pll", "tegra-udc.0"),
 	REGULATOR_SUPPLY("avdd_usb_pll", "tegra-ehci.0"),
 	REGULATOR_SUPPLY("avdd_usb_pll", "tegra-ehci.1"),
 	REGULATOR_SUPPLY("avdd_usb_pll", "tegra-ehci.2"),
+	REGULATOR_SUPPLY("avdd_usb", NULL),
+	REGULATOR_SUPPLY("avdd_ic_usb", NULL),
+	REGULATOR_SUPPLY("vdd_lvds", NULL),
+	REGULATOR_SUPPLY("vdd_pnl", NULL),
+	REGULATOR_SUPPLY("vcom_3v3", NULL),
+	REGULATOR_SUPPLY("vdd_3v3", NULL),
+	REGULATOR_SUPPLY("vcore_mmc", NULL),
+	REGULATOR_SUPPLY("vddio_pex_ctl", NULL),
+	REGULATOR_SUPPLY("pwrdet_pex_ctl", NULL),
+	REGULATOR_SUPPLY("hvdd_pex_pmu", NULL),
+	REGULATOR_SUPPLY("avdd_hdmi", NULL),
+	REGULATOR_SUPPLY("vpp_fuse", NULL),
+	REGULATOR_SUPPLY("avdd_usb", "tegra-udc.0"),
+	REGULATOR_SUPPLY("avdd_usb", "tegra-ehci.0"),
+	REGULATOR_SUPPLY("avdd_usb", "tegra-ehci.1"),
+	REGULATOR_SUPPLY("avdd_usb", "tegra-ehci.2"),
+	REGULATOR_SUPPLY("vdd_ddr_rx", NULL),
+	REGULATOR_SUPPLY("vcore_nand", NULL),
+	REGULATOR_SUPPLY("hvdd_sata", NULL),
+	REGULATOR_SUPPLY("vddio_gmi_pmu", NULL),
+	REGULATOR_SUPPLY("pwrdet_nand", NULL),
+	REGULATOR_SUPPLY("avdd_cam1", NULL),
+	REGULATOR_SUPPLY("vdd_af", NULL),
+	REGULATOR_SUPPLY("avdd_cam2", NULL),
+	REGULATOR_SUPPLY("vdd_acc", NULL),
+	REGULATOR_SUPPLY("vdd_phtl", NULL),
+	REGULATOR_SUPPLY("vddio_tp", NULL),
+	REGULATOR_SUPPLY("vdd_led", NULL),
+	REGULATOR_SUPPLY("vddio_cec", NULL),
+	REGULATOR_SUPPLY("vdd_cmps", NULL),
+	REGULATOR_SUPPLY("vdd_temp", NULL),
+	REGULATOR_SUPPLY("vpp_kfuse", NULL),
+	REGULATOR_SUPPLY("vddio_ts", NULL),
+	REGULATOR_SUPPLY("vdd_ir_led", NULL),
+	REGULATOR_SUPPLY("vddio_1wire", NULL),
+	REGULATOR_SUPPLY("avddio_audio", NULL),
+	REGULATOR_SUPPLY("vdd_ec", NULL),
+	REGULATOR_SUPPLY("vcom_pa", NULL),
+	REGULATOR_SUPPLY("vdd_3v3_devices", NULL),
+	REGULATOR_SUPPLY("vdd_3v3_dock", NULL),
+	REGULATOR_SUPPLY("vdd_3v3_edid", NULL),
+	REGULATOR_SUPPLY("vdd_3v3_hdmi_cec", NULL),
+	REGULATOR_SUPPLY("vdd_3v3_gmi", NULL),
+	REGULATOR_SUPPLY("vdd_3v3_sensor", NULL),
+	REGULATOR_SUPPLY("vdd_3v3_cam", NULL),
+	REGULATOR_SUPPLY("vdd_3v3_als", NULL),
+	REGULATOR_SUPPLY("debug_cons", NULL),
+	REGULATOR_SUPPLY("vdd", "4-004c"),
+	REGULATOR_SUPPLY("pwrdet_sdmmc4", NULL),
+	REGULATOR_SUPPLY("pwrdet_sdmmc3", NULL),
+	REGULATOR_SUPPLY("vddio_audio", NULL),
+	REGULATOR_SUPPLY("pwrdet_audio", NULL),
+	REGULATOR_SUPPLY("ldo6", NULL),
+	REGULATOR_SUPPLY("ldo7", NULL),
+	REGULATOR_SUPPLY("ldo8", NULL),
+	REGULATOR_SUPPLY("vcore_audio", NULL),
+	REGULATOR_SUPPLY("avcore_audio", NULL),
+	REGULATOR_SUPPLY("MICVDD", NULL),
+	REGULATOR_SUPPLY("SPKVDD1", NULL),
+	REGULATOR_SUPPLY("SPKVDD2", NULL),
+	REGULATOR_SUPPLY("DCVDD", NULL),
+	REGULATOR_SUPPLY("DBVDD", NULL),
+	REGULATOR_SUPPLY("AVDD", NULL),
+	REGULATOR_SUPPLY("CPVDD", NULL),
+	REGULATOR_SUPPLY("PLLVDD", NULL),
 };
-
 static struct regulator_consumer_supply tps6591x_ldo1_supply_0[] = {
 	REGULATOR_SUPPLY("vdd_bridge", NULL),
 };
 
 static struct regulator_consumer_supply tps6591x_ldo3_supply_0[] = {
 	REGULATOR_SUPPLY("tCoverPower", NULL),
+
 };
 
 static struct regulator_consumer_supply tps6591x_ldo5_supply_0[] = {
 	REGULATOR_SUPPLY("vddio_sdmmc", "sdhci-tegra.0"),
+
 };
 
 static struct regulator_consumer_supply tps6591x_ldo7_supply_0[] = {
@@ -274,6 +342,7 @@ static struct regulator_consumer_supply fixed_reg_en_vdd_pnl1_supply[] = {
 /* EN_VDD_BL */
 static struct regulator_consumer_supply fixed_reg_en_vdd_bl_supply[] = {
 	REGULATOR_SUPPLY("vdd_backlight", NULL),
+
 };
 
 /* CAM1_LDO_EN from AP GPIO KB_ROW6 R06*/
@@ -331,11 +400,13 @@ static struct regulator_consumer_supply fixed_reg_cam2_ldo_en_supply[] = {
 		_gpio_nr, _active_high, _boot_state, _millivolts, false)
 
 
+
 FIXED_REG(0, en_vdd_pnl1,		en_vdd_pnl1,	NULL,	0,      0,      TEGRA_GPIO_PDD2,	true,	1, 3300);
-FIXED_REG(1, en_vdd_bl,		en_vdd_bl,	NULL,	0,      0,      TEGRA_GPIO_PDD0,	true,	1, 5000);
+FIXED_REG(1, en_vdd_bl,			en_vdd_bl,	NULL,	0,      0,      TEGRA_GPIO_PDD0,	true,	1, 5000);
 
 FIXED_REG(2, cam1_ldo_en,		cam1_ldo_en,	NULL,	0,      0,      TEGRA_GPIO_PR6,	true,	0, 2800);
 FIXED_REG(3, cam2_ldo_en,		cam2_ldo_en,	NULL,	0,      0,      TEGRA_GPIO_PR7,	true,	0, 2800);
+
 
 /*
  * Creating the fixed/gpio-switch regulator device tables for different boards

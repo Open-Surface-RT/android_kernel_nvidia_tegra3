@@ -72,3 +72,4 @@ obj-$(CONFIG_BRCMSMAC)	+= brcm80211/
 obj-$(CONFIG_SD8797)	+= sd8797/
 obj-$(CONFIG_SD8897)	+= sd8897/
 
+obj-$(CONFIG_SD8797_AOSP)       += sd8xxx/

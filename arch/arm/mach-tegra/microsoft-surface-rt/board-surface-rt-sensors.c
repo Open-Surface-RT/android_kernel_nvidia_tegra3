@@ -32,6 +32,15 @@
 
 #include <mach/pinmux-tegra30.h>
 
+static struct i2c_board_info surface_rt_i2c4_battery_charger_info[] = {
+	{
+		I2C_BOARD_INFO("surface-rt-ec", 0x0A),
+	},
+};
+
+
+
+
 static struct throttle_table tj_throttle_table[] = {
 		/* CPU_THROT_LOW cannot be used by other than CPU */
 		/* NO_CAP cannot be used by CPU */
@@ -134,6 +143,9 @@ int __init surface_rt_sensors_init(void)
 	else
 		i2c_register_board_info(4, surface_rt_i2c4_nct1008_board_info,
 			ARRAY_SIZE(surface_rt_i2c4_nct1008_board_info));
+
+	i2c_register_board_info(4, surface_rt_i2c4_battery_charger_info,
+			ARRAY_SIZE(surface_rt_i2c4_battery_charger_info));
 
 	return 0;
 }

@@ -53,6 +53,24 @@ config SND_SOC_TEGRA30_SPDIF
 	  You will also need to select the individual machine drivers to support
 	  below.
 
+config MACH_HAS_SND_SOC_TEGRA_WM8962
+        bool
+        help
+          Machines that use the SND_SOC_TEGRA_WM8962 driver should select
+          this config option, in order to allow the user to enable
+          SND_SOC_TEGRA_WM8962.
+
+config SND_SOC_TEGRA_WM8962
+        tristate "SoC Audio support for Tegra boards using a WM8962 codec"
+        depends on SND_SOC_TEGRA && I2C
+        select SND_SOC_TEGRA30_I2S
+        select SND_SOC_WM8962
+        help
+          Say Y or M here if you want to add support for SoC audio on Tegra
+          boards using the WM8962 codec. Currently, the supported boards are
+          Surface RT.
+
+
 config MACH_HAS_SND_SOC_TEGRA_WM8903
 	bool
 	help

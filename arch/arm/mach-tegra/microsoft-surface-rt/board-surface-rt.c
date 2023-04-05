@@ -58,6 +58,10 @@
 #include <mach/usb_phy.h>
 #include <mach/tegra_fiq_debugger.h>
 
+
+#include <sound/wm8962.h>
+#include <mach/tegra_wm8962_pdata.h>
+
 #include "../board.h"
 #include "../board-common.h"
 #include "../clock.h"
@@ -69,33 +73,42 @@
 #include "../wdt-recovery.h"
 #include "../common.h"
 
+
+#define TEGRA_BATTERY_EN TEGRA_GPIO_PN3
+
+
 static __initdata struct tegra_clk_init_table surface_rt_clk_init_table[] = {
 	/* name		parent		rate		enabled */
-	{ "pll_m",		NULL,		0,		false},
-	{ "hda",		"pll_p",	108000000,	false},
-	{ "hda2codec_2x", 	"pll_p",	48000000,	false},
-	{ "pwm",		"pll_p",	5100000,	false},
-	{ "blink",		"clk_32k",	32768,		true},
-	{ "i2s1",		"pll_a_out0",	0,		false},
-	{ "i2s3",		"pll_a_out0",	0,		false},
-	{ "i2s4",		"pll_a_out0",	0,		false},
-	{ "spdif_out",		"pll_a_out0",	0,		false},
-	{ "d_audio",		"clk_m",	12000000,	false},
-	{ "dam0",		"clk_m",	12000000,	false},
-	{ "dam1",		"clk_m",	12000000,	false},
-	{ "dam2",		"clk_m",	12000000,	false},
-	{ "audio1",		"i2s1_sync",	0,		false},
-	{ "audio3",		"i2s3_sync",	0,		false},
-	{ "vi_sensor",		"pll_p",	150000000,	false},
-	{ "i2c1",		"pll_p",	3200000,	false},
-	{ "i2c2",		"pll_p",	3200000,	false},
-	{ "i2c3",		"pll_p",	3200000,	false},
-	{ "i2c4",		"pll_p",	3200000,	false},
-	{ "i2c5",		"pll_p",	3200000,	false},
-	{ NULL,		NULL,		0,		0},
+	{"pll_m",	NULL,		0,		false},
+	{"audio1",	"i2s1_sync",	0,		false},
+	{"audio2",	"i2s2_sync",	0,		false},
+	{"audio3",	"i2s3_sync",	0,		false},
+	{"audio4",	"i2s4_sync",	0,		false},
+	{"blink",	"clk_32k",	32768,		true},
+	{"d_audio",	"clk_m",	12000000,	false},
+	{"dam0",	"clk_m",	12000000,	false},
+	{"dam1",	"clk_m",	12000000,	false},
+	{"dam2",	"clk_m",	12000000,	false},
+	{"hda",		"pll_p",	108000000,	false},
+	{"hda2codec_2x","pll_p",	48000000,	false},
+	{"i2c1",	"pll_p",	3200000,	false},
+	{"i2c2",	"pll_p",	3200000,	false},
+	{"i2c3",	"pll_p",	3200000,	false},
+	{"i2c4",	"pll_p",	3200000,	false},
+	{"i2c5",	"pll_p",	3200000,	false},
+	{"i2s0",	"pll_a_out0",	0,		false},
+	{"i2s1",	"pll_a_out0",	0,		false},
+	{"i2s2",	"pll_a_out0",	0,		false},
+	{"i2s3",	"pll_a_out0",	0,		false},
+	{"i2s4",	"pll_a_out0",	0,		false},
+	{"pll_p",	NULL,		0,		false},
+	{"pll_c",       NULL,           0,              false},
+	{"pwm",		"pll_p",	5100000,	false},
+	{"spdif_out",	"pll_a_out0",	0,		false},
+	{NULL,		NULL,		0,		0},
 };
 
-static struct tegra_i2c_platform_data surface_rt_i2c1_platform_data = {
+static struct tegra_i2c_platform_data surface_rt_i2c1_platform_data = { //MS HID
 	.adapter_nr	= 0,
 	.bus_count	= 1,
 	.bus_clk_rate	= { 100000, 0 },
@@ -104,17 +117,17 @@ static struct tegra_i2c_platform_data surface_rt_i2c1_platform_data = {
 	.arb_recovery = arb_lost_recovery,
 };
 
-static struct tegra_i2c_platform_data surface_rt_i2c2_platform_data = {
+static struct tegra_i2c_platform_data surface_rt_i2c2_platform_data = { //touch hid
 	.adapter_nr	= 1,
 	.bus_count	= 1,
-	.bus_clk_rate	= { 400000, 0 },
+	.bus_clk_rate	= { 100000, 0 },
 	.is_clkon_always = true,
 	.scl_gpio		= {TEGRA_GPIO_PT5, 0},
 	.sda_gpio		= {TEGRA_GPIO_PT6, 0},
 	.arb_recovery = arb_lost_recovery,
 };
-
-static struct tegra_i2c_platform_data surface_rt_i2c3_platform_data = {
+/*
+static struct tegra_i2c_platform_data surface_rt_i2c3_platform_data = { //cameras
 	.adapter_nr	= 2,
 	.bus_count	= 1,
 	.bus_clk_rate	= { 100000, 0 },
@@ -123,7 +136,7 @@ static struct tegra_i2c_platform_data surface_rt_i2c3_platform_data = {
 	.arb_recovery = arb_lost_recovery,
 };
 
-static struct tegra_i2c_platform_data surface_rt_i2c4_platform_data = {
+static struct tegra_i2c_platform_data surface_rt_i2c4_platform_data = { //HDMI display data channel ?? 
 	.adapter_nr	= 3,
 	.bus_count	= 1,
 	.bus_clk_rate	= { 100000, 0 },
@@ -132,7 +145,8 @@ static struct tegra_i2c_platform_data surface_rt_i2c4_platform_data = {
 	.arb_recovery = arb_lost_recovery,
 };
 
-static struct tegra_i2c_platform_data surface_rt_i2c5_platform_data = {
+*/
+static struct tegra_i2c_platform_data surface_rt_i2c5_platform_data = { // system bus - embedded controller / wm8962 audio
 	.adapter_nr	= 4,
 	.bus_count	= 1,
 	.bus_clk_rate	= { 400000, 0 },
@@ -141,19 +155,38 @@ static struct tegra_i2c_platform_data surface_rt_i2c5_platform_data = {
 	.arb_recovery = arb_lost_recovery,
 };
 
+#ifdef CONFIG_SND_SOC_TEGRA_WM8962
+
+static struct wm8962_pdata surface_rt_wm8962_pdata = {
+	.irq_active_low = 0,
+	.mic_cfg = 0,
+	.gpio_base = SURFACE_RT_GPIO_WM8962(0),
+	.gpio_init = {
+		/* Needs to be filled for digital Mic's */
+	},
+};
+
+static struct i2c_board_info __initdata surface_rt_codec_wm8962_info = {
+	I2C_BOARD_INFO("wm8962", 0x1a),
+	.platform_data = &surface_rt_wm8962_pdata,
+};
+
+#endif
+
 static void surface_rt_i2c_init(void)
 {
 	tegra_i2c_device1.dev.platform_data = &surface_rt_i2c1_platform_data;
 	tegra_i2c_device2.dev.platform_data = &surface_rt_i2c2_platform_data;
-	tegra_i2c_device3.dev.platform_data = &surface_rt_i2c3_platform_data;
-	tegra_i2c_device4.dev.platform_data = &surface_rt_i2c4_platform_data;
+//	tegra_i2c_device3.dev.platform_data = &surface_rt_i2c3_platform_data;
+//	tegra_i2c_device4.dev.platform_data = &surface_rt_i2c4_platform_data;
 	tegra_i2c_device5.dev.platform_data = &surface_rt_i2c5_platform_data;
 
 	platform_device_register(&tegra_i2c_device5);
-	platform_device_register(&tegra_i2c_device4);
-	platform_device_register(&tegra_i2c_device3);
+//	platform_device_register(&tegra_i2c_device4);
+//	platform_device_register(&tegra_i2c_device3);
 	platform_device_register(&tegra_i2c_device2);
 	platform_device_register(&tegra_i2c_device1);
+
 }
 
 static struct platform_device *surface_rt_uart_devices[] __initdata = {
@@ -187,7 +220,7 @@ static void __init uart_debug_init(void)
 {
 	int debug_port_id;
 	return;
-	debug_port_id = uart_console_debug_init(0);
+	debug_port_id = uart_console_debug_init(2);
 	if (debug_port_id < 0)
 		return;
 
@@ -303,6 +336,50 @@ static struct platform_device tegra_rtc_device = {
 	.num_resources = ARRAY_SIZE(tegra_rtc_resources),
 };
 
+#ifdef CONFIG_SND_SOC_TEGRA_WM8962
+
+static void surface_rt_sound_init(void)
+
+{
+        surface_rt_codec_wm8962_info.irq = gpio_to_irq(TEGRA_GPIO_CDC_IRQ);
+        i2c_register_board_info(4, &surface_rt_codec_wm8962_info, 1);
+
+        printk(KERN_INFO "Surface RT Sound Init \n");
+}
+
+static struct tegra_asoc_platform_data cardhu_audio_wm8962_pdata = {
+        .gpio_spkr_en           = TEGRA_GPIO_SPKR_EN,
+        .gpio_hp_det            = TEGRA_GPIO_HP_DET,
+        .gpio_hp_mute           = -1,
+        .gpio_int_mic_en        = -1,
+        .gpio_ext_mic_en        = -1,
+//      .gpio_bypass_switch_en  = TEGRA_GPIO_BYPASS_SWITCH_EN,
+//      .gpio_debug_switch_en   = TEGRA_GPIO_DEBUG_SWITCH_EN,
+        .i2s_param[HIFI_CODEC]  = {
+                .audio_port_id  = 0,
+                .is_i2s_master  = 1,
+                .i2s_mode       = TEGRA_DAIFMT_I2S,
+        },
+//      .i2s_param[BASEBAND]    = {
+//              .audio_port_id  = -1,
+//      },
+//      .i2s_param[BT_SCO]      = {
+//              .audio_port_id  = 3,
+//              .is_i2s_master  = 1,
+//              .i2s_mode       = TEGRA_DAIFMT_DSP_A,
+//      },
+};
+
+static struct platform_device cardhu_audio_wm8962_device = {
+        .name   = "tegra-snd-wm8962",
+        .id     = 0,
+        .dev    = {
+                .platform_data = &cardhu_audio_wm8962_pdata,
+        },
+};
+
+#endif
+
 static struct platform_device *surface_rt_devices[] __initdata = {
 	&tegra_pmu_device,
 	&tegra_rtc_device,
@@ -319,6 +396,7 @@ static struct platform_device *surface_rt_devices[] __initdata = {
 	&tegra_dam_device1,
 	&tegra_dam_device2,
 	&tegra_i2s_device1,
+	&tegra_i2s_device2,
 	&tegra_i2s_device3,
 	&tegra_i2s_device4,
 	&tegra_spdif_device,
@@ -326,29 +404,31 @@ static struct platform_device *surface_rt_devices[] __initdata = {
 	&bluetooth_dit_device,
 	&tegra_pcm_device,
 	&tegra_hda_device,
+#ifdef CONFIG_SND_SOC_TEGRA_WM8962
+
+	&cardhu_audio_wm8962_device,
+#endif
+
 #ifdef CONFIG_CRYPTO_DEV_TEGRA_AES
 	&tegra_aes_device,
 #endif
 };
 
-
-
-
 #if defined(CONFIG_USB_SUPPORT)
 static void surface_rt_otg_power(int enable)
 {
-	struct power_supply *smb_usb = power_supply_get_by_name("smb347-usb");
-	union power_supply_propval usb_otg = { enable };
+//	struct power_supply *smb_usb = power_supply_get_by_name("smb347-usb");
+//	union power_supply_propval usb_otg = { enable };
 
 	pr_debug("%s: %d\n", __func__, enable);
 
-	if (smb_usb && smb_usb->set_property)
-		smb_usb->set_property(
-			smb_usb,
-			POWER_SUPPLY_PROP_USB_OTG,
-			&usb_otg);
-	else
-		pr_err("%s: couldn't get power supply\n", __func__);
+//	if (smb_usb && smb_usb->set_property)
+//		smb_usb->set_property(
+//			smb_usb,
+//			POWER_SUPPLY_PROP_USB_OTG,
+//			&usb_otg);
+//	else
+//		pr_err("%s: couldn't get power supply\n", __func__);
 }
 
 void surface_rt_usb_ehci1_phy_on(void)
@@ -453,14 +533,37 @@ void surface_rt_booting_info(void)
 	}
 }
 
+
+static void surface_rt_ec_init(void)
+
+{
+	int ret;
+	ret = gpio_request(TEGRA_BATTERY_EN, "ec_gpio");
+	if (ret)
+	{
+		pr_err("EC gpio request failed:%d\n", ret);
+		return ;
+	}
+	else
+	{
+		gpio_direction_output(TEGRA_BATTERY_EN, 1);
+		mdelay(100);
+ 	        gpio_set_value(TEGRA_BATTERY_EN, 1);
+		mdelay(100);
+		ret = gpio_get_value(TEGRA_BATTERY_EN);
+
+		printk(KERN_INFO "Set Surface EC GPIO : %d\n",ret);
+	}
+}
+
 static void __init tegra_surface_rt_init(void)
 {
 	tegra_clk_init_from_table(surface_rt_clk_init_table);
 	tegra_enable_pinmux();
 	tegra_smmu_init();
 	tegra_soc_device_init("surface-rt");
-	//surface_rt_pinmux_init_early();
-	//surface_rt_pinmux_init(); // need to fix first
+	surface_rt_pinmux_init_early();
+	surface_rt_pinmux_init();
 	surface_rt_booting_info();
 	surface_rt_i2c_init();
 	surface_rt_spi_init();
@@ -471,14 +574,19 @@ static void __init tegra_surface_rt_init(void)
 	surface_rt_uart_init();
 	platform_add_devices(surface_rt_devices, ARRAY_SIZE(surface_rt_devices));
 	tegra_ram_console_debug_init();
-	surface_rt_sdhci_init();
 	surface_rt_regulator_init();
+	surface_rt_sdhci_init();
+	surface_rt_ec_init();
 	surface_rt_suspend_init();
 	surface_rt_keys_init();
 	surface_rt_panel_init();
-	//surface_rt_sensors_init();
+	surface_rt_sensors_init();
 	surface_rt_pins_state_init();
 	surface_rt_emc_init(); // need to fix first
+#ifdef CONFIG_SND_SOC_TEGRA_WM8962
+
+	surface_rt_sound_init();
+#endif
 	tegra_release_bootloader_fb();
 #ifdef CONFIG_TEGRA_WDT_RECOVERY
 	tegra_wdt_recovery_init();
@@ -490,12 +598,17 @@ static void __init tegra_surface_rt_init(void)
 static void __init tegra_surface_rt_reserve(void)
 {
 #ifdef CONFIG_NVMAP_CONVERT_CARVEOUT_TO_IOVMM
-	/* 800*1280*4*2 = 8192000 bytes */
-	tegra_reserve(0, SZ_16M, SZ_16M);
+	/* support 1920X1200 with 24bpp */
+	tegra_reserve(0, SZ_8M + SZ_1M, SZ_16M);
 #else
-	tegra_reserve(SZ_128M, SZ_16M, 0);
+	tegra_reserve(SZ_128M, SZ_8M + SZ_8M);
 #endif
 }
+
+static const char *cardhu_dt_board_compat[] = {
+	"nvidia,cardhu",
+	NULL
+};
 
 MACHINE_START(SURFACE_RT, "surface-rt")
 	.atag_offset	= 0x100,
@@ -507,5 +620,6 @@ MACHINE_START(SURFACE_RT, "surface-rt")
 	.handle_irq 	= gic_handle_irq,
 	.timer		= &tegra_timer,
 	.init_machine	= tegra_surface_rt_init,
+.dt_compat		= cardhu_dt_board_compat,
 	.restart	= tegra_assert_system_reset,
 MACHINE_END
