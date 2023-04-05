@@ -599,10 +599,10 @@ static void __init tegra_ramrepair_init(void)
 static void __init tegra_init_power(void)
 {
 #ifdef CONFIG_ARCH_TEGRA_HAS_SATA
-	tegra_powergate_partition_with_clk_off(TEGRA_POWERGATE_SATA);
+	//tegra_powergate_partition_with_clk_off(TEGRA_POWERGATE_SATA); //REMOVED FOR UEFI
 #endif
 #ifdef CONFIG_ARCH_TEGRA_HAS_PCIE
-	tegra_powergate_partition_with_clk_off(TEGRA_POWERGATE_PCIE);
+	//tegra_powergate_partition_with_clk_off(TEGRA_POWERGATE_PCIE);//REMOVED FOR UEFI
 #endif
 #if !defined(CONFIG_ARCH_TEGRA_2x_SOC) && !defined(CONFIG_ARCH_TEGRA_3x_SOC)
 	/* some partitions need to be powergated by default for t11x */

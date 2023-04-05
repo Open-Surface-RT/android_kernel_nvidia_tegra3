@@ -270,6 +270,7 @@ int tegra3_powergate_mc_flush(int id)
 	u32 idx, rst_ctrl, rst_stat;
 	enum mc_client mcClientBit;
 	unsigned long flags;
+	int hotResetTries;
 
 	for (idx = 0; idx < MAX_HOTRESET_CLIENT_NUM; idx++) {
 		mcClientBit =
@@ -283,9 +284,29 @@ int tegra3_powergate_mc_flush(int id)
 		mc_write(rst_ctrl, MC_CLIENT_HOTRESET_CTRL);
 		spin_unlock_irqrestore(&tegra3_powergate_lock, flags);
 
+		
+		hotResetTries =0;
 		do {
 			udelay(10);
 			rst_stat = mc_read(MC_CLIENT_HOTRESET_STAT);
+
+			pr_info("MC_CLIENT_HOTRESET_STAT tegra3_powergate_mc_flush int: %d  - idx:%x :rst_stat =  %x : rst_ctrl = %x : mcClientBit = %d \n",id,idx,rst_stat,rst_ctrl,mcClientBit);
+
+			if (rst_stat == 0x3d7ff && id == 13)
+			{
+
+			if (hotResetTries > 10) 
+				{
+
+				pr_info("MC_CLIENT_HOTRESET_STAT tegra3_powergate_mc_flush int: %d  - idx:%x :rst_stat =  %x : rst_ctrl = %x : mcClientBit = %d  - match \n",id,idx,rst_stat,rst_ctrl,mcClientBit);
+
+				rst_stat = 0x3ffff;
+				}
+
+			hotResetTries++;
+
+			}
+
 		} while (!(rst_stat & (1 << mcClientBit)));
 	}
 

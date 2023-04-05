@@ -840,7 +840,7 @@ static int tegra3_cpu_clk_set_rate(struct clk *c, unsigned long rate)
 	bool skip_from_backup = skip && (rate >= SKIPPER_ENGAGE_RATE);
 	bool skip_to_backup =
 		skip && (clk_get_rate_all_locked(c) >= SKIPPER_ENGAGE_RATE);
-
+/*
 	if (c->dvfs) {
 		if (!c->dvfs->dvfs_rail)
 			return -ENOSYS;
@@ -852,7 +852,7 @@ static int tegra3_cpu_clk_set_rate(struct clk *c, unsigned long rate)
 			return -ENOSYS;
 		}
 	}
-
+*/
 	/*
 	 * Take an extra reference to the main pll so it doesn't turn
 	 * off when we move the cpu off of it
