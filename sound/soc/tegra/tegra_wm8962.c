@@ -104,7 +104,6 @@ static int tegra_wm8962_hw_params(struct snd_pcm_substream *substream,
 		break;
 	}
 
-
 	if(pdata->i2s_param[HIFI_CODEC].is_i2s_master) {
 		/* FIXME: Codec only requires >= 3MHz if OSR==0 */
 		while (mclk < 6000000)
@@ -315,8 +314,6 @@ static int tegra_wm8962_event_hp(struct snd_soc_dapm_widget *w,
 static const struct snd_soc_dapm_widget surface_rt_dapm_widgets[] = {
 	SND_SOC_DAPM_SPK("Int Spk", tegra_wm8962_event_int_spk),
 	SND_SOC_DAPM_HP("Headphone Jack", tegra_wm8962_event_hp),
-	SND_SOC_DAPM_MIC("Int Mic", NULL),
-
 };
 
 static const struct snd_soc_dapm_route surface_rt_audio_map[] = {
@@ -324,13 +321,11 @@ static const struct snd_soc_dapm_route surface_rt_audio_map[] = {
 	{"Headphone Jack", NULL, "HPOUTL"},
 	{"Int Spk", NULL, "SPKOUTR"},
 	{"Int Spk", NULL, "SPKOUTL"},
-	{"DMIC", NULL, "Int Mic"},
 };
 
 static const struct snd_kcontrol_new surface_rt_controls[] = {
 	SOC_DAPM_PIN_SWITCH("Int Spk"),
 	SOC_DAPM_PIN_SWITCH("Headphone Jack"),
-	SOC_DAPM_PIN_SWITCH("Int Mic"),
 };
 
 static const struct snd_kcontrol_new tegra_wm8962_default_controls[] = {
