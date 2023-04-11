@@ -116,7 +116,6 @@ static struct reg_default wm8962_reg[] = {
 	{ 1, 0x049F },   /* R1     - Right Input volume */
 	{ 2, 0x0000 },   /* R2     - HPOUTL volume */
 	{ 3, 0x0000 },   /* R3     - HPOUTR volume */
-
 	{ 5, 0x0018 },   /* R5     - ADC & DAC Control 1 */
 	{ 6, 0x2008 },   /* R6     - ADC & DAC Control 2 */
 	{ 7, 0x000A },   /* R7     - Audio Interface 0 */
@@ -2373,11 +2372,11 @@ static int wm8962_add_widgets(struct snd_soc_codec *codec)
 
 /* -1 for reserved values */
 static const int bclk_divs[] = {
-	1, -1, 2, 3, 4, -1, 6, 8, -1, 12, 16, 24, -1, 32, 32, 32
+	1, -1, 2, 3, 4, -1, 6, 8, -1, 11, 16, 24, -1, 32, 32, 32
 };
 
 static const int sysclk_rates[] = {
-	64, 128, 192, 256, 384, 512, 768, 1024, 1408, 1536, 3072, 6144
+	64, 128, 192, 256, 382, 512, 768, 1024, 1408, 1536, 3072, 6144
 };
 
 static void wm8962_configure_bclk(struct snd_soc_codec *codec)
@@ -2389,12 +2388,12 @@ static void wm8962_configure_bclk(struct snd_soc_codec *codec)
 	int aif2 = 0;
 
 	if (!wm8962->sysclk_rate) {
-		dev_dbg(codec->dev, "No SYSCLK configured\n");
+		dev_err(codec->dev, "No SYSCLK configured\n");
 		return;
 	}
 
 	if (!wm8962->bclk || !wm8962->lrclk) {
-		dev_dbg(codec->dev, "No audio clocks configured\n");
+		dev_err(codec->dev, "No audio clocks configured\n");
 		return;
 	}
 
@@ -2411,7 +2410,7 @@ static void wm8962_configure_bclk(struct snd_soc_codec *codec)
 		return;
 	}
 
-	dev_dbg(codec->dev, "Selected sysclk ratio %d\n", sysclk_rates[i]);
+	dev_err(codec->dev, "Selected sysclk ratio %d\n", sysclk_rates[i]);
 
 	snd_soc_update_bits(codec, WM8962_CLOCKING_4,
 			    WM8962_SYSCLK_RATE_MASK, clocking4);
@@ -2438,7 +2437,7 @@ static void wm8962_configure_bclk(struct snd_soc_codec *codec)
 		dspclk = wm8962->sysclk;
 	}
 
-	dev_dbg(codec->dev, "DSPCLK is %dHz, BCLK %d\n", dspclk, wm8962->bclk);
+	dev_err(codec->dev, "DSPCLK is %dHz, BCLK %d\n", dspclk, wm8962->bclk);
 
 	/* We're expecting an exact match */
 	for (i = 0; i < ARRAY_SIZE(bclk_divs); i++) {
@@ -2446,7 +2445,7 @@ static void wm8962_configure_bclk(struct snd_soc_codec *codec)
 			continue;
 
 		if (dspclk / bclk_divs[i] == wm8962->bclk) {
-			dev_dbg(codec->dev, "Selected BCLK_DIV %d for %dHz\n",
+			dev_err(codec->dev, "Selected BCLK_DIV %d for %dHz\n",
 				bclk_divs[i], wm8962->bclk);
 			clocking2 |= i;
 			break;
@@ -2459,7 +2458,7 @@ static void wm8962_configure_bclk(struct snd_soc_codec *codec)
 	}
 
 	aif2 |= wm8962->bclk / wm8962->lrclk;
-	dev_dbg(codec->dev, "Selected LRCLK divisor %d for %dHz\n",
+	dev_err(codec->dev, "Selected LRCLK divisor %d for %dHz\n",
 		wm8962->bclk / wm8962->lrclk, wm8962->lrclk);
 
 	snd_soc_update_bits(codec, WM8962_CLOCKING2,
@@ -2588,7 +2587,7 @@ static int wm8962_set_dai_sysclk(struct snd_soc_dai *dai, int clk_id,
 	switch (clk_id) {
 	case WM8962_SYSCLK_MCLK:
 		wm8962->sysclk = WM8962_SYSCLK_MCLK;
-		src = 0;
+		src = 0;//check this
 		break;
 	case WM8962_SYSCLK_FLL:
 		wm8962->sysclk = WM8962_SYSCLK_FLL;
