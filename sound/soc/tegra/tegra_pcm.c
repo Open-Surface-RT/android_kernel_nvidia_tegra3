@@ -42,7 +42,7 @@
 
 #define DRV_NAME "tegra-pcm-audio"
 
-#define PERIOD_BYTES_MAX	(PAGE_SIZE * 2)
+#define PERIOD_BYTES_MAX	(PAGE_SIZE * 8)
 #define PERIODS_MAX		64
 
 static const struct snd_pcm_hardware tegra_pcm_hardware = {
