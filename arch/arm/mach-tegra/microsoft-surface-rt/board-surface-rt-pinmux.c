@@ -152,7 +152,7 @@ static __initdata struct tegra_pingroup_config surface_rt_pinmux_common[] = {
 	DEFAULT_PINMUX(DAP3_DIN,        I2S2,  PULL_DOWN, TRISTATE,          INPUT),
 	DEFAULT_PINMUX(DAP3_DOUT,       I2S2,  PULL_DOWN, TRISTATE,          INPUT),
 	DEFAULT_PINMUX(DAP3_SCLK,       I2S2,  PULL_DOWN, TRISTATE,          INPUT),
-	DEFAULT_PINMUX(GPIO_PV0,        RSVD,  PULL_UP,   NORMAL,         INPUT),
+	DEFAULT_PINMUX(GPIO_PV0,        RSVD,  PULL_UP,   TRISTATE,         INPUT),
 	DEFAULT_PINMUX(GPIO_PV1,        RSVD,  NORMAL,    TRISTATE,         INPUT),
 	DEFAULT_PINMUX(SDMMC1_CLK,      SDIO1,  NORMAL,    NORMAL,         INPUT),
 	DEFAULT_PINMUX(SDMMC1_CMD,      SDIO1,  PULL_UP,   NORMAL,         INPUT),
@@ -161,9 +161,9 @@ static __initdata struct tegra_pingroup_config surface_rt_pinmux_common[] = {
 	DEFAULT_PINMUX(SDMMC1_DAT1,     SDIO1,  PULL_UP,   NORMAL,         INPUT),
 	DEFAULT_PINMUX(SDMMC1_DAT0,     SDIO1,  PULL_UP,   NORMAL,         INPUT),
 	DEFAULT_PINMUX(GPIO_PV2,        OWR,  NORMAL,    TRISTATE,           INPUT),
-	DEFAULT_PINMUX(GPIO_PV3,        RSVD3,  PULL_UP,    TRISTATE,       INPUT),
+	DEFAULT_PINMUX(GPIO_PV3,        RSVD3,  NORMAL,    TRISTATE,       INPUT),
 	DEFAULT_PINMUX(CLK2_OUT,        EXTPERIPH2,  PULL_DOWN, TRISTATE,    INPUT),
-	DEFAULT_PINMUX(CLK2_REQ,        DAP,  PULL_UP,    TRISTATE,           INPUT),
+	DEFAULT_PINMUX(CLK2_REQ,        DAP,  NORMAL,    TRISTATE,           INPUT),
 	DEFAULT_PINMUX(LCD_PWR1,        DISPLAYA, PULL_DOWN, TRISTATE,      OUTPUT),
 	DEFAULT_PINMUX(LCD_PWR2,        DISPLAYA, PULL_DOWN, TRISTATE,      OUTPUT),
 	DEFAULT_PINMUX(LCD_SDIN,        DISPLAYA, PULL_DOWN, NORMAL,      OUTPUT),
@@ -326,10 +326,10 @@ static __initdata struct tegra_pingroup_config surface_rt_pinmux_common[] = {
 	DEFAULT_PINMUX(PWR_INT_N,       RSVD,  NORMAL,    NORMAL,         INPUT),
 	DEFAULT_PINMUX(CLK_32K_IN,      RSVD,  NORMAL,    NORMAL,         INPUT),
 	DEFAULT_PINMUX(OWR,             OWR,  PULL_UP,   NORMAL,           INPUT),
-	DEFAULT_PINMUX(DAP1_FS,         I2S0, NORMAL,    NORMAL,          OUTPUT),
-	DEFAULT_PINMUX(DAP1_DIN,        I2S0,  PULL_DOWN, TRISTATE,          INPUT),
-	DEFAULT_PINMUX(DAP1_DOUT,       I2S0,  PULL_DOWN, TRISTATE,          INPUT),
-	DEFAULT_PINMUX(DAP1_SCLK,       I2S0, NORMAL,    NORMAL,          OUTPUT),
+       DEFAULT_PINMUX(DAP1_FS,         I2S0, NORMAL,    NORMAL,          OUTPUT),
+       DEFAULT_PINMUX(DAP1_DIN,        I2S0,  PULL_DOWN, TRISTATE,          INPUT),
+       DEFAULT_PINMUX(DAP1_DOUT,       I2S0,  PULL_DOWN, TRISTATE,          INPUT),
+       DEFAULT_PINMUX(DAP1_SCLK,       I2S0, NORMAL,    NORMAL,          OUTPUT),
 	DEFAULT_PINMUX(CLK1_REQ,        DAP,  NORMAL,    TRISTATE,           INPUT),
 	DEFAULT_PINMUX(CLK1_OUT,        EXTPERIPH1,  NORMAL,    NORMAL,    INPUT),
 	DEFAULT_PINMUX(SPDIF_IN,        SPDIF,  PULL_UP,   TRISTATE,         INPUT),
@@ -403,10 +403,11 @@ static __initdata struct tegra_pingroup_config unused_pins_lowpower[] = {
 	}
 
 static struct gpio_init_pin_info init_gpio_mode_surface_rt_common[] = {
-	//GPIO_INIT_PIN_MODE(TEGRA_GPIO_PDD7, false, 0),
-	//GPIO_INIT_PIN_MODE(TEGRA_GPIO_PCC6, false, 0),
-	//GPIO_INIT_PIN_MODE(TEGRA_GPIO_PR0, false, 0),
-	//GPIO_INIT_PIN_MODE(TEGRA_GPIO_PU4, false, 1),
+	GPIO_INIT_PIN_MODE(TEGRA_GPIO_PDD7, false, 0),
+	GPIO_INIT_PIN_MODE(TEGRA_GPIO_PCC6, false, 0),
+	GPIO_INIT_PIN_MODE(TEGRA_GPIO_PR0, false, 0),
+	GPIO_INIT_PIN_MODE(TEGRA_GPIO_PU4, false, 1),
+	GPIO_INIT_PIN_MODE(TEGRA_GPIO_PD4, false, 1),
 };
 
 static void __init surface_rt_gpio_init_configure(void)

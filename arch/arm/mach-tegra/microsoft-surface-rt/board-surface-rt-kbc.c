@@ -36,16 +36,43 @@
 		.debounce_interval = 10,	\
 	}
 
+
+#define GPIO_SW(_id, _gpio, _active_low, _iswake)   \
+	{                                           \
+		.code = _id,                        \
+		.gpio = TEGRA_GPIO_##_gpio,         \
+		.irq = -1,                          \
+		.type = EV_SW,                      \
+		.desc = #_id,                       \
+		.active_low = _active_low,          \
+		.wakeup = _iswake,                  \
+		.debounce_interval = 0,             \
+	}
+
+
 static struct gpio_keys_button surface_rt_keys[] = {
 	[0] = GPIO_KEY(KEY_POWER, PV0, 1),
 	[1] = GPIO_KEY(KEY_VOLUMEUP, PS7, 0),
 	[2] = GPIO_KEY(KEY_VOLUMEDOWN, PS6, 0),
 	[3] = GPIO_KEY(KEY_HOME, PS5, 1),
+//	[4] = GPIO_SW(SW_LID, PC7, 1, 1),
+//	[5] = GPIO_SW(SW_TABLET_MODE, PQ1, 0, 0),
 };
+
+static int surface_rt_wakeup_key(void)
+{
+	int wakeup_key;
+
+	wakeup_key = KEY_POWER;
+
+	return wakeup_key;
+}
 
 static struct gpio_keys_platform_data surface_rt_keys_platform_data = {
 	.buttons	= surface_rt_keys,
 	.nbuttons	= ARRAY_SIZE(surface_rt_keys),
+	.wakeup_key	= surface_rt_wakeup_key,
+
 };
 
 static struct platform_device surface_rt_keys_device = {

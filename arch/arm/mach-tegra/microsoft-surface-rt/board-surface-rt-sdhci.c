@@ -432,14 +432,13 @@ static int __init tegra_wifi_init(void)
                 pr_warning("Unable to get gpio for WLAN Power and Reset\n");
         else {
 
-		//tegra_gpio_enable(TEGRA_WLAN_PWR);
-		//tegra_gpio_enable(TEGRA_WLAN_RST);
                 /* toggle in this order as per spec */
-                gpio_direction_output(TEGRA_WLAN_PWR, 0);
-                gpio_direction_output(TEGRA_WLAN_RST, 0);
-		udelay(5);
+
+              //  gpio_direction_output(TEGRA_WLAN_RST, 1);
+	//	udelay(1600);
                 gpio_direction_output(TEGRA_WLAN_PWR, 1);
-                gpio_direction_output(TEGRA_WLAN_RST, 1);
+
+
         }
 
 

@@ -58,6 +58,7 @@ static inline void tegra_atomics_reset(void)
 	}
 }
 
+#ifdef CONFIG_SUSPEND
 static void tegra_atomics_resume(void)
 {
 	tegra_atomics_reset();
@@ -72,6 +73,7 @@ static struct syscore_ops tegra_atomics_ops = {
 	.suspend = tegra_atomics_suspend,
 	.resume = tegra_atomics_resume,
 };
+#endif
 
 /*
  * tegra_atomics_init

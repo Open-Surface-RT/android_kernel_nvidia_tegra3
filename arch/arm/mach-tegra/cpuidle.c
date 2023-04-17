@@ -51,8 +51,10 @@
 #include "timer.h"
 
 int tegra_pg_exit_latency;
+#ifdef CONFIG_SUSPEND
 static int tegra_pd_power_off_time;
 static unsigned int tegra_pd_min_residency;
+#endif
 
 extern void tegra_cpu_wfi(void);
 
