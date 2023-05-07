@@ -147,12 +147,12 @@ TPS65090_PDATA_INIT(DCDC3, dcdc3, NULL, 1, 1, 0, true, -1, -1);
 TPS65090_PDATA_INIT(LDO1, ldo1, tps65090_rails(DCDC1), 1, 1, 0, false, -1, -1);
 TPS65090_PDATA_INIT(LDO2, ldo2, tps65090_rails(DCDC2), 1, 1, 0, false, -1, -1);
 TPS65090_PDATA_INIT(FET1, fet1, NULL, 1, 1, 0, false, -1, 800);
-TPS65090_PDATA_INIT(FET4, fet2, NULL, 1, 1, 0, false, -1, 0);
-TPS65090_PDATA_INIT(FET4, fet3, NULL, 1, 1, 0, false, -1, 0);
+TPS65090_PDATA_INIT(FET2, fet2, NULL, 1, 1, 0, false, -1, 0);
+TPS65090_PDATA_INIT(FET3, fet3, NULL, 1, 1, 0, false, -1, 0);
 TPS65090_PDATA_INIT(FET4, fet4, NULL, 1, 1, 0, false, -1, 0);
-TPS65090_PDATA_INIT(FET4, fet5, NULL, 1, 1, 0, false, -1, 0);
+TPS65090_PDATA_INIT(FET5, fet5, NULL, 1, 1, 0, false, -1, 0);
 TPS65090_PDATA_INIT(FET6, fet6, NULL, 1, 1, 0, false, -1, 0);
-TPS65090_PDATA_INIT(FET4, fet7, NULL, 1, 1, 0, false, -1, 0);
+TPS65090_PDATA_INIT(FET7, fet7, NULL, 1, 1, 0, false, -1, 0);
 
 #define ADD_TPS65090_REG(_name) (&tps65090_regulator_pdata_##_name)
 static struct tps65090_regulator_platform_data *tps65090_reg_pdata[] = {
