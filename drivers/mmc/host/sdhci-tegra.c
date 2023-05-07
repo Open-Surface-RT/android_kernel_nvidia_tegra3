@@ -57,6 +57,7 @@
 #define SDHCI_VNDR_CLK_CTRL_TAP_VALUE_SHIFT	16
 #define SDHCI_VNDR_CLK_CTRL_TRIM_VALUE_SHIFT	24
 #define SDHCI_VNDR_CLK_CTRL_SDR50_TUNING		0x20
+#define SDHCI_VNDR_CLK_CTRL_INTERNAL_CLK	0x2
 
 #define SDHCI_VNDR_MISC_CTRL		0x120
 #define SDHCI_VNDR_MISC_CTRL_ENABLE_SDR104_SUPPORT	0x8
@@ -64,9 +65,23 @@
 #define SDHCI_VNDR_MISC_CTRL_ENABLE_DDR50_SUPPORT	0x200
 #define SDHCI_VNDR_MISC_CTRL_ENABLE_SD_3_0	0x20
 #define SDHCI_VNDR_MISC_CTRL_INFINITE_ERASE_TIMEOUT	0x1
+#define SDHCI_VNDR_MISC_CTRL_PIPE_STAGES_MASK	0x180
+
+
+#define SDHCI_VNDR_PRESET_VAL0_0	0x1d4
+#define SDCLK_FREQ_SEL_HS_SHIFT	20
+#define SDCLK_FREQ_SEL_DEFAULT_SHIFT	10
+
+#define SDHCI_VNDR_PRESET_VAL1_0	0x1d8
+#define SDCLK_FREQ_SEL_SDR50_SHIFT	20
+#define SDCLK_FREQ_SEL_SDR25_SHIFT	10
+
+#define SDHCI_VNDR_PRESET_VAL2_0	0x1dc
+#define SDCLK_FREQ_SEL_DDR50_SHIFT	10
 
 #define SDMMC_SDMEMCOMPPADCTRL	0x1E0
 #define SDMMC_SDMEMCOMPPADCTRL_VREF_SEL_MASK	0xF
+#define SDMMC_SDMEMCOMPPADCTRL_PAD_E_INPUT_OR_E_PWRD_MASK	0x80000000
 
 #define SDMMC_AUTO_CAL_CONFIG	0x1E4
 #define SDMMC_AUTO_CAL_CONFIG_AUTO_CAL_START	0x80000000
@@ -86,6 +101,8 @@
 #define SDHOST_HIGH_VOLT_2V8	2800000
 #define SDHOST_LOW_VOLT_MIN	1800000
 #define SDHOST_LOW_VOLT_MAX	1800000
+#define SDHOST_HIGH_VOLT_3V2	3200000
+#define SDHOST_HIGH_VOLT_3V3	3300000
 
 #define MAX_DIVISOR_VALUE	128
 #define DEFAULT_SDHOST_FREQ	50000000
@@ -93,11 +110,22 @@
 #define MMC_TUNING_BLOCK_SIZE_BUS_WIDTH_8	128
 #define MMC_TUNING_BLOCK_SIZE_BUS_WIDTH_4	64
 #define MAX_TAP_VALUES	255
-#define TUNING_FREQ_COUNT	2
-#define TUNING_VOLTAGES_COUNT	2
+#define TUNING_FREQ_COUNT	3
+#define TUNING_VOLTAGES_COUNT	3
 #define TUNING_RETRIES	1
 #define SDMMC_AHB_MAX_FREQ	150000000
 #define SDMMC_EMC_MAX_FREQ	150000000
+#define SDMMC_EMC_NOM_VOLT_FREQ	900000000
+#define DFS_FREQ_COUNT	2
+
+/* Tuning core voltage requirements */
+#define NOMINAL_VCORE_TUN	BIT(0)
+#define BOOT_VCORE_TUN	BIT(1)
+#define MIN_OVERRIDE_VCORE_TUN	BIT(2)
+
+/* Tap cmd sysfs commands */
+#define TAP_CMD_TRIM_DEFAULT_VOLTAGE	1
+#define TAP_CMD_TRIM_HIGH_VOLTAGE	2
 
 static unsigned int uhs_max_freq_MHz[] = {
 	[MMC_TIMING_UHS_SDR50] = 100,
@@ -154,14 +182,22 @@ static struct tegra_sdhci_hw_ops tegra_11x_sdhci_ops = {
 #define NVQUIRK_ENABLE_DDR50			BIT(12)
 /* Enable Frequency Tuning for SDR50 mode */
 #define NVQUIRK_ENABLE_SDR50_TUNING		BIT(13)
+/* Enable HS200 mode */
+#define NVQUIRK_ENABLE_HS200			BIT(14)
 /* Enable Infinite Erase Timeout*/
-#define NVQUIRK_INFINITE_ERASE_TIMEOUT		BIT(14)
-/* Disable AUTO CMD23 */
-#define NVQUIRK_DISABLE_AUTO_CMD23		BIT(15)
+#define NVQUIRK_INFINITE_ERASE_TIMEOUT		BIT(15)
+/* No Calibration for sdmmc4 */
+#define NVQUIRK_DISABLE_SDMMC4_CALIB		BIT(16)
 /* ENAABLE FEEDBACK IO CLOCK */
-#define NVQUIRK_EN_FEEDBACK_CLK			BIT(16)
+#define NVQUIRK_EN_FEEDBACK_CLK			BIT(17)
+/* Disable AUTO CMD23 */
+#define NVQUIRK_DISABLE_AUTO_CMD23		BIT(18)
 /* Shadow write xfer mode reg and write it alongwith CMD register */
-#define NVQUIRK_SHADOW_XFER_MODE_REG		BIT(17)
+#define NVQUIRK_SHADOW_XFER_MODE_REG		BIT(19)
+/* update PAD_E_INPUT_OR_E_PWRD bit */
+#define NVQUIRK_SET_PAD_E_INPUT_OR_E_PWRD	BIT(20)
+/* Shadow write xfer mode reg and write it alongwith CMD register */
+#define NVQUIRK_SET_PIPE_STAGES_MASK_0		BIT(21)
 
 struct sdhci_tegra_soc_data {
 	struct sdhci_pltfm_data *pdata;
@@ -189,6 +225,11 @@ static struct freq_gov_params gov_params[3] = {
 		.active_load_threshold = 25,
 	},
 	[MMC_TYPE_SDIO] = {
+		.idle_mon_cycles = 3,
+		.polling_interval_ms = 50,
+		.active_load_threshold = 25,
+	},
+	[MMC_TYPE_SD] = {
 		.idle_mon_cycles = 3,
 		.polling_interval_ms = 50,
 		.active_load_threshold = 25,

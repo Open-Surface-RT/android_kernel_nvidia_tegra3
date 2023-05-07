@@ -37,7 +37,7 @@
 #include "board.h"
 #include "board-roth.h"
 #include "dvfs.h"
-
+/*
 #define ROTH_WLAN_PWR	TEGRA_GPIO_PCC5
 #define ROTH_WLAN_RST	TEGRA_GPIO_INVALID
 #define ROTH_WLAN_WOW	TEGRA_GPIO_PU5
@@ -102,7 +102,7 @@ static struct resource sdhci_resource2[] = {
 		.flags	= IORESOURCE_MEM,
 	},
 };
-
+*/
 static struct resource sdhci_resource3[] = {
 	[0] = {
 		.start  = INT_SDMMC4,
@@ -115,7 +115,7 @@ static struct resource sdhci_resource3[] = {
 		.flags	= IORESOURCE_MEM,
 	},
 };
-
+/*
 #ifdef CONFIG_MMC_EMBEDDED_SDIO
 static struct embedded_sdio_data embedded_sdio_data0 = {
 	.cccr   = {
@@ -165,22 +165,22 @@ static struct tegra_sdhci_platform_data tegra_sdhci_platform_data2 = {
 	.max_clk_limit = 156000000,
 	.uhs_mask = MMC_UHS_MASK_DDR50,
 };
-
+*/
 static struct tegra_sdhci_platform_data tegra_sdhci_platform_data3 = {
 	.cd_gpio = -1,
 	.wp_gpio = -1,
 	.power_gpio = -1,
 	.is_8bit = 1,
-	.tap_delay = 0x5,
-	.trim_delay = 0xA,
-	.ddr_clk_limit = 41000000,
-	.max_clk_limit = 156000000,
+//	.tap_delay = 0x5,
+	//.trim_delay = 0xA,
+//	.ddr_clk_limit = 41000000,
+//	.max_clk_limit = 156000000,
 	.mmc_data = {
 		.built_in = 1,
 		.ocr_mask = MMC_OCR_1V8_MASK,
 	}
 };
-
+/*
 static struct platform_device tegra_sdhci_device0 = {
 	.name		= "sdhci-tegra",
 	.id		= 0,
@@ -200,7 +200,7 @@ static struct platform_device tegra_sdhci_device2 = {
 		.platform_data = &tegra_sdhci_platform_data2,
 	},
 };
-
+*/
 static struct platform_device tegra_sdhci_device3 = {
 	.name		= "sdhci-tegra",
 	.id		= 3,
@@ -211,6 +211,8 @@ static struct platform_device tegra_sdhci_device3 = {
 	},
 };
 
+
+/*
 static int roth_wifi_status_register(
 		void (*callback)(int card_present, void *dev_id),
 		void *dev_id)
@@ -242,7 +244,7 @@ static int roth_wifi_regulator_enable(void)
 {
 	int ret = 0;
 
-	/* Enable COM's vdd_com_3v3 regulator*/
+	// Enable COM's vdd_com_3v3 regulator//
 	if (IS_ERR_OR_NULL(roth_vdd_com_3v3)) {
 		roth_vdd_com_3v3 = regulator_get(&roth_wifi_device.dev,
 					ROTH_VDD_WIFI_3V3);
@@ -262,7 +264,7 @@ static int roth_wifi_regulator_enable(void)
 		}
 	}
 
-	/* Enable COM's vddio_com_1v8 regulator*/
+	//Enable COM's vddio_com_1v8 regulator//
 	if (IS_ERR_OR_NULL(roth_vddio_com_1v8)) {
 		roth_vddio_com_1v8 = regulator_get(&roth_wifi_device.dev,
 			ROTH_VDD_WIFI_1V8);
@@ -295,14 +297,14 @@ static int roth_wifi_regulator_enable(void)
 
 static void roth_wifi_regulator_disable(void)
 {
-	/* Disable COM's vdd_com_3v3 regulator*/
+	// Disable COM's vdd_com_3v3 regulator//
 	if (!IS_ERR_OR_NULL(roth_vdd_com_3v3)) {
 		regulator_disable(roth_vdd_com_3v3);
 		regulator_put(roth_vdd_com_3v3);
 		roth_vdd_com_3v3 = NULL;
 	}
 
-	/* Disable COM's vddio_com_1v8 regulator*/
+	// Disable COM's vddio_com_1v8 regulator//
 	if (!IS_ERR_OR_NULL(roth_vddio_com_1v8)) {
 		regulator_disable(roth_vddio_com_1v8);
 		regulator_put(roth_vddio_com_1v8);
@@ -316,7 +318,7 @@ static int roth_wifi_power(int on)
 	int ret = 0;
 
 	pr_debug("%s: %d\n", __func__, on);
-	/* Enable COM's regulators on wi-fi poer on*/
+	// Enable COM's regulators on wi-fi poer on//
 	if (on == 1) {
 		ret = roth_wifi_regulator_enable();
 		if (ret < 0) {
@@ -325,12 +327,12 @@ static int roth_wifi_power(int on)
 		}
 	}
 
-	/*
-	 * FIXME : we need to revisit IO DPD code
-	 * on how should multiple pins under DPD get controlled
-	 *
-	 * roth GPIO WLAN enable is part of SDMMC3 pin group
-	 */
+	//
+	 // FIXME : we need to revisit IO DPD code
+	 /// on how should multiple pins under DPD get controlled
+	 //
+	 // roth GPIO WLAN enable is part of SDMMC3 pin group
+	 //
 	sd_dpd = tegra_io_dpd_get(&tegra_sdhci_device2.dev);
 	if (sd_dpd) {
 		mutex_lock(&sd_dpd->delay_lock);
@@ -346,7 +348,7 @@ static int roth_wifi_power(int on)
 		mutex_unlock(&sd_dpd->delay_lock);
 	}
 
-	/* Disable COM's regulators on wi-fi poer off*/
+	// Disable COM's regulators on wi-fi poer off//
 	if (on != 1) {
 		pr_debug("Disabling COM regulators\n");
 		roth_wifi_regulator_disable();
@@ -365,11 +367,11 @@ static int __init roth_wifi_init(void)
 {
 	int rc = 0;
 
-	/* init wlan_pwr gpio */
+	// init wlan_pwr gpio //
 	rc = gpio_request(ROTH_WLAN_PWR, WLAN_PWR_STR);
-	/* Due to pre-init, during first time boot,
-	 * gpio request returns -EBUSY
-	 */
+	// Due to pre-init, during first time boot,
+	// gpio request returns -EBUSY
+	 //
 	if ((rc < 0) && (rc != -EBUSY)) {
 		pr_err("gpio req failed:%d\n", rc);
 		return rc;
@@ -381,7 +383,7 @@ static int __init roth_wifi_init(void)
 		return rc;
 	}
 
-	/* init wlan_wow gpio */
+	// init wlan_wow gpio //
 	rc = gpio_request(ROTH_WLAN_WOW, WLAN_WOW_STR);
 	if (rc) {
 		pr_err("gpio req failed:%d\n", rc);
@@ -416,7 +418,7 @@ static int __init roth_wifi_prepower(void)
 
 subsys_initcall_sync(roth_wifi_prepower);
 #endif
-
+*/
 int __init roth_sdhci_init(void)
 {
 	int nominal_core_mv;
@@ -425,17 +427,17 @@ int __init roth_sdhci_init(void)
 	nominal_core_mv =
 		tegra_dvfs_rail_get_nominal_millivolts(tegra_core_rail);
 	if (nominal_core_mv > 0) {
-		tegra_sdhci_platform_data0.nominal_vcore_mv = nominal_core_mv;
-		tegra_sdhci_platform_data2.nominal_vcore_mv = nominal_core_mv;
+	//	tegra_sdhci_platform_data0.nominal_vcore_mv = nominal_core_mv;
+	//	tegra_sdhci_platform_data2.nominal_vcore_mv = nominal_core_mv;
 		tegra_sdhci_platform_data3.nominal_vcore_mv = nominal_core_mv;
 	}
 	min_vcore_override_mv =
 		tegra_dvfs_rail_get_override_floor(tegra_core_rail);
 	if (min_vcore_override_mv) {
-		tegra_sdhci_platform_data0.min_vcore_override_mv =
-			min_vcore_override_mv;
-		tegra_sdhci_platform_data2.min_vcore_override_mv =
-			min_vcore_override_mv;
+	//	tegra_sdhci_platform_data0.min_vcore_override_mv =
+	//		min_vcore_override_mv;
+	//	tegra_sdhci_platform_data2.min_vcore_override_mv =
+	//		min_vcore_override_mv;
 		tegra_sdhci_platform_data3.min_vcore_override_mv =
 			min_vcore_override_mv;
 	}
@@ -446,8 +448,8 @@ int __init roth_sdhci_init(void)
 		tegra_sdhci_platform_data3.trim_delay = 0;
 
 	platform_device_register(&tegra_sdhci_device3);
-	platform_device_register(&tegra_sdhci_device2);
-	platform_device_register(&tegra_sdhci_device0);
-	roth_wifi_init();
+	//platform_device_register(&tegra_sdhci_device2);
+	//platform_device_register(&tegra_sdhci_device0);
+	//roth_wifi_init();
 	return 0;
 }

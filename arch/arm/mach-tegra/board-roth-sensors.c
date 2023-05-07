@@ -203,56 +203,9 @@ static struct i2c_board_info roth_i2c4_nct1008_board_info[] = {
 		.ioreset	= TEGRA_PIN_IO_RESET_##_ioreset	\
 	}
 
-/* MPU board file definition	*/
-static struct mpu_platform_data mpu6050_gyro_data = {
-	.int_config	= 0x10,
-	.level_shifter	= 0,
-	/* Located in board_[platformname].h */
-	.orientation	= MPU_GYRO_ORIENTATION,
-	.sec_slave_type	= SECONDARY_SLAVE_TYPE_NONE,
-	.key		= {0x4E, 0xCC, 0x7E, 0xEB, 0xF6, 0x1E, 0x35, 0x22,
-			   0x00, 0x34, 0x0D, 0x65, 0x32, 0xE9, 0x94, 0x89},
-};
-
-static struct i2c_board_info __initdata inv_mpu6050_i2c2_board_info[] = {
-	{
-		I2C_BOARD_INFO(MPU_GYRO_NAME, MPU_GYRO_ADDR),
-		.platform_data = &mpu6050_gyro_data,
-	},
-};
-
-static void mpuirq_init(void)
-{
-	int ret = 0;
-	unsigned gyro_irq_gpio = MPU_GYRO_IRQ_GPIO;
-	unsigned gyro_bus_num = MPU_GYRO_BUS_NUM;
-	char *gyro_name = MPU_GYRO_NAME;
-
-	pr_info("*** MPU START *** mpuirq_init...\n");
-
-	ret = gpio_request(gyro_irq_gpio, gyro_name);
-
-	if (ret < 0) {
-		pr_err("%s: gpio_request failed %d\n", __func__, ret);
-		return;
-	}
-
-	ret = gpio_direction_input(gyro_irq_gpio);
-	if (ret < 0) {
-		pr_err("%s: gpio_direction_input failed %d\n", __func__, ret);
-		gpio_free(gyro_irq_gpio);
-		return;
-	}
-	pr_info("*** MPU END *** mpuirq_init...\n");
-
-	inv_mpu6050_i2c2_board_info[0].irq = gpio_to_irq(MPU_GYRO_IRQ_GPIO);
-	i2c_register_board_info(gyro_bus_num, inv_mpu6050_i2c2_board_info,
-		ARRAY_SIZE(inv_mpu6050_i2c2_board_info));
-}
-
 static int roth_nct1008_init(void)
 {
-	int nct1008_port = TEGRA_GPIO_PX6;
+	int nct1008_port = TEGRA_GPIO_PV1;
 	int ret = 0;
 
 	tegra_platform_edp_init(roth_nct1008_pdata.trips,
@@ -284,11 +237,6 @@ static int roth_nct1008_init(void)
 	return ret;
 }
 
-static struct i2c_board_info __initdata bq20z45_pdata[] = {
-	{
-		I2C_BOARD_INFO("sbs-battery", 0x0B),
-	},
-};
 
 #ifdef CONFIG_TEGRA_SKIN_THROTTLE
 static struct thermal_trip_info skin_trips[] = {
@@ -416,71 +364,8 @@ static int __init roth_skin_init(void)
 late_initcall(roth_skin_init);
 #endif
 
-static int roth_fan_est_match(struct thermal_zone_device *thz, void *data)
-{
-	return (strcmp((char *)data, thz->type) == 0);
-}
 
-static int roth_fan_est_get_temp(void *data, long *temp)
-{
-	struct thermal_zone_device *thz;
 
-	thz = thermal_zone_device_find(data, roth_fan_est_match);
-
-	if (!thz || thz->ops->get_temp(thz, temp))
-		*temp = 25000;
-
-	return 0;
-}
-
-static struct therm_fan_est_data fan_est_data = {
-	.toffset = 0,
-	.polling_period = 1100,
-	.ndevs = 2,
-	.devs = {
-			{
-				.dev_data = "Tdiode_soc",
-				.get_temp = roth_fan_est_get_temp,
-				.coeffs = {
-					100, 0, 0, 0,
-					0, 0, 0, 0,
-					0, 0, 0, 0,
-					0, 0, 0, 0,
-					0, 0, 0, 0
-				},
-			},
-			{
-				.dev_data = "Tboard_soc",
-				.get_temp = roth_fan_est_get_temp,
-				.coeffs = {
-					0, 0, 0, 0,
-					0, 0, 0, 0,
-					0, 0, 0, 0,
-					0, 0, 0, 0,
-					0, 0, 0, 0
-				},
-			},
-	},
-	.cdev_type = "pwm-fan",
-	.active_trip_temps = {0, 70000, 82000, 120000, 130000,
-				140000, 150000, 160000, 170000, 180000},
-	.active_hysteresis = {0, 10000, 7000, 0, 0, 0, 0, 0, 0, 0},
-};
-
-static struct platform_device roth_fan_therm_est_device = {
-	.name   = "therm-fan-est",
-	.id     = -1,
-	.num_resources  = 0,
-	.dev = {
-		.platform_data = &fan_est_data,
-	},
-};
-
-static int __init roth_fan_est_init(void)
-{
-	platform_device_register(&roth_fan_therm_est_device);
-	return 0;
-}
 int __init roth_sensors_init(void)
 {
 	int err;
@@ -491,13 +376,8 @@ int __init roth_sensors_init(void)
 	if (err)
 		return err;
 
-	mpuirq_init();
 
-	roth_fan_est_init();
 
-	if (0)
-		i2c_register_board_info(0, bq20z45_pdata,
-			ARRAY_SIZE(bq20z45_pdata));
-
+	
 	return 0;
 }

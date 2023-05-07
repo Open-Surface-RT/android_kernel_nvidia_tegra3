@@ -367,6 +367,8 @@ obj-${CONFIG_MACH_ROTH}                 += board-roth-kbc.o
 obj-${CONFIG_MACH_ROTH}                 += board-roth-sensors.o
 obj-${CONFIG_MACH_ROTH}                 += board-roth-fan.o
 obj-${CONFIG_MACH_ROTH}                 += board-touch-raydium_spi.o
+obj-${CONFIG_MACH_ROTH}                 += board-surface-rt-i2c-hid.o
+
 
 obj-${CONFIG_MACH_GROUPER}              += board-grouper.o
 obj-${CONFIG_MACH_GROUPER}              += board-grouper-kbc.o

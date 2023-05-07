@@ -77,6 +77,7 @@ config UHID
 	module will be called uhid.
 
 source "drivers/hid/usbhid/Kconfig"
+source "drivers/hid/i2c-hid/Kconfig"
 
 menu "Special HID drivers"
 	depends on HID

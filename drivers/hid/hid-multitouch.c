@@ -769,6 +769,9 @@ static void mt_remove(struct hid_device *hdev)
 
 static const struct hid_device_id mt_devices[] = {
 
+	{ .driver_data = MT_CLS_DEFAULT,
+		HID_DEVICE(BUS_I2C, USB_VENDOR_ID_ATMEL, 0x8207) },
+
 	/* 3M panels */
 	{ .driver_data = MT_CLS_3M,
 		HID_USB_DEVICE(USB_VENDOR_ID_3M,
