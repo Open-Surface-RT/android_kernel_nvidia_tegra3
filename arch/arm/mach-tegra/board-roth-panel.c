@@ -444,8 +444,8 @@ static struct tegra_dc_mode roth_dsi_modes[] = {
 		.pclk = 136666666,
 		.h_ref_to_sync = 4,
 		.v_ref_to_sync = 1,
-		.h_sync_width = 28,
-		.v_sync_width = 5,
+		.h_sync_width = 32,
+		.v_sync_width = 3,
 		.h_back_porch = 148,
 		.v_back_porch = 23,
 		.h_active = 1920,
@@ -487,8 +487,8 @@ static struct tegra_dc_out roth_disp1_out = {
 	.enable		= roth_dsi_panel_enable,
 	.disable	= roth_dsi_panel_disable,
 	.postsuspend	= roth_dsi_panel_postsuspend,
-	.width		= 235,
-	.height		= 132,
+	.width		= 132,
+	.height		= 235,
 };
 
 static int roth_hdmi_enable(struct device *dev)
