@@ -633,8 +633,7 @@ static void __init roth_spi_init(void)
 	}
 	roth_spi_pdata.parent_clk_list = spi_parent_clk_roth;
 	roth_spi_pdata.parent_clk_count = ARRAY_SIZE(spi_parent_clk_roth);
-	roth_spi_pdata.is_dma_based = (tegra_revision == TEGRA_REVISION_A01) ?
-					false : true;
+	roth_spi_pdata.is_dma_based = true;
 	tegra11_spi_device4.dev.platform_data = &roth_spi_pdata;
 	platform_add_devices(roth_spi_devices,
 		ARRAY_SIZE(roth_spi_devices));
@@ -665,7 +664,7 @@ static void __init tegra_roth_init(void)
 	//roth_touch_init();
 	/* roth will pass a null board id to panel_init */
 	roth_panel_init(0);
-	//roth_kbc_init();
+	roth_kbc_init();
 	//roth_pmon_init();
 #ifdef CONFIG_BT_BLUESLEEP
 	//roth_setup_bluesleep();

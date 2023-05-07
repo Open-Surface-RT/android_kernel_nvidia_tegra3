@@ -139,6 +139,31 @@ static int tegra_fb_set_par(struct fb_info *info)
 		tegra_fb->win->phys_addr_v = 0;
 	}
 
+ dev_warn(&tegra_fb->ndev->dev, "tegra_fb->win->stride: %i\n",tegra_fb->win->stride);
+ dev_warn(&tegra_fb->ndev->dev, "info->fix.line_length: %i\n",info->fix.line_length);
+// dev_warn(&tegra_fb->ndev->dev, "var->pixlock: %i\n",var->pixclock);
+// dev_warn(&tegra_fb->ndev->dev, "var->pixlock: %i\n",var->pixclock);
+
+ dev_warn(&tegra_fb->ndev->dev, "var->pixlock: %i\n",var->pixclock);
+ dev_warn(&tegra_fb->ndev->dev, "var->xres: %i\n",var->xres);
+ dev_warn(&tegra_fb->ndev->dev, "var->yres: %i\n",var->yres);
+ dev_warn(&tegra_fb->ndev->dev, "var->left_margin: %i\n",var->left_margin);
+ dev_warn(&tegra_fb->ndev->dev, "var->right_margin: %i\n",var->right_margin);
+ dev_warn(&tegra_fb->ndev->dev, "var->upper_margin: %i\n",var->upper_margin);
+ dev_warn(&tegra_fb->ndev->dev, "var->lower_margin: %i\n",var->lower_margin);
+
+ dev_warn(&tegra_fb->ndev->dev, "var->hsync_len: %i\n",var->hsync_len);
+ dev_warn(&tegra_fb->ndev->dev, "var->vsync_len: %i\n",var->vsync_len);
+
+ dev_warn(&tegra_fb->ndev->dev, "var->colorspace: %i\n",var->colorspace);
+ dev_warn(&tegra_fb->ndev->dev, "var->sync: %i\n",var->sync);
+ dev_warn(&tegra_fb->ndev->dev, "var->vmode: %i\n",var->vmode);
+ dev_warn(&tegra_fb->ndev->dev, "var->bits_per_pixel: %i\n",var->bits_per_pixel);
+
+
+// dev_warn(&tegra_fb->ndev->dev, "info->mode: %s\n",info->mode);
+
+
 	if (var->pixclock) {
 		bool stereo;
 		unsigned old_len = 0;

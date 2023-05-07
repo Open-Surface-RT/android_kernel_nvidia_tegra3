@@ -260,6 +260,14 @@ static const struct fb_videomode modedb[] = {
 	{ NULL, 72, 480, 300, 33386, 40, 24, 11, 19, 80, 3, 0,
 		FB_VMODE_DOUBLE },
 
+
+	//surface 2 uefi mode
+        /* 1920x1080 @ 56 Hz, 74.5 Khz hsync */
+        { NULL, 56, 1920, 1080, 8611, 148, 66, 23, 4, 32, 6,
+                FB_SYNC_HOR_HIGH_ACT | FB_SYNC_VERT_HIGH_ACT,
+                FB_VMODE_NONINTERLACED },
+
+
 	/* 1920x1200 @ 60 Hz, 74.5 Khz hsync */
 	{ NULL, 60, 1920, 1200, 5177, 128, 336, 1, 38, 208, 3,
 		FB_SYNC_HOR_HIGH_ACT | FB_SYNC_VERT_HIGH_ACT,
@@ -535,10 +543,10 @@ const struct fb_videomode cea_modes[CEA_MODEDB_SIZE] = {
 	 .flag = FB_FLAG_RATIO_16_9 | FB_FLAG_PIXEL_REPEAT,
 	 .vmode = FB_VMODE_NONINTERLACED},
 	/* 31: 1920x1080p @ 50Hz */
-	{.refresh = 50, .xres = 1920, .yres = 1080, .pixclock = 6734,
-	 .left_margin = 148, .right_margin = 528,
-	 .upper_margin = 36, .lower_margin = 4,
-	 .hsync_len = 44, .vsync_len = 5,
+	{.refresh = 56, .xres = 1920, .yres = 1080, .pixclock = 8611,
+	 .left_margin = 148, .right_margin = 66,
+	 .upper_margin = 23, .lower_margin = 4,
+	 .hsync_len = 32, .vsync_len = 6,
 	 .sync = FB_SYNC_HOR_HIGH_ACT | FB_SYNC_VERT_HIGH_ACT,
 	 .flag = FB_FLAG_RATIO_16_9,
 	 .vmode = FB_VMODE_NONINTERLACED},
@@ -1419,11 +1427,50 @@ const struct fb_videomode *fb_find_nearest_mode(const struct fb_videomode *mode,
 	struct fb_videomode *cmode, *best = NULL;
 	u32 diff = -1, diff_refresh = -1;
 
+
+
 	list_for_each(pos, head) {
 		u32 d;
 
 		modelist = list_entry(pos, struct fb_modelist, list);
 		cmode = &modelist->mode;
+
+ pr_err("modedb. cmode->xres :%d \n",cmode->xres);
+ pr_err("modedb. cmode->yres :%d \n",cmode->yres);
+ pr_err("modedb. cmode->refresh :%d \n",cmode->refresh);
+
+pr_err("modedb. cmode->pixclock :%d \n",cmode->pixclock);
+ pr_err("modedb. cmode->left_margin :%d \n",cmode->left_margin);
+ pr_err("modedb. cmode->right_margin :%d \n",cmode->right_margin);
+pr_err("modedb. cmode->upper_margin :%d \n",cmode->upper_margin);
+ pr_err("modedb. cmode->lower_margin :%d \n",cmode->lower_margin);
+ pr_err("modedb. cmode->hsync_len :%d \n",cmode->hsync_len);
+ pr_err("modedb. cmode->vsync_len :%d \n",cmode->vsync_len);
+ pr_err("modedb. cmode->sync :%d \n",cmode->sync);
+ pr_err("modedb. cmode->vmode :%d \n",cmode->vmode);
+ pr_err("modedb. cmode->flag :%d \n",cmode->flag);
+
+
+ pr_err("modedb. mode->xres :%d \n",mode->xres);
+ pr_err("modedb. mode->yres :%d \n",mode->yres);
+ pr_err("modedb. mode->refresh :%d \n",mode->refresh);
+ pr_err("modedb. mode->pixclock :%d \n",mode->pixclock);
+ pr_err("modedb. mode->left_margin :%d \n",mode->left_margin);
+ pr_err("modedb. mode->right_margin :%d \n",mode->right_margin);
+ pr_err("modedb. mode->upper_margin :%d \n",mode->upper_margin);
+ pr_err("modedb. mode->lower_margin :%d \n",mode->lower_margin);
+ pr_err("modedb. mode->hsync_len :%d \n",mode->hsync_len);
+ pr_err("modedb. mode->vsync_len :%d \n",mode->vsync_len);
+ pr_err("modedb. mode->sync :%d \n",mode->sync);
+ pr_err("modedb. mode->vmode :%d \n",mode->vmode);
+ pr_err("modedb. mode->flag :%d \n",mode->flag);
+
+
+
+
+
+
+
 
 		d = abs(cmode->xres - mode->xres) +
 			abs(cmode->yres - mode->yres);

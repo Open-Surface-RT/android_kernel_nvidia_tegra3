@@ -178,6 +178,8 @@ static u8 panel_ce13[] = {0x7c, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0};
 */
 
 static struct tegra_dsi_cmd dsi_init_cmd[] = {
+	
+/*
 	DSI_CMD_SHORT(0x05, 0x11, 0x00),
 	DSI_DLY_MS(150),
 #if (DC_CTRL_MODE & TEGRA_DC_OUT_ONE_SHOT_MODE)
@@ -185,7 +187,7 @@ static struct tegra_dsi_cmd dsi_init_cmd[] = {
 #endif
 	DSI_CMD_SHORT(0x05, 0x29, 0x00),
 	DSI_DLY_MS(20),
-
+*/
 /*
 	DSI_CMD_LONG(DSI_GENERIC_LONG_WRITE, panel_dsi_config),
 
@@ -254,15 +256,15 @@ static struct tegra_dsi_out roth_dsi = {
 	.n_data_lanes = 4,
 	.controller_vs = DSI_VS_1,
 	.pixel_format = TEGRA_DSI_PIXEL_FORMAT_24BIT_P,
-	.refresh_rate = 60,
+	.refresh_rate = 56,
 	.virtual_channel = TEGRA_DSI_VIRTUAL_CHANNEL_0,
 
 	.dsi_instance = DSI_INSTANCE_0,
 
 	.panel_reset = DSI_PANEL_RESET,
 	.power_saving_suspend = true,
-	.video_data_type = TEGRA_DSI_VIDEO_TYPE_COMMAND_MODE,//TEGRA_DSI_VIDEO_TYPE_VIDEO_MODE,
-	.video_clock_mode = TEGRA_DSI_VIDEO_CLOCK_CONTINUOUS,
+	.video_data_type = TEGRA_DSI_VIDEO_TYPE_VIDEO_MODE,//TEGRA_DSI_VIDEO_TYPE_COMMAND_MODE,//
+	.video_clock_mode = TEGRA_DSI_VIDEO_CLOCK_CONTINUOUS,//TEGRA_DSI_VIDEO_CLOCK_TX_ONLY,
 	.video_burst_mode = TEGRA_DSI_VIDEO_NONE_BURST_MODE_WITH_SYNC_END,
 	.dsi_init_cmd = dsi_init_cmd,
 	.n_init_cmd = ARRAY_SIZE(dsi_init_cmd),
@@ -441,17 +443,21 @@ static int roth_dsi_panel_postsuspend(void)
 static struct tegra_dc_mode roth_dsi_modes[] = {
 	{
 
-		.pclk = 136666666,
+		.pclk = 136519680,//136521000,//136519680,//136521000, //pixclock
+		      //136666666
+
+					//(h_active + h_sync_width + 32 + 64) * (v_active + v_sync_width + 3 + 22) * 56 / 1000
+					//(1920 + 32 + 32 + 64) * (1080 + 6 + 3 + 22) * 60 / 1000
 		.h_ref_to_sync = 4,
 		.v_ref_to_sync = 1,
-		.h_sync_width = 32,
-		.v_sync_width = 3,
-		.h_back_porch = 148,
-		.v_back_porch = 23,
-		.h_active = 1920,
-		.v_active = 1080,
-		.h_front_porch = 66,
-		.v_front_porch = 4,
+		.h_sync_width = 32, 	//hsync_len
+		.v_sync_width = 6, 	//vsync_len
+		.h_back_porch = 32, 	//left_margin
+		.v_back_porch = 6,	//upper_margin
+		.h_active = 1920, 	// xres
+		.v_active = 1080, 	// yres
+		.h_front_porch = 64,	//right_margin
+		.v_front_porch = 9, 	//lower_margin
 /*
 
 		.pclk = 148500000,
@@ -487,8 +493,8 @@ static struct tegra_dc_out roth_disp1_out = {
 	.enable		= roth_dsi_panel_enable,
 	.disable	= roth_dsi_panel_disable,
 	.postsuspend	= roth_dsi_panel_postsuspend,
-	.width		= 132,
-	.height		= 235,
+	.width		= 235,
+	.height		= 132,
 };
 
 static int roth_hdmi_enable(struct device *dev)
