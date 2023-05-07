@@ -664,7 +664,7 @@ static void __init tegra_roth_init(void)
 	roth_edp_init();
 	//roth_touch_init();
 	/* roth will pass a null board id to panel_init */
-	//roth_panel_init(0);
+	roth_panel_init(0);
 	//roth_kbc_init();
 	//roth_pmon_init();
 #ifdef CONFIG_BT_BLUESLEEP

@@ -68,7 +68,7 @@ struct platform_device * __init roth_host1x_init(void)
 
 /* HDMI Hotplug detection pin */
 #define roth_hdmi_hpd	TEGRA_GPIO_PN7
-
+/*
 static bool reg_requested;
 static bool gpio_requested;
 
@@ -80,6 +80,7 @@ static struct regulator *avdd_lcd_3v0_2v8;
 static struct regulator *roth_hdmi_reg;
 static struct regulator *roth_hdmi_pll;
 static struct regulator *roth_hdmi_vddio;
+*/
 
 static struct resource roth_disp1_resources[] = {
 	{
@@ -141,6 +142,7 @@ static struct resource roth_disp2_resources[] = {
 	},
 };
 
+/*
 static u8 panel_dsi_config[] = {0xe0, 0x43, 0x0, 0x80, 0x0, 0x0};
 static u8 panel_disp_ctrl1[] = {0xb5, 0x34, 0x20, 0x40, 0x0, 0x20};
 static u8 panel_disp_ctrl2[] = {0xb6, 0x04, 0x74, 0x0f, 0x16, 0x13};
@@ -173,8 +175,18 @@ static u8 panel_ce10[] = {
 static u8 panel_ce11[] = {0x7a, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0};
 static u8 panel_ce12[] = {0x7b, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0};
 static u8 panel_ce13[] = {0x7c, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0};
+*/
 
 static struct tegra_dsi_cmd dsi_init_cmd[] = {
+	DSI_CMD_SHORT(0x05, 0x11, 0x00),
+	DSI_DLY_MS(150),
+#if (DC_CTRL_MODE & TEGRA_DC_OUT_ONE_SHOT_MODE)
+	DSI_CMD_SHORT(0x15, 0x35, 0x00),
+#endif
+	DSI_CMD_SHORT(0x05, 0x29, 0x00),
+	DSI_DLY_MS(20),
+
+/*
 	DSI_CMD_LONG(DSI_GENERIC_LONG_WRITE, panel_dsi_config),
 
 	DSI_CMD_LONG(DSI_GENERIC_LONG_WRITE, panel_disp_ctrl1),
@@ -182,7 +194,7 @@ static struct tegra_dsi_cmd dsi_init_cmd[] = {
 
 	DSI_CMD_LONG(DSI_GENERIC_LONG_WRITE, panel_internal_clk),
 
-	/*  panel power control 1 */
+	//  panel power control 1//
 	DSI_CMD_SHORT(DSI_GENERIC_SHORT_WRITE_2_PARAMS, 0xc1, 0x0),
 	DSI_CMD_LONG(DSI_GENERIC_LONG_WRITE, panel_pwr_ctrl3),
 	DSI_CMD_LONG(DSI_GENERIC_LONG_WRITE, panel_pwr_ctrl4),
@@ -196,10 +208,10 @@ static struct tegra_dsi_cmd dsi_init_cmd[] = {
 
 	DSI_CMD_SHORT(DSI_DCS_WRITE_1_PARAM, DSI_DCS_SET_ADDR_MODE, 0x08),
 
-	/* panel OTP 2 */
+	// panel OTP 2 //
 	DSI_CMD_SHORT(DSI_GENERIC_SHORT_WRITE_2_PARAMS, 0xf9, 0x0),
 
-	/* panel CE 1 */
+	// panel CE 1 //
 	DSI_CMD_SHORT(DSI_GENERIC_SHORT_WRITE_2_PARAMS, 0x70, 0x0),
 	DSI_CMD_LONG(DSI_GENERIC_LONG_WRITE, panel_ce2),
 	DSI_CMD_LONG(DSI_GENERIC_LONG_WRITE, panel_ce3),
@@ -214,26 +226,28 @@ static struct tegra_dsi_cmd dsi_init_cmd[] = {
 	DSI_CMD_LONG(DSI_GENERIC_LONG_WRITE, panel_ce12),
 	DSI_CMD_LONG(DSI_GENERIC_LONG_WRITE, panel_ce13),
 
-	/* panel power control 2 */
+	// panel power control 2 //
 	DSI_CMD_SHORT(DSI_GENERIC_SHORT_WRITE_2_PARAMS, 0xc2, 0x02),
 	DSI_DLY_MS(20),
 
-	/* panel power control 2 */
+	// panel power control 2 //
 	DSI_CMD_SHORT(DSI_GENERIC_SHORT_WRITE_2_PARAMS, 0xc2, 0x06),
 	DSI_DLY_MS(20),
 
-	/* panel power control 2 */
+	// panel power control 2 //
 	DSI_CMD_SHORT(DSI_GENERIC_SHORT_WRITE_2_PARAMS, 0xc2, 0x4e),
 	DSI_DLY_MS(100),
 
 	DSI_CMD_SHORT(DSI_DCS_WRITE_0_PARAM, DSI_DCS_EXIT_SLEEP_MODE, 0x0),
 	DSI_DLY_MS(20),
 
-	/* panel OTP 2 */
+	// panel OTP 2 //
 	DSI_CMD_SHORT(DSI_GENERIC_SHORT_WRITE_2_PARAMS, 0xf9, 0x80),
 	DSI_DLY_MS(20),
 
 	DSI_CMD_SHORT(DSI_DCS_WRITE_0_PARAM, DSI_DCS_SET_DISPLAY_ON, 0x0),
+
+*/
 };
 
 static struct tegra_dsi_out roth_dsi = {
@@ -247,15 +261,16 @@ static struct tegra_dsi_out roth_dsi = {
 
 	.panel_reset = DSI_PANEL_RESET,
 	.power_saving_suspend = true,
-	.video_data_type = TEGRA_DSI_VIDEO_TYPE_VIDEO_MODE,
+	.video_data_type = TEGRA_DSI_VIDEO_TYPE_COMMAND_MODE,//TEGRA_DSI_VIDEO_TYPE_VIDEO_MODE,
 	.video_clock_mode = TEGRA_DSI_VIDEO_CLOCK_CONTINUOUS,
 	.video_burst_mode = TEGRA_DSI_VIDEO_NONE_BURST_MODE_WITH_SYNC_END,
 	.dsi_init_cmd = dsi_init_cmd,
 	.n_init_cmd = ARRAY_SIZE(dsi_init_cmd),
 };
-
+/*
 static int roth_dsi_regulator_get(struct device *dev)
 {
+
 	int err = 0;
 
 	if (reg_requested)
@@ -297,10 +312,14 @@ static int roth_dsi_regulator_get(struct device *dev)
 	return 0;
 fail:
 	return err;
+
+
 }
 
 static int roth_dsi_gpio_get(void)
 {
+
+
 	int err = 0;
 
 	if (gpio_requested)
@@ -316,12 +335,15 @@ static int roth_dsi_gpio_get(void)
 	return 0;
 fail:
 	return err;
-}
 
+	
+}
+*/
 static struct tegra_dc_out roth_disp1_out;
 
 static int roth_dsi_panel_enable(struct device *dev)
 {
+/*
 	int err = 0;
 
 	err = roth_dsi_regulator_get(dev);
@@ -370,11 +392,13 @@ static int roth_dsi_panel_enable(struct device *dev)
 		}
 	}
 
-	/* Skip panel programming if in initialized mode */
+	// Skip panel programming if in initialized mode //
 	if (roth_disp1_out.flags & TEGRA_DC_OUT_INITIALIZED_MODE)
+
 		return 0;
 
 #if DSI_PANEL_RESET
+
 	gpio_direction_output(DSI_PANEL_RST_GPIO, 1);
 	usleep_range(1000, 5000);
 	gpio_set_value(DSI_PANEL_RST_GPIO, 0);
@@ -386,10 +410,13 @@ static int roth_dsi_panel_enable(struct device *dev)
 	return 0;
 fail:
 	return err;
+*/
+return 0;
 }
 
 static int roth_dsi_panel_disable(void)
 {
+/*
 	if (vdd_lcd_bl)
 		regulator_disable(vdd_lcd_bl);
 
@@ -401,7 +428,7 @@ static int roth_dsi_panel_disable(void)
 
 	if (avdd_lcd_3v0_2v8)
 		regulator_disable(avdd_lcd_3v0_2v8);
-
+*/
 	return 0;
 }
 
@@ -413,18 +440,36 @@ static int roth_dsi_panel_postsuspend(void)
 
 static struct tegra_dc_mode roth_dsi_modes[] = {
 	{
-		.pclk = 66700000,
+
+		.pclk = 136666666,
 		.h_ref_to_sync = 4,
 		.v_ref_to_sync = 1,
-		.h_sync_width = 4,
-		.v_sync_width = 4,
-		.h_back_porch = 112,
-		.v_back_porch = 7,
-		.h_active = 720,
-		.v_active = 1280,
-		.h_front_porch = 12,
-		.v_front_porch = 20,
+		.h_sync_width = 28,
+		.v_sync_width = 5,
+		.h_back_porch = 148,
+		.v_back_porch = 23,
+		.h_active = 1920,
+		.v_active = 1080,
+		.h_front_porch = 66,
+		.v_front_porch = 4,
+/*
+
+		.pclk = 148500000,
+		.h_ref_to_sync = 1,
+		.v_ref_to_sync = 1,
+		.h_sync_width = 44,
+		.v_sync_width = 5,
+		.h_back_porch = 148,
+		.v_back_porch = 36,
+		.h_active = 1920,
+		.v_active = 1080,
+		.h_front_porch = 88,
+		.v_front_porch = 4,
+
+*/
 	},
+
+
 };
 
 static struct tegra_dc_sd_settings sd_settings;
@@ -442,12 +487,13 @@ static struct tegra_dc_out roth_disp1_out = {
 	.enable		= roth_dsi_panel_enable,
 	.disable	= roth_dsi_panel_disable,
 	.postsuspend	= roth_dsi_panel_postsuspend,
-	.width		= 62,
-	.height		= 110,
+	.width		= 235,
+	.height		= 132,
 };
 
 static int roth_hdmi_enable(struct device *dev)
 {
+/*
 	int ret;
 	if (!roth_hdmi_reg) {
 		roth_hdmi_reg = regulator_get(dev, "avdd_hdmi");
@@ -477,11 +523,14 @@ static int roth_hdmi_enable(struct device *dev)
 		pr_err("hdmi: couldn't enable regulator avdd_hdmi_pll\n");
 		return ret;
 	}
+
+*/
 	return 0;
 }
 
 static int roth_hdmi_disable(void)
 {
+/*
 	if (roth_hdmi_reg) {
 		regulator_disable(roth_hdmi_reg);
 		regulator_put(roth_hdmi_reg);
@@ -493,22 +542,25 @@ static int roth_hdmi_disable(void)
 		regulator_put(roth_hdmi_pll);
 		roth_hdmi_pll = NULL;
 	}
-
+*/
 	return 0;
 }
 
 static int roth_hdmi_postsuspend(void)
 {
+/*
 	if (roth_hdmi_vddio) {
 		regulator_disable(roth_hdmi_vddio);
 		regulator_put(roth_hdmi_vddio);
 		roth_hdmi_vddio = NULL;
 	}
+*/
 	return 0;
 }
 
 static int roth_hdmi_hotplug_init(struct device *dev)
 {
+/*
 	if (!roth_hdmi_vddio) {
 		roth_hdmi_vddio = regulator_get(dev, "vdd_hdmi_5v0");
 		if (WARN_ON(IS_ERR(roth_hdmi_vddio))) {
@@ -518,11 +570,13 @@ static int roth_hdmi_hotplug_init(struct device *dev)
 		} else
 			regulator_enable(roth_hdmi_vddio);
 	}
+*/
 	return 0;
 }
 
 static void roth_hdmi_hotplug_report(bool state)
 {
+/*
 	if (state) {
 		tegra_pinmux_set_pullupdown(TEGRA_PINGROUP_DDC_SDA,
 						TEGRA_PUPD_PULL_DOWN);
@@ -534,6 +588,7 @@ static void roth_hdmi_hotplug_report(bool state)
 		tegra_pinmux_set_pullupdown(TEGRA_PINGROUP_DDC_SCL,
 						TEGRA_PUPD_NORMAL);
 	}
+*/
 }
 
 static struct tegra_dc_out roth_disp2_out = {
@@ -559,9 +614,9 @@ static struct tegra_dc_out roth_disp2_out = {
 static struct tegra_fb_data roth_disp1_fb_data = {
 	.win		= 0,
 	.bits_per_pixel = 32,
-	.flags		= TEGRA_FB_FLIP_ON_PROBE,
-	.xres		= 720,
-	.yres		= 1280,
+	//.flags		= TEGRA_FB_FLIP_ON_PROBE,
+	.xres		= 1920,
+	.yres		= 1080,
 };
 
 static struct tegra_dc_platform_data roth_disp1_pdata = {
