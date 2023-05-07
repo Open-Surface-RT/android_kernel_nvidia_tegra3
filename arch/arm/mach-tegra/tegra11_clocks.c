@@ -1246,6 +1246,7 @@ static int tegra11_cpu_clk_set_rate(struct clk *c, unsigned long rate)
 	/* On SILICON allow CPU rate change only if cpu regulator is connected.
 	   Ignore regulator connection on FPGA and SIMULATION platforms. */
 #ifdef CONFIG_TEGRA_SILICON_PLATFORM
+/*
 	if (c->dvfs) {
 		if (!c->dvfs->dvfs_rail)
 			return -ENOSYS;
@@ -1256,6 +1257,7 @@ static int tegra11_cpu_clk_set_rate(struct clk *c, unsigned long rate)
 			return -ENOSYS;
 		}
 	}
+*/
 #endif
 	if (has_dfll && c->dvfs && c->dvfs->dvfs_rail) {
 		if (tegra_dvfs_is_dfll_range(c->dvfs, rate))

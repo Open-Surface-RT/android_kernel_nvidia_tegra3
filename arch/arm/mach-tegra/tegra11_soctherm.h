@@ -18,6 +18,7 @@
 
 #ifndef __MACH_TEGRA_11x_SOCTHERM_H
 #define __MACH_TEGRA_11x_SOCTHERM_H
+#define THERMAL_MAX_TRIPS	32
 
 /* This order must match the soc_therm HW register spec */
 enum soctherm_sense {

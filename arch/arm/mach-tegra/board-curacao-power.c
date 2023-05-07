@@ -38,7 +38,8 @@
 #include "board-curacao.h"
 #include "tegra_cl_dvfs.h"
 #include "gpio-names.h"
-#include "tegra11_soctherm.h"
+//#include "tegra11_soctherm.h"
+
 #include "devices.h"
 
 #define PMC_CTRL                0x0

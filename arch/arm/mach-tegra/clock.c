@@ -878,7 +878,7 @@ static void __init tegra_clk_verify_rates(void)
 	list_for_each_entry(c, &clocks, node) {
 		rate = clk_get_rate(c);
 		if (rate > clk_get_max_rate(c))
-			WARN(1, "tegra: %s boot rate %lu exceeds max rate %lu\n",
+			pr_warn("tegra: %s boot rate %lu exceeds max rate %lu\n",
 			     c->name, rate, clk_get_max_rate(c));
 		c->boot_rate = rate;
 	}
