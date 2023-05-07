@@ -179,7 +179,7 @@ static u8 panel_ce13[] = {0x7c, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0};
 
 static struct tegra_dsi_cmd dsi_init_cmd[] = {
 	
-/*
+
 	DSI_CMD_SHORT(0x05, 0x11, 0x00),
 	DSI_DLY_MS(150),
 #if (DC_CTRL_MODE & TEGRA_DC_OUT_ONE_SHOT_MODE)
@@ -187,7 +187,7 @@ static struct tegra_dsi_cmd dsi_init_cmd[] = {
 #endif
 	DSI_CMD_SHORT(0x05, 0x29, 0x00),
 	DSI_DLY_MS(20),
-*/
+
 /*
 	DSI_CMD_LONG(DSI_GENERIC_LONG_WRITE, panel_dsi_config),
 
@@ -443,7 +443,7 @@ static int roth_dsi_panel_postsuspend(void)
 static struct tegra_dc_mode roth_dsi_modes[] = {
 	{
 
-		.pclk = 136519680,//136521000,//136519680,//136521000, //pixclock
+		.pclk = 126166666,//136521000,//136519680,//136521000, //pixclock
 		      //136666666
 
 					//(h_active + h_sync_width + 32 + 64) * (v_active + v_sync_width + 3 + 22) * 56 / 1000
