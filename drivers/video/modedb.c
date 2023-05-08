@@ -263,7 +263,7 @@ static const struct fb_videomode modedb[] = {
 
 	//surface 2 uefi mode
         /* 1920x1080 @ 56 Hz, 74.5 Khz hsync */
-        { NULL, 56, 1920, 1080, 8611, 148, 66, 23, 4, 32, 6,
+        { NULL, 56, 1920, 1080, 7915, 32, 64, 6, 9, 32, 6, 0,
                 FB_SYNC_HOR_HIGH_ACT | FB_SYNC_VERT_HIGH_ACT,
                 FB_VMODE_NONINTERLACED },
 
@@ -423,13 +423,23 @@ const struct fb_videomode cea_modes[CEA_MODEDB_SIZE] = {
 	 .flag = FB_FLAG_RATIO_16_9 | FB_FLAG_PIXEL_REPEAT,
 	 .vmode = FB_VMODE_NONINTERLACED},
 	/* 16: 1920x1080p @ 59.94Hz/60Hz */
-	{.refresh = 60, .xres = 1920, .yres = 1080, .pixclock = 6734,
+	{.refresh = 56, .xres = 1920, .yres = 1080, .pixclock = 7915,
 	 .left_margin = 148, .right_margin = 88,
 	 .upper_margin = 36, .lower_margin = 4,
 	 .hsync_len = 44, .vsync_len = 5,
 	 .sync = FB_SYNC_HOR_HIGH_ACT | FB_SYNC_VERT_HIGH_ACT,
 	 .flag = FB_FLAG_RATIO_16_9,
 	 .vmode = FB_VMODE_NONINTERLACED},
+
+        {.refresh = 65, .xres = 1920, .yres = 1080, .pixclock = 6779,
+         .left_margin = 148, .right_margin = 88,
+         .upper_margin = 36, .lower_margin = 4,
+         .hsync_len = 44, .vsync_len = 5,
+         .sync = FB_SYNC_HOR_HIGH_ACT | FB_SYNC_VERT_HIGH_ACT,
+         .flag = FB_FLAG_RATIO_16_9,
+         .vmode = FB_VMODE_NONINTERLACED},
+
+
 	/* 17: 720x576p @ 50Hz */
 	{.refresh = 50, .xres = 720, .yres = 576, .pixclock = 37037,
 	 .left_margin = 68, .right_margin = 12,
@@ -542,14 +552,15 @@ const struct fb_videomode cea_modes[CEA_MODEDB_SIZE] = {
 	 .sync = 0,
 	 .flag = FB_FLAG_RATIO_16_9 | FB_FLAG_PIXEL_REPEAT,
 	 .vmode = FB_VMODE_NONINTERLACED},
-	/* 31: 1920x1080p @ 50Hz */
-	{.refresh = 56, .xres = 1920, .yres = 1080, .pixclock = 8611,
-	 .left_margin = 148, .right_margin = 66,
-	 .upper_margin = 23, .lower_margin = 4,
+	/* 31: 1920x1080p @ 55Hz */
+	{.refresh = 55, .xres = 1920, .yres = 1080, .pixclock = 7462,
+	 .left_margin = 32, .right_margin = 64,
+	 .upper_margin = 6, .lower_margin = 9,
 	 .hsync_len = 32, .vsync_len = 6,
 	 .sync = FB_SYNC_HOR_HIGH_ACT | FB_SYNC_VERT_HIGH_ACT,
-	 .flag = FB_FLAG_RATIO_16_9,
-	 .vmode = FB_VMODE_NONINTERLACED},
+        .flag = FB_FLAG_RATIO_16_9,
+        .vmode = FB_VMODE_NONINTERLACED},
+
 	/* 32: 1920x1080p @ 23.97Hz/24Hz */
 	{.refresh = 24, .xres = 1920, .yres = 1080, .pixclock = 13468,
 	 .left_margin = 148, .right_margin = 638,
@@ -695,13 +706,6 @@ const struct fb_videomode cea_modes[CEA_MODEDB_SIZE] = {
 	 .flag = FB_FLAG_RATIO_16_9,
 	 .vmode = FB_VMODE_NONINTERLACED},
 	/* 50: 720(1440)x480i @ 119.88/120Hz */
-	{.refresh = 119, .xres = 1440, .yres = 480, .pixclock = 18518,
-	 .left_margin = 114, .right_margin = 38,
-	 .upper_margin = 15, .lower_margin = 4,
-	 .hsync_len = 124, .vsync_len = 3,
-	 .sync = 0,
-	 .flag = FB_FLAG_RATIO_4_3 | FB_FLAG_PIXEL_REPEAT,
-	 .vmode = FB_VMODE_INTERLACED},
 	/* 51: 720(1440)x480i @ 119.88/120Hz */
 	{.refresh = 119, .xres = 1440, .yres = 480, .pixclock = 18518,
 	 .left_margin = 114, .right_margin = 38,
@@ -1434,7 +1438,7 @@ const struct fb_videomode *fb_find_nearest_mode(const struct fb_videomode *mode,
 
 		modelist = list_entry(pos, struct fb_modelist, list);
 		cmode = &modelist->mode;
-
+/*
  pr_err("modedb. cmode->xres :%d \n",cmode->xres);
  pr_err("modedb. cmode->yres :%d \n",cmode->yres);
  pr_err("modedb. cmode->refresh :%d \n",cmode->refresh);
@@ -1465,7 +1469,7 @@ pr_err("modedb. cmode->upper_margin :%d \n",cmode->upper_margin);
  pr_err("modedb. mode->vmode :%d \n",mode->vmode);
  pr_err("modedb. mode->flag :%d \n",mode->flag);
 
-
+*/
 
 
 

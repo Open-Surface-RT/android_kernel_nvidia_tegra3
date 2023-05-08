@@ -139,30 +139,6 @@ static int tegra_fb_set_par(struct fb_info *info)
 		tegra_fb->win->phys_addr_v = 0;
 	}
 
- dev_warn(&tegra_fb->ndev->dev, "tegra_fb->win->stride: %i\n",tegra_fb->win->stride);
- dev_warn(&tegra_fb->ndev->dev, "info->fix.line_length: %i\n",info->fix.line_length);
-// dev_warn(&tegra_fb->ndev->dev, "var->pixlock: %i\n",var->pixclock);
-// dev_warn(&tegra_fb->ndev->dev, "var->pixlock: %i\n",var->pixclock);
-
- dev_warn(&tegra_fb->ndev->dev, "var->pixlock: %i\n",var->pixclock);
- dev_warn(&tegra_fb->ndev->dev, "var->xres: %i\n",var->xres);
- dev_warn(&tegra_fb->ndev->dev, "var->yres: %i\n",var->yres);
- dev_warn(&tegra_fb->ndev->dev, "var->left_margin: %i\n",var->left_margin);
- dev_warn(&tegra_fb->ndev->dev, "var->right_margin: %i\n",var->right_margin);
- dev_warn(&tegra_fb->ndev->dev, "var->upper_margin: %i\n",var->upper_margin);
- dev_warn(&tegra_fb->ndev->dev, "var->lower_margin: %i\n",var->lower_margin);
-
- dev_warn(&tegra_fb->ndev->dev, "var->hsync_len: %i\n",var->hsync_len);
- dev_warn(&tegra_fb->ndev->dev, "var->vsync_len: %i\n",var->vsync_len);
-
- dev_warn(&tegra_fb->ndev->dev, "var->colorspace: %i\n",var->colorspace);
- dev_warn(&tegra_fb->ndev->dev, "var->sync: %i\n",var->sync);
- dev_warn(&tegra_fb->ndev->dev, "var->vmode: %i\n",var->vmode);
- dev_warn(&tegra_fb->ndev->dev, "var->bits_per_pixel: %i\n",var->bits_per_pixel);
-
-
-// dev_warn(&tegra_fb->ndev->dev, "info->mode: %s\n",info->mode);
-
 
 	if (var->pixclock) {
 		bool stereo;
@@ -171,13 +147,57 @@ static int tegra_fb_set_par(struct fb_info *info)
 		struct fb_videomode *old_mode = NULL;
 
 		fb_var_to_videomode(&m, var);
-
+/*
+//		dev_warn(&tegra_fb->ndev->dev, "initial fb_videomode refresh %i \n",var->refresh);
+		dev_warn(&tegra_fb->ndev->dev, "initial fb_videomode xres %i \n",var->xres);
+		dev_warn(&tegra_fb->ndev->dev, "initial fb_videomode yres %i \n",var->yres);
+		dev_warn(&tegra_fb->ndev->dev, "initial fb_videomode pixclock %i \n",var->pixclock);
+		dev_warn(&tegra_fb->ndev->dev, "initial fb_videomode left_margin %i \n",var->left_margin);
+		dev_warn(&tegra_fb->ndev->dev, "initial fb_videomode right_margin %i \n",var->right_margin);
+		dev_warn(&tegra_fb->ndev->dev, "initial fb_videomode upper_margin %i \n",var->upper_margin);
+		dev_warn(&tegra_fb->ndev->dev, "initial fb_videomode lower_margin %i \n",var->lower_margin);
+		dev_warn(&tegra_fb->ndev->dev, "initial fb_videomode hsync_len %i \n",var->hsync_len);
+		dev_warn(&tegra_fb->ndev->dev, "initial fb_videomode vsync_len %i \n",var->vsync_len);
+		dev_warn(&tegra_fb->ndev->dev, "initial fb_videomode sync %i \n",var->sync);
+		dev_warn(&tegra_fb->ndev->dev, "initial fb_videomode vmode %i \n",var->vmode);
+//		dev_warn(&tegra_fb->ndev->dev, "initial fb_videomode flag %i \n",var->flag);
+*/
 		/* Load framebuffer info with new mode details*/
 		old_mode = info->mode;
 		old_len  = info->fix.line_length;
-
+/*
+                dev_warn(&tegra_fb->ndev->dev, "old_mode fb_videomode xres %i \n",old_mode->xres);
+              dev_warn(&tegra_fb->ndev->dev, "old_mode fb_videomode yres %i \n",old_mode->yres);
+                dev_warn(&tegra_fb->ndev->dev, "old_mode fb_videomode pixclock %i \n",old_mode->pixclock);
+                dev_warn(&tegra_fb->ndev->dev, "old_mode fb_videomode left_margin %i \n",old_mode->left_margin);
+                dev_warn(&tegra_fb->ndev->dev, "old_mode fb_videomode right_margin %i \n",old_mode->right_margin);
+                dev_warn(&tegra_fb->ndev->dev, "old_mode fb_videomode upper_margin %i \n",old_mode->upper_margin);
+                dev_warn(&tegra_fb->ndev->dev, "old_mode fb_videomode lower_margin %i \n",old_mode->lower_margin);
+                dev_warn(&tegra_fb->ndev->dev, "old_mode fb_videomode hsync_len %i \n",old_mode->hsync_len);
+                dev_warn(&tegra_fb->ndev->dev, "old_mode fb_videomode vsync_len %i \n",old_mode->vsync_len);
+                dev_warn(&tegra_fb->ndev->dev, "old_mode fb_videomode sync %i \n",old_mode->sync);
+                dev_warn(&tegra_fb->ndev->dev, "old_mode fb_videomode vmode %i \n",old_mode->vmode);
+*/
 		info->mode = (struct fb_videomode *)
 			fb_find_nearest_mode(&m, &info->modelist);
+
+/*
+                info->mode->refresh = 55;
+                info->mode->xres = 1920;
+                info->mode->yres = 1080;
+                info->mode->pixclock = 7915;
+                info->mode->left_margin = 32;
+                info->mode->right_margin = 64;
+                info->mode->upper_margin = 6;
+                info->mode->lower_margin = 9;
+                info->mode->hsync_len = 32;
+                info->mode->vsync_len = 6;
+                info->mode->sync = 3;
+                info->mode->vmode = 0;
+                info->mode->flag = 0;
+*/
+
+
 		if (!info->mode) {
 			dev_warn(&tegra_fb->ndev->dev, "can't match video mode\n");
 			info->mode = old_mode;

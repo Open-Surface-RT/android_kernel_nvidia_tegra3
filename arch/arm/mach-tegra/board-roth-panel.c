@@ -443,7 +443,7 @@ static int roth_dsi_panel_postsuspend(void)
 static struct tegra_dc_mode roth_dsi_modes[] = {
 	{
 
-		.pclk = 126166666,//136521000,//136519680,//136521000, //pixclock
+		.pclk = 147495530, //126166666,//136521000,//136519680,//136521000, //pixclock
 		      //136666666
 
 					//(h_active + h_sync_width + 32 + 64) * (v_active + v_sync_width + 3 + 22) * 56 / 1000
@@ -459,6 +459,19 @@ static struct tegra_dc_mode roth_dsi_modes[] = {
 		.h_front_porch = 64,	//right_margin
 		.v_front_porch = 9, 	//lower_margin
 /*
+
+        .pclk = 126166666,
+        .h_ref_to_sync = 4,
+        .v_ref_to_sync = 1,
+        .h_sync_width = 32,     //hsync_len
+        .v_sync_width = 6,     //vsync_len
+        .h_back_porch = 32,     //left_margin
+        .v_back_porch = 6,    //upper_margin
+        .h_active = 1920,     // xres
+        .v_active = 1080,     // yres
+        .h_front_porch = 64,    //right_margin
+        .v_front_porch = 9,     //lower_margin
+
 
 		.pclk = 148500000,
 		.h_ref_to_sync = 1,
@@ -620,7 +633,7 @@ static struct tegra_dc_out roth_disp2_out = {
 static struct tegra_fb_data roth_disp1_fb_data = {
 	.win		= 0,
 	.bits_per_pixel = 32,
-	//.flags		= TEGRA_FB_FLIP_ON_PROBE,
+	.flags		= TEGRA_FB_FLIP_ON_PROBE,
 	.xres		= 1920,
 	.yres		= 1080,
 };
@@ -637,8 +650,8 @@ static struct tegra_dc_platform_data roth_disp1_pdata = {
 
 static struct tegra_fb_data roth_disp2_fb_data = {
 	.win		= 0,
-	.xres		= 1024,
-	.yres		= 600,
+	.xres		= 1920,
+	.yres		= 1080,
 	.bits_per_pixel = 32,
 	.flags		= TEGRA_FB_FLIP_ON_PROBE,
 };
@@ -827,23 +840,33 @@ int __init roth_panel_init(int board_id)
 		return -EINVAL;
 	}
 
-	gpio_request(roth_hdmi_hpd, "hdmi_hpd");
-	gpio_direction_input(roth_hdmi_hpd);
+//	gpio_request(roth_hdmi_hpd, "hdmi_hpd");
+//	gpio_direction_input(roth_hdmi_hpd);
 	res = platform_get_resource_byname(&roth_disp1_device,
 					 IORESOURCE_MEM, "fbmem");
 	res->start = tegra_fb_start;
 	res->end = tegra_fb_start + tegra_fb_size - 1;
 
 	/* Copy the bootloader fb to the fb. */
-	__tegra_move_framebuffer(&roth_nvmap_device,
-		tegra_fb_start, tegra_bootloader_fb_start,
-			min(tegra_fb_size, tegra_bootloader_fb_size));
+//	__tegra_move_framebuffer(&roth_nvmap_device,
+//		tegra_fb_start, tegra_bootloader_fb_start,
+//			min(tegra_fb_size, tegra_bootloader_fb_size));
+
+
+	if (tegra_bootloader_fb_size)
+		__tegra_move_framebuffer(&roth_nvmap_device,
+				tegra_fb_start, tegra_bootloader_fb_start,
+				min(tegra_fb_size, tegra_bootloader_fb_size));
+	else
+		__tegra_clear_framebuffer(&roth_nvmap_device,
+					  tegra_fb_start, tegra_fb_size);
+
 
 	/*
 	 * only roth supports initialized mode.
 	 */
-	if (!board_id)
-		roth_disp1_out.flags |= TEGRA_DC_OUT_INITIALIZED_MODE;
+//	if (!board_id)
+//		roth_disp1_out.flags |= TEGRA_DC_OUT_INITIALIZED_MODE;
 
 	roth_disp1_device.dev.parent = &phost1x->dev;
 	err = platform_device_register(&roth_disp1_device);

@@ -37,7 +37,7 @@ static struct i2c_hid_platform_data i2c_hid_ts_platform_data = {
 
 static struct i2c_board_info i2c_hid_ts[] ={
 	{
-		I2C_BOARD_INFO("hid", 0x5B),
+		I2C_BOARD_INFO("hid", 0x4b),
 		.platform_data = &i2c_hid_ts_platform_data,
 		.irq = -1,
 	},
@@ -57,15 +57,17 @@ static struct i2c_board_info i2c_hid_tc[] ={
 
 void __init surface_rt_i2c_hid_init(void)
 {
-	gpio_request(TEGRA_GPIO_PK2, "touch-irq");
-	gpio_direction_input(TEGRA_GPIO_PK2);
-	i2c_hid_ts[0].irq = gpio_to_irq(TEGRA_GPIO_PK2);
+
+	gpio_request(TEGRA_GPIO_PO6, "touch-irq");
+	gpio_direction_input(TEGRA_GPIO_PO6);
+	i2c_hid_ts[0].irq = gpio_to_irq(TEGRA_GPIO_PO6);
 	i2c_register_board_info(1, i2c_hid_ts, 1);
-	
-	gpio_request(TEGRA_GPIO_PO5, "tcover-irq");
-	gpio_direction_input(TEGRA_GPIO_PO5);
-	i2c_hid_tc[0].irq = gpio_to_irq(TEGRA_GPIO_PO5);
+
+	gpio_request(TEGRA_GPIO_PC7, "tcover-irq");
+	gpio_direction_input(TEGRA_GPIO_PC7);
+	i2c_hid_tc[0].irq = gpio_to_irq(TEGRA_GPIO_PC7);
 	i2c_register_board_info(0, i2c_hid_tc, 1);
 	
 	/* HID SENSORS GO HERE TOO */
+
 }

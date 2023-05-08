@@ -467,19 +467,19 @@ static struct platform_device *roth_devices[] __initdata = {
 #if defined(CONFIG_CRYPTO_DEV_TEGRA_SE)
 	&tegra11_se_device,
 #endif
-	//&tegra_ahub_device,
-	//&tegra_dam_device0,
-	//&tegra_dam_device1,
-	//&tegra_dam_device2,
-	//&tegra_i2s_device1,
-	//&tegra_i2s_device3,
-	//&tegra_i2s_device4,
-	//&tegra_spdif_device,
-	//&spdif_dit_device,
-	//&bluetooth_dit_device,
-	//&tegra_pcm_device,
+	&tegra_ahub_device,
+	&tegra_dam_device0,
+	&tegra_dam_device1,
+	&tegra_dam_device2,
+	&tegra_i2s_device1,
+	&tegra_i2s_device3,
+	&tegra_i2s_device4,
+	&tegra_spdif_device,
+	&spdif_dit_device,
+	&bluetooth_dit_device,
+	&tegra_pcm_device,
 	//&roth_audio_device,
-	//&tegra_hda_device,
+	&tegra_hda_device,
 #if defined(CONFIG_CRYPTO_DEV_TEGRA_AES)
 	&tegra_aes_device,
 #endif
@@ -680,7 +680,7 @@ static void __init tegra_roth_init(void)
 	roth_sensors_init();
 	roth_soctherm_init();
 	//roth_fan_init();
-	//surface_rt_i2c_hid_init(); hang
+	surface_rt_i2c_hid_init();
 	tegra_register_fuse();
 }
 
