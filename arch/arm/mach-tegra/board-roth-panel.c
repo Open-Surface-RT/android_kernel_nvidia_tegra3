@@ -256,10 +256,18 @@ static struct tegra_dsi_out roth_dsi = {
 	.n_data_lanes = 4,
 	.controller_vs = DSI_VS_1,
 	.pixel_format = TEGRA_DSI_PIXEL_FORMAT_24BIT_P,
-	.refresh_rate = 56,
+	.refresh_rate = 60,
 	.virtual_channel = TEGRA_DSI_VIRTUAL_CHANNEL_0,
-
+	//.chip_id = 1000
+	//.chip_rev = 1
 	.dsi_instance = DSI_INSTANCE_0,
+//	.lp_cmd_mode_freq_khz
+//	.lp_read_cmd_mode_freq_khz
+//	.suspend_aggr
+//	.dsi_suspend_cmd
+//	.n_suspend_cmd
+//	.dsi_early_suspend_cmd
+//	.n_early_suspend_cmd
 
 	.panel_reset = DSI_PANEL_RESET,
 	.power_saving_suspend = true,
@@ -443,11 +451,24 @@ static int roth_dsi_panel_postsuspend(void)
 static struct tegra_dc_mode roth_dsi_modes[] = {
 	{
 
-		.pclk = 147495530, //126166666,//136521000,//136519680,//136521000, //pixclock
-		      //136666666
 
-					//(h_active + h_sync_width + 32 + 64) * (v_active + v_sync_width + 3 + 22) * 56 / 1000
-					//(1920 + 32 + 32 + 64) * (1080 + 6 + 3 + 22) * 60 / 1000
+		.pclk = 148500000,//(1920 + 32 + 32 + 64) * (1080 + 6 + 3 + 22) * 60 / 1000, 
+			//148500000,//147495530, //126166666,//136521000,//136519680,//136521000,//136666666
+		.h_ref_to_sync = 4,
+		.v_ref_to_sync = 1,
+		.h_sync_width = 32, 	//hsync_len
+		.v_sync_width = 3, 	//vsync_len
+		.h_back_porch = 32, 	//left_margin
+		.v_back_porch = 22,	//upper_margin
+		.h_active = 1920, 	// xres
+		.v_active = 1080, 	// yres
+		.h_front_porch = 6,	//right_margin
+		.v_front_porch = 9, 	//lower_margin
+
+/*
+
+		.pclk = 148500000,//147495530, //126166666,//136521000,//136519680,//136521000, //pixclock
+		      //136666666
 		.h_ref_to_sync = 4,
 		.v_ref_to_sync = 1,
 		.h_sync_width = 32, 	//hsync_len
@@ -458,7 +479,22 @@ static struct tegra_dc_mode roth_dsi_modes[] = {
 		.v_active = 1080, 	// yres
 		.h_front_porch = 64,	//right_margin
 		.v_front_porch = 9, 	//lower_margin
-/*
+
+
+	.clock = (1920 + 32 + 32 + 64) * (1080 + 6 + 3 + 22) * 60 / 1000,
+	.hdisplay = 1920,
+	.hsync_start = 1920 + 32,
+	.hsync_end = 1920 + 32 + 32,
+	.htotal = 1920 + 32 + 32 + 64,
+	.vdisplay = 1080,
+	.vsync_start = 1080 + 6,
+	.vsync_end = 1080 + 6 + 3,
+	.vtotal = 1080 + 6 + 3 + 22,
+	.width_mm = 235,
+	.height_mm = 132,
+
+
+
 
         .pclk = 126166666,
         .h_ref_to_sync = 4,

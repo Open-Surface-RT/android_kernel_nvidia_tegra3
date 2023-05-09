@@ -370,7 +370,7 @@ int tegra_dc_update_windows(struct tegra_dc_win *windows[], int n)
 		scan_column = (win->flags & TEGRA_WIN_FLAG_SCAN_COLUMN);
 #endif
 
-#ifdef CONFIG_MACH_GROUPER
+#ifdef CONFIG_MACH_GROUPER // flip the display horizontally UEFI HACK
 		if (win->dc->ndev->id == 0) {
 			invert_h = !invert_h;
 			invert_v = !invert_v;

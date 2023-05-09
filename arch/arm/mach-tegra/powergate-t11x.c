@@ -433,7 +433,7 @@ int tegra11x_powergate_mc_flush(int id)
 			udelay(10);
 			rst_stat = 0;
 			ret = tegra11x_stable_hotreset_check(&rst_stat);
-			pr_info("MC_CLIENT_HOTRESET_STAT tegra3_powergate_mc_flush int: %d  - idx:%x :rst_stat =  %x : rst_ctrl = %x : mcClientBit = %d \n",id,idx,rst_stat,rst_ctrl,mcClientBit);
+//			pr_info("MC_CLIENT_HOTRESET_STAT tegra3_powergate_mc_flush int: %d  - idx:%x :rst_stat =  %x : rst_ctrl = %x : mcClientBit = %d \n",id,idx,rst_stat,rst_ctrl,mcClientBit);
 
 			if (!ret)
 				continue;

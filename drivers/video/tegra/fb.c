@@ -99,6 +99,7 @@ static int tegra_fb_set_par(struct fb_info *info)
 	struct fb_var_screeninfo *var = &info->var;
 	struct tegra_dc *dc = tegra_fb->win->dc;
 
+
 	if (var->bits_per_pixel) {
 		/* we only support RGB ordering for now */
 		switch (var->bits_per_pixel) {
@@ -126,6 +127,7 @@ static int tegra_fb_set_par(struct fb_info *info)
 		default:
 			return -EINVAL;
 		}
+
 		/* if line_length unset, then pad the stride */
 		if (!info->fix.line_length) {
 			info->fix.line_length = var->xres * var->bits_per_pixel
@@ -137,8 +139,12 @@ static int tegra_fb_set_par(struct fb_info *info)
 		tegra_fb->win->stride_uv = 0;
 		tegra_fb->win->phys_addr_u = 0;
 		tegra_fb->win->phys_addr_v = 0;
-	}
 
+	}
+		//HACK FOR SURFACE 2 PANEL & HDMI SIMULTANEOUS
+		// WILL NEED A HACK TO GET TWRP WORKING AGAIN
+		// AS ONLY AOSP NEEDS THIS HACK
+		if(dc->out->type != TEGRA_DC_OUT_HDMI) return 0;
 
 	if (var->pixclock) {
 		bool stereo;
@@ -147,55 +153,11 @@ static int tegra_fb_set_par(struct fb_info *info)
 		struct fb_videomode *old_mode = NULL;
 
 		fb_var_to_videomode(&m, var);
-/*
-//		dev_warn(&tegra_fb->ndev->dev, "initial fb_videomode refresh %i \n",var->refresh);
-		dev_warn(&tegra_fb->ndev->dev, "initial fb_videomode xres %i \n",var->xres);
-		dev_warn(&tegra_fb->ndev->dev, "initial fb_videomode yres %i \n",var->yres);
-		dev_warn(&tegra_fb->ndev->dev, "initial fb_videomode pixclock %i \n",var->pixclock);
-		dev_warn(&tegra_fb->ndev->dev, "initial fb_videomode left_margin %i \n",var->left_margin);
-		dev_warn(&tegra_fb->ndev->dev, "initial fb_videomode right_margin %i \n",var->right_margin);
-		dev_warn(&tegra_fb->ndev->dev, "initial fb_videomode upper_margin %i \n",var->upper_margin);
-		dev_warn(&tegra_fb->ndev->dev, "initial fb_videomode lower_margin %i \n",var->lower_margin);
-		dev_warn(&tegra_fb->ndev->dev, "initial fb_videomode hsync_len %i \n",var->hsync_len);
-		dev_warn(&tegra_fb->ndev->dev, "initial fb_videomode vsync_len %i \n",var->vsync_len);
-		dev_warn(&tegra_fb->ndev->dev, "initial fb_videomode sync %i \n",var->sync);
-		dev_warn(&tegra_fb->ndev->dev, "initial fb_videomode vmode %i \n",var->vmode);
-//		dev_warn(&tegra_fb->ndev->dev, "initial fb_videomode flag %i \n",var->flag);
-*/
 		/* Load framebuffer info with new mode details*/
 		old_mode = info->mode;
 		old_len  = info->fix.line_length;
-/*
-                dev_warn(&tegra_fb->ndev->dev, "old_mode fb_videomode xres %i \n",old_mode->xres);
-              dev_warn(&tegra_fb->ndev->dev, "old_mode fb_videomode yres %i \n",old_mode->yres);
-                dev_warn(&tegra_fb->ndev->dev, "old_mode fb_videomode pixclock %i \n",old_mode->pixclock);
-                dev_warn(&tegra_fb->ndev->dev, "old_mode fb_videomode left_margin %i \n",old_mode->left_margin);
-                dev_warn(&tegra_fb->ndev->dev, "old_mode fb_videomode right_margin %i \n",old_mode->right_margin);
-                dev_warn(&tegra_fb->ndev->dev, "old_mode fb_videomode upper_margin %i \n",old_mode->upper_margin);
-                dev_warn(&tegra_fb->ndev->dev, "old_mode fb_videomode lower_margin %i \n",old_mode->lower_margin);
-                dev_warn(&tegra_fb->ndev->dev, "old_mode fb_videomode hsync_len %i \n",old_mode->hsync_len);
-                dev_warn(&tegra_fb->ndev->dev, "old_mode fb_videomode vsync_len %i \n",old_mode->vsync_len);
-                dev_warn(&tegra_fb->ndev->dev, "old_mode fb_videomode sync %i \n",old_mode->sync);
-                dev_warn(&tegra_fb->ndev->dev, "old_mode fb_videomode vmode %i \n",old_mode->vmode);
-*/
 		info->mode = (struct fb_videomode *)
 			fb_find_nearest_mode(&m, &info->modelist);
-
-/*
-                info->mode->refresh = 55;
-                info->mode->xres = 1920;
-                info->mode->yres = 1080;
-                info->mode->pixclock = 7915;
-                info->mode->left_margin = 32;
-                info->mode->right_margin = 64;
-                info->mode->upper_margin = 6;
-                info->mode->lower_margin = 9;
-                info->mode->hsync_len = 32;
-                info->mode->vsync_len = 6;
-                info->mode->sync = 3;
-                info->mode->vmode = 0;
-                info->mode->flag = 0;
-*/
 
 
 		if (!info->mode) {
@@ -676,6 +638,8 @@ struct tegra_fb_info *tegra_fb_register(struct platform_device *ndev,
 
 	INIT_LIST_HEAD(&info->modelist);
 	/* pick first mode as the default for initialization */
+	dev_info(&ndev->dev, "fb initialization\n");
+
 	tegra_dc_to_fb_videomode(&m, &dc->mode);
 	fb_videomode_to_var(&info->var, &m);
 	info->var.xres_virtual		= fb_data->xres;
