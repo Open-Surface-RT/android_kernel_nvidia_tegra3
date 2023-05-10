@@ -231,7 +231,7 @@ static int roth_nct1008_init(void)
 	}
 
 	/* roth has thermal sensor on GEN1-I2C i.e. instance 0 */
-	i2c_register_board_info(0, roth_i2c4_nct1008_board_info,
+	i2c_register_board_info(2, roth_i2c4_nct1008_board_info,
 		ARRAY_SIZE(roth_i2c4_nct1008_board_info));
 
 	return ret;
