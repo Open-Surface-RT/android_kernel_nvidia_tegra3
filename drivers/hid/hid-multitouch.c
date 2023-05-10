@@ -769,9 +769,14 @@ static void mt_remove(struct hid_device *hdev)
 
 static const struct hid_device_id mt_devices[] = {
 
+	/* Surface 2 mxt1664s */
 	{ .driver_data = MT_CLS_DEFAULT,
-		HID_DEVICE(BUS_I2C, USB_VENDOR_ID_ATMEL, 0x212C) },
+		HID_DEVICE(BUS_I2C, USB_VENDOR_ID_ATMEL, 0x843C) },
 
+/*	 match all ID's
+	{ .driver_data = MT_CLS_DEFAULT,
+		HID_DEVICE(BUS_I2C, USB_VENDOR_ID_ATMEL, HID_ANY_ID) },
+*/
 	/* 3M panels */
 	{ .driver_data = MT_CLS_3M,
 		HID_USB_DEVICE(USB_VENDOR_ID_3M,
