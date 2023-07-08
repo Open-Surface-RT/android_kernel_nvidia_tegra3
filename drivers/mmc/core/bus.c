@@ -292,6 +292,12 @@ int mmc_add_card(struct mmc_card *card)
 	};
 
 
+//        struct sdio_cis *cis = &card->cis;
+//	unsigned short *vid = &cis->vendor;
+//	unsigned short *did = &cis->device;
+
+
+
 	dev_set_name(&card->dev, "%s:%04x", mmc_hostname(card->host), card->rca);
 
 	switch (card->type) {

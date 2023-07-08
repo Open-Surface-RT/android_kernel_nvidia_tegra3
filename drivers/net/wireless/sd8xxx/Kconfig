@@ -1,0 +1,17 @@
+config SD8797_AOSP
+	tristate "Marvell WiFi-Ex Driver for Android SD8797"
+	depends on CFG80211
+	select LIB80211
+	---help---
+	  Help Marvell WiFi-Ex Driver for Android SD8797 wlan.ko
+
+config SD8797_AOSP_SDIO
+	tristate "Marvell WiFi-Ex Driver for Android SD8797_SDIO"
+	depends on SD8797_AOSP && MMC
+	select FW_LOADER
+	---help---
+	  This adds support for wireless adapters based on Marvell
+	  8787/8797 chipsets with SDIO interface.
+
+	  If you choose to build it as a module, it will be called
+	  sd8xxx.ko

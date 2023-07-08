@@ -40,9 +40,7 @@ static struct tegra30_ahub *ahub;
 
 static inline void tegra30_apbif_write(u32 reg, u32 val)
 {
-#ifdef CONFIG_PM
-	ahub->apbif_reg_cache[reg >> 2] = val;
-#endif
+
 	__raw_writel(val, ahub->apbif_regs + reg);
 }
 
@@ -53,9 +51,7 @@ static inline u32 tegra30_apbif_read(u32 reg)
 
 static inline void tegra30_audio_write(u32 reg, u32 val)
 {
-#ifdef CONFIG_PM
-	ahub->ahub_reg_cache[reg >> 2] = val;
-#endif
+
 	__raw_writel(val, ahub->audio_regs + reg);
 }
 
@@ -64,35 +60,7 @@ static inline u32 tegra30_audio_read(u32 reg)
 	return __raw_readl(ahub->audio_regs + reg);
 }
 
-#ifdef CONFIG_PM
-int tegra30_ahub_apbif_resume()
-{
-	int i = 0;
-	int cache_idx_rsvd;
 
-	tegra30_ahub_enable_clocks();
-
-	/*restore ahub regs*/
-	for (i = 0; i < TEGRA30_AHUB_AUDIO_RX_COUNT; i++)
-		tegra30_audio_write(i<<2, ahub->ahub_reg_cache[i]);
-
-	/*restore apbif regs*/
-	cache_idx_rsvd = TEGRA30_APBIF_CACHE_REG_INDEX_RSVD;
-	for (i = 0; i < TEGRA30_APBIF_CACHE_REG_COUNT; i++) {
-		if (i == cache_idx_rsvd) {
-			cache_idx_rsvd +=
-				TEGRA30_APBIF_CACHE_REG_INDEX_RSVD_STRIDE;
-			continue;
-		}
-
-		tegra30_apbif_write(i<<2, ahub->apbif_reg_cache[i]);
-	}
-
-	tegra30_ahub_disable_clocks();
-
-	return 0;
-}
-#endif
 
 /*
  * clk_apbif isn't required for a theoretical I2S<->I2S configuration where
@@ -276,7 +244,7 @@ int tegra30_ahub_allocate_rx_fifo(enum tegra30_ahub_rxcif *rxcif,
 
 	return 0;
 }
-
+EXPORT_SYMBOL(tegra30_ahub_allocate_rx_fifo);
 int tegra30_ahub_rx_fifo_is_enabled(int i2s_id)
 {
 	int val, mask;
@@ -286,7 +254,7 @@ int tegra30_ahub_rx_fifo_is_enabled(int i2s_id)
 	val &= mask;
 	return val;
 }
-
+EXPORT_SYMBOL(tegra30_ahub_rx_fifo_is_enabled);
 int tegra30_ahub_tx_fifo_is_enabled(int i2s_id)
 {
 	int val, mask;
@@ -297,8 +265,7 @@ int tegra30_ahub_tx_fifo_is_enabled(int i2s_id)
 
 	return val;
 }
-
-
+EXPORT_SYMBOL(tegra30_ahub_tx_fifo_is_enabled);
 int tegra30_ahub_rx_fifo_is_empty(int i2s_id)
 {
 	int val, mask;
@@ -308,7 +275,7 @@ int tegra30_ahub_rx_fifo_is_empty(int i2s_id)
 	val &= mask;
 	return val;
 }
-
+EXPORT_SYMBOL(tegra30_ahub_rx_fifo_is_empty);
 int tegra30_ahub_tx_fifo_is_empty(int i2s_id)
 {
 	int val, mask;
@@ -320,7 +287,7 @@ int tegra30_ahub_tx_fifo_is_empty(int i2s_id)
 	return val;
 }
 
-
+EXPORT_SYMBOL(tegra30_ahub_tx_fifo_is_empty);
 int tegra30_ahub_dam_ch0_is_enabled(int dam_id)
 {
 	int val, mask;
@@ -332,7 +299,7 @@ int tegra30_ahub_dam_ch0_is_enabled(int dam_id)
 
 	return val;
 }
-
+EXPORT_SYMBOL(tegra30_ahub_dam_ch0_is_enabled);
 int tegra30_ahub_dam_ch1_is_enabled(int dam_id)
 {
 	int val, mask;
@@ -344,7 +311,7 @@ int tegra30_ahub_dam_ch1_is_enabled(int dam_id)
 
 	return val;
 }
-
+EXPORT_SYMBOL(tegra30_ahub_dam_ch1_is_enabled);
 int tegra30_ahub_dam_tx_is_enabled(int dam_id)
 {
 	int val, mask;
@@ -356,7 +323,7 @@ int tegra30_ahub_dam_tx_is_enabled(int dam_id)
 
 	return val;
 }
-
+EXPORT_SYMBOL(tegra30_ahub_dam_tx_is_enabled);
 
 int tegra30_ahub_dam_ch0_is_empty(int dam_id)
 {
@@ -369,7 +336,7 @@ int tegra30_ahub_dam_ch0_is_empty(int dam_id)
 
 	return val;
 }
-
+EXPORT_SYMBOL(tegra30_ahub_dam_ch0_is_empty);
 int tegra30_ahub_dam_ch1_is_empty(int dam_id)
 {
 	int val, mask;
@@ -381,7 +348,7 @@ int tegra30_ahub_dam_ch1_is_empty(int dam_id)
 
 	return val;
 }
-
+EXPORT_SYMBOL(tegra30_ahub_dam_ch1_is_empty);
 int tegra30_ahub_dam_tx_is_empty(int dam_id)
 {
 	int val, mask;
@@ -393,7 +360,7 @@ int tegra30_ahub_dam_tx_is_empty(int dam_id)
 
 	return val;
 }
-
+EXPORT_SYMBOL(tegra30_ahub_dam_tx_is_empty);
 
 int tegra30_ahub_set_rx_fifo_pack_mode(enum tegra30_ahub_rxcif rxcif,
 							unsigned int pack_mode)
@@ -418,7 +385,7 @@ int tegra30_ahub_set_rx_fifo_pack_mode(enum tegra30_ahub_rxcif rxcif,
 
 	return 0;
 }
-
+EXPORT_SYMBOL(tegra30_ahub_set_rx_fifo_pack_mode);
 int tegra30_ahub_set_tx_fifo_pack_mode(enum tegra30_ahub_txcif txcif,
 							unsigned int pack_mode)
 {
@@ -442,6 +409,7 @@ int tegra30_ahub_set_tx_fifo_pack_mode(enum tegra30_ahub_txcif txcif,
 
 	return 0;
 }
+EXPORT_SYMBOL(tegra30_ahub_set_tx_fifo_pack_mode);
 
 int tegra30_ahub_enable_rx_fifo(enum tegra30_ahub_rxcif rxcif)
 {
@@ -459,6 +427,8 @@ int tegra30_ahub_enable_rx_fifo(enum tegra30_ahub_rxcif rxcif)
 	return 0;
 }
 
+EXPORT_SYMBOL(tegra30_ahub_enable_rx_fifo);
+
 int tegra30_ahub_disable_rx_fifo(enum tegra30_ahub_rxcif rxcif)
 {
 	int channel = rxcif - TEGRA30_AHUB_RXCIF_APBIF_RX0;
@@ -475,6 +445,7 @@ int tegra30_ahub_disable_rx_fifo(enum tegra30_ahub_rxcif rxcif)
 	return 0;
 }
 
+EXPORT_SYMBOL(tegra30_ahub_disable_rx_fifo);
 int tegra30_ahub_free_rx_fifo(enum tegra30_ahub_rxcif rxcif)
 {
 	int channel = rxcif - TEGRA30_AHUB_RXCIF_APBIF_RX0;
@@ -566,6 +537,7 @@ int tegra30_ahub_free_tx_fifo(enum tegra30_ahub_txcif txcif)
 	return 0;
 }
 
+EXPORT_SYMBOL(tegra30_ahub_free_tx_fifo);
 int tegra30_ahub_set_rx_cif_source(enum tegra30_ahub_rxcif rxcif,
 				   enum tegra30_ahub_txcif txcif)
 {
@@ -582,6 +554,8 @@ int tegra30_ahub_set_rx_cif_source(enum tegra30_ahub_rxcif rxcif,
 
 	return 0;
 }
+
+EXPORT_SYMBOL(tegra30_ahub_set_rx_cif_source);
 
 int tegra30_ahub_unset_rx_cif_source(enum tegra30_ahub_rxcif rxcif)
 {
@@ -698,13 +672,13 @@ static int __devinit tegra30_ahub_probe(struct platform_device *pdev)
 {
 	struct resource *res0, *res1, *region;
 	int ret = 0;
-#ifdef CONFIG_PM
-	int i = 0, cache_idx_rsvd;
-#endif
+
 	int clkm_rate;
 
 	if (ahub)
 		return -ENODEV;
+
+dev_err(&pdev->dev, "---DEBUG--- 1\n");
 
 	ahub = kzalloc(sizeof(struct tegra30_ahub), GFP_KERNEL);
 	if (!ahub) {
@@ -712,29 +686,34 @@ static int __devinit tegra30_ahub_probe(struct platform_device *pdev)
 		ret = -ENOMEM;
 		goto exit;
 	}
+dev_err(&pdev->dev, "---DEBUG--- 2\n");
 	ahub->dev = &pdev->dev;
-
+dev_err(&pdev->dev, "---DEBUG--- 2\n");
 	ahub->clk_d_audio = clk_get(&pdev->dev, "d_audio");
+dev_err(&pdev->dev, "---DEBUG--- 3\n");
 	if (IS_ERR(ahub->clk_d_audio)) {
 		dev_err(&pdev->dev, "Can't retrieve ahub d_audio clock\n");
 		ret = PTR_ERR(ahub->clk_d_audio);
 		goto err_free;
 	}
+dev_err(&pdev->dev, "---DEBUG--- 5\n");
 	clkm_rate = clk_get_rate(clk_get_parent(ahub->clk_d_audio));
-
+dev_err(&pdev->dev, "---DEBUG--- 6\n");
 	while (clkm_rate > 13000000)
 		clkm_rate >>= 1;
-
+dev_err(&pdev->dev, "---DEBUG--- 7\n");
 	clk_set_rate(ahub->clk_d_audio,clkm_rate);
-
+dev_err(&pdev->dev, "---DEBUG--- 8\n");
 	ahub->clk_apbif = clk_get(&pdev->dev, "apbif");
+dev_err(&pdev->dev, "---DEBUG--- 9\n");
 	if (IS_ERR(ahub->clk_apbif)) {
 		dev_err(&pdev->dev, "Can't retrieve ahub apbif clock\n");
 		ret = PTR_ERR(ahub->clk_apbif);
 		goto err_clk_put_d_audio;
 	}
-
+dev_err(&pdev->dev, "---DEBUG--- 10\n");
 	res0 = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+dev_err(&pdev->dev, "---DEBUG--- 11\n");
 	if (!res0) {
 		dev_err(&pdev->dev, "No memory 0 resource\n");
 		ret = -ENODEV;
@@ -743,6 +722,7 @@ static int __devinit tegra30_ahub_probe(struct platform_device *pdev)
 
 	region = request_mem_region(res0->start, resource_size(res0),
 				    pdev->name);
+dev_err(&pdev->dev, "---DEBUG--- 12\n");
 	if (!region) {
 		dev_err(&pdev->dev, "Memory region 0 already claimed\n");
 		ret = -EBUSY;
@@ -750,6 +730,7 @@ static int __devinit tegra30_ahub_probe(struct platform_device *pdev)
 	}
 
 	ahub->apbif_regs = ioremap(res0->start, resource_size(res0));
+dev_err(&pdev->dev, "---DEBUG--- 13\n");
 	if (!ahub->apbif_regs) {
 		dev_err(&pdev->dev, "ioremap 0 failed\n");
 		ret = -ENOMEM;
@@ -757,14 +738,14 @@ static int __devinit tegra30_ahub_probe(struct platform_device *pdev)
 	}
 
 	ahub->apbif_addr = res0->start;
-
+dev_err(&pdev->dev, "---DEBUG--- 14\n");
 	res1 = platform_get_resource(pdev, IORESOURCE_MEM, 1);
 	if (!res1) {
 		dev_err(&pdev->dev, "No memory 1 resource\n");
 		ret = -ENODEV;
 		goto err_unmap0;
 	}
-
+dev_err(&pdev->dev, "---DEBUG--- 15\n");
 	region = request_mem_region(res1->start, resource_size(res1),
 				    pdev->name);
 	if (!region) {
@@ -772,55 +753,43 @@ static int __devinit tegra30_ahub_probe(struct platform_device *pdev)
 		ret = -EBUSY;
 		goto err_unmap0;
 	}
-
+dev_err(&pdev->dev, "---DEBUG--- 16\n");
 	ahub->audio_regs = ioremap(res1->start, resource_size(res1));
 	if (!ahub->audio_regs) {
 		dev_err(&pdev->dev, "ioremap 1 failed\n");
 		ret = -ENOMEM;
 		goto err_release1;
 	}
+dev_err(&pdev->dev, "---DEBUG--- 17\n");
 
-#ifdef CONFIG_PM
-	/* cache the POR values of ahub/apbif regs*/
-	tegra30_ahub_enable_clocks();
-
-	for (i = 0; i < TEGRA30_AHUB_AUDIO_RX_COUNT; i++)
-		ahub->ahub_reg_cache[i] = tegra30_audio_read(i<<2);
-
-	cache_idx_rsvd = TEGRA30_APBIF_CACHE_REG_INDEX_RSVD;
-	for (i = 0; i < TEGRA30_APBIF_CACHE_REG_COUNT; i++) {
-		if (i == cache_idx_rsvd) {
-			cache_idx_rsvd +=
-				TEGRA30_APBIF_CACHE_REG_INDEX_RSVD_STRIDE;
-			continue;
-		}
-
-		ahub->apbif_reg_cache[i] = tegra30_apbif_read(i<<2);
-	}
-
-	tegra30_ahub_disable_clocks();
-#endif
-
+dev_err(&pdev->dev, "---DEBUG--- 22\n");
 	tegra30_ahub_debug_add(ahub);
-
+dev_err(&pdev->dev, "---DEBUG--- 23\n");
 	platform_set_drvdata(pdev, ahub);
 
 	return 0;
 
 err_release1:
+dev_err(&pdev->dev, "---DEBUG--- 24\n");
 	release_mem_region(res1->start, resource_size(res1));
 err_unmap0:
+dev_err(&pdev->dev, "---DEBUG--- 25\n");
 	iounmap(ahub->apbif_regs);
 err_release0:
+dev_err(&pdev->dev, "---DEBUG--- 26\n");
 	release_mem_region(res0->start, resource_size(res0));
 err_clk_put_apbif:
+dev_err(&pdev->dev, "---DEBUG--- 27\n");
 	clk_put(ahub->clk_apbif);
 err_clk_put_d_audio:
+dev_err(&pdev->dev, "---DEBUG--- 28\n");
 	clk_put(ahub->clk_d_audio);
 err_free:
+dev_err(&pdev->dev, "---DEBUG--- 29\n");
 	kfree(ahub);
 	ahub = 0;
 exit:
+dev_err(&pdev->dev, "---DEBUG--- 30\n");
 	return ret;
 }
 
@@ -872,6 +841,23 @@ static void __exit tegra30_ahub_modexit(void)
 {
 	platform_driver_unregister(&tegra30_ahub_driver);
 }
+
+
+EXPORT_SYMBOL(tegra30_ahub_free_rx_fifo);
+EXPORT_SYMBOL(tegra30_ahub_set_tx_cif_bits);
+EXPORT_SYMBOL(tegra30_ahub_enable_clocks);
+EXPORT_SYMBOL(tegra30_ahub_allocate_tx_fifo);
+EXPORT_SYMBOL(tegra30_ahub_set_rx_cif_channels);
+EXPORT_SYMBOL(tegra30_ahub_unset_rx_cif_source);
+EXPORT_SYMBOL(tegra30_ahub_set_tx_cif_channels);
+EXPORT_SYMBOL(tegra30_ahub_set_rx_cif_bits);
+//EXPORT_SYMBOL(tegra30_ahub_apbif_resume);
+EXPORT_SYMBOL(tegra30_ahub_disable_clocks);
+EXPORT_SYMBOL(tegra30_ahub_clock_set_rate);
+EXPORT_SYMBOL(tegra30_ahub_disable_tx_fifo);
+EXPORT_SYMBOL(tegra30_ahub_enable_tx_fifo);
+
+
 module_exit(tegra30_ahub_modexit);
 
 MODULE_AUTHOR("Stephen Warren <swarren@nvidia.com>");

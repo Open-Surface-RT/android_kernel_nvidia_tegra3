@@ -46,7 +46,7 @@
 #ifdef __ASSEMBLY__
 #define IOMEM(x)	(x)
 #else
-#define IOMEM(x)	((void __force __iomem *)(x))
+//#define IOMEM(x)	((void __force __iomem *)(x))
 #endif
 
 #ifdef CONFIG_ARM_LPAE

@@ -34,3 +34,4 @@ hci_uart-objs				:= $(hci_uart-y)
 
 obj-$(CONFIG_SD8897) += sd8897/
 obj-$(CONFIG_SD8797) += sd8797/
+obj-$(CONFIG_MBT_SD_CHAR)       += mbtc/

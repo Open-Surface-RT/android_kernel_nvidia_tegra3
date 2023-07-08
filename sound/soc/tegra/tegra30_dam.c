@@ -322,9 +322,7 @@ static void tegra30_dam_ch0_set_step(struct tegra30_dam_context *dam, int step);
 static inline void tegra30_dam_writel(struct tegra30_dam_context *dam,
 			u32 val, u32 reg)
 {
-#ifdef CONFIG_PM
-	dam->reg_cache[reg >> 2] = val;
-#endif
+
 	__raw_writel(val, dam->damregs + reg);
 }
 
@@ -335,35 +333,7 @@ static inline u32 tegra30_dam_readl(struct tegra30_dam_context *dam, u32 reg)
 	return val;
 }
 
-#ifdef CONFIG_PM
-int tegra30_dam_resume(int ifc)
-{
-	int i = 0;
-	struct tegra30_dam_context *dam;
 
-	if ((ifc < 0) || (ifc >= TEGRA30_NR_DAM_IFC))
-		return -EINVAL;
-
-	dam = dams_cont_info[ifc];
-
-	if (dam->in_use) {
-		tegra30_dam_enable_clock(ifc);
-
-		for (i = 0; i <= TEGRA30_DAM_CTRL_REGINDEX; i++) {
-			if ((i == TEGRA30_DAM_CTRL_RSVD_6) ||
-				(i == TEGRA30_DAM_CTRL_RSVD_10))
-				continue;
-
-			tegra30_dam_writel(dam, dam->reg_cache[i],
-						(i << 2));
-		}
-
-		tegra30_dam_disable_clock(ifc);
-	}
-
-	return 0;
-}
-#endif
 
 void tegra30_dam_disable_clock(int ifc)
 {
@@ -1025,9 +995,7 @@ static int __devinit tegra30_dam_probe(struct platform_device *pdev)
 	struct resource *res,  *region;
 	struct tegra30_dam_context *dam;
 	int ret = 0;
-#ifdef CONFIG_PM
-	int i;
-#endif
+
 	int clkm_rate;
 
 	if ((pdev->id < 0) ||
@@ -1080,21 +1048,7 @@ static int __devinit tegra30_dam_probe(struct platform_device *pdev)
 		goto err_clk_put_dam;
 	}
 
-#ifdef CONFIG_PM
-	/* cache the POR values of DAM regs*/
-	tegra30_dam_enable_clock(pdev->id);
 
-	for (i = 0; i <= TEGRA30_DAM_CTRL_REGINDEX; i++) {
-		if ((i == TEGRA30_DAM_CTRL_RSVD_6) ||
-			(i == TEGRA30_DAM_CTRL_RSVD_10))
-			continue;
-
-			dam->reg_cache[i] =
-				tegra30_dam_readl(dam, i << 2);
-	}
-
-	tegra30_dam_disable_clock(pdev->id);
-#endif
 
 	platform_set_drvdata(pdev, dam);
 
@@ -1141,6 +1095,26 @@ static void __exit tegra30_dam_modexit(void)
 {
 	platform_driver_unregister(&tegra30_dam_driver);
 }
+
+
+EXPORT_SYMBOL(tegra30_dam_set_biquad_fixed_coef);
+EXPORT_SYMBOL(tegra30_dam_set_gain);
+EXPORT_SYMBOL(tegra30_dam_enable_clock);
+EXPORT_SYMBOL(tegra30_dam_allocate_controller);
+EXPORT_SYMBOL(tegra30_dam_set_acif);
+EXPORT_SYMBOL(tegra30_dam_set_filter_stages);
+EXPORT_SYMBOL(tegra30_dam_disable_clock);
+EXPORT_SYMBOL(tegra30_dam_enable_stereo_mixing);
+EXPORT_SYMBOL(tegra30_dam_allocate_channel);
+EXPORT_SYMBOL(tegra30_dam_write_coeff_ram);
+EXPORT_SYMBOL(tegra30_dam_enable_coeff_ram);
+EXPORT_SYMBOL(tegra30_dam_free_channel);
+EXPORT_SYMBOL(tegra30_dam_enable);
+//EXPORT_SYMBOL(tegra30_dam_resume);
+EXPORT_SYMBOL(tegra30_dam_free_controller);
+EXPORT_SYMBOL(tegra30_dam_set_samplerate);
+EXPORT_SYMBOL(tegra30_dam_set_farrow_param);
+
 module_exit(tegra30_dam_modexit);
 
 MODULE_AUTHOR("Nikesh Oswal <noswal@nvidia.com>");

@@ -1,0 +1,13 @@
+# Aliases extracted from modules themselves.
+alias sdio:c*v02DFd9129* sd8xxx
+alias sdio:c*v02DFd9131* sd8xxx
+alias devname:snd/timer snd_timer
+alias char-major-116-33 snd_timer
+alias platform:soc-audio snd_soc_core
+alias i2c:wm8962 snd_soc_wm8962
+alias platform:tegra-pcm-audio snd_soc_tegra_pcm
+alias platform:tegra-tdm-pcm-audio snd_soc_tegra_tdm_pcm
+alias platform:tegra30-ahub snd_soc_tegra30_ahub
+alias platform:tegra30-dam snd_soc_tegra30_dam
+alias platform:tegra30-i2s snd_soc_tegra30_i2s
+alias platform:tegra-snd-wm8962 tegra_wm8962

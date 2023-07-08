@@ -233,6 +233,14 @@ config TEGRA_HDMI_74MHZ_LIMIT
 	  Say Y here to make kernel report only low bandwidth modes.
 	  Useful only for boards which can't deliver 148.50 MHz.
 
+config S2_PANEL_BYPASS
+        bool "Enable support for the Surface 2 Panel"
+        depends on ARCH_TEGRA
+        default n
+        help
+          Enables support for the Surface 2 Panel
+          If unsure, say N
+
 endif
 
 config TEGRA_CAMERA
@@ -241,5 +249,4 @@ config TEGRA_CAMERA
 	default y
 	help
 	  Enables support for the Tegra camera interface
-
 	  If unsure, say Y

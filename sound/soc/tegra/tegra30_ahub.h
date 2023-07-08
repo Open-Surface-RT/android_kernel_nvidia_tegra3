@@ -461,6 +461,7 @@ enum tegra30_ahub_rxcif {
 	TEGRA30_AHUB_RXCIF_DAM2_RX1,
 	TEGRA30_AHUB_RXCIF_SPDIF_RX0,
 	TEGRA30_AHUB_RXCIF_SPDIF_RX1,
+	//TEGRA30_AHUB_AUDIO_RX_COUNT,
 };
 
 extern void tegra30_ahub_enable_clocks(void);
@@ -528,8 +529,8 @@ struct tegra30_ahub {
 	DECLARE_BITMAP(tx_usage, TEGRA30_AHUB_CHANNEL_CTRL_COUNT);
 	struct dentry *debug;
 #ifdef CONFIG_PM
-	u32 ahub_reg_cache[TEGRA30_AHUB_AUDIO_RX_COUNT];
-	u32 apbif_reg_cache[TEGRA30_APBIF_CACHE_REG_COUNT];
+//	u32 ahub_reg_cache[TEGRA30_AHUB_AUDIO_RX_COUNT];
+//	u32 apbif_reg_cache[TEGRA30_APBIF_CACHE_REG_COUNT];
 #endif
 };
 

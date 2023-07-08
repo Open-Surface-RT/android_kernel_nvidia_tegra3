@@ -1,0 +1,15 @@
+config MBT_SD_CHAR
+	tristate "Marvell Bluetooth SD Char driver"
+	help
+	  This driver supports Marvell Bluetooth SD8797 device.
+
+	  Say Y here to compile Marvell Bluetooth SD Char driver
+	  into the kernel or say M to compile it as module (mbt8xxx).
+
+config ATHOME_BT_REMOTE
+	boolean "Support athome remote"
+	depends on MBT_SD_CHAR
+	help
+	  Enabling this puts in the splitter that allows BT to
+	  function as before, while splitting off remote traffic
+	  to a separate device.

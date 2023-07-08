@@ -17,7 +17,7 @@
 #define __ASM_ASSEMBLER_H__
 
 #ifndef __ASSEMBLY__
-#error "Only include this from assembly code"
+//#error "Only include this from assembly code"
 #endif
 
 #include <asm/ptrace.h>

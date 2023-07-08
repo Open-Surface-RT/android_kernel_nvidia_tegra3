@@ -57,7 +57,7 @@ struct thermal_cooling_device *balanced_throttle_register(
 void tegra_throttle_exit(void);
 bool tegra_is_throttling(int *count);
 unsigned long tegra_throttle_governor_speed(unsigned long requested_speed);
-int tegra_throttle_debug_init(struct dentry *cpu_tegra_debugfs_root);
+//int tegra_throttle_debug_init(struct dentry *cpu_tegra_debugfs_root);
 void tegra_throttling_enable(bool enable);
 #else
 static inline int tegra_throttle_init(struct mutex *cpu_lock)

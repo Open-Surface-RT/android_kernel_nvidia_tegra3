@@ -1,0 +1,6 @@
+config MWLAN
+	tristate "Marvell MLAN Driver"
+	depends on CFG80211
+	---help---
+	  This adds support for wireless adapters based on Marvell
+	  MLAN chipsets.

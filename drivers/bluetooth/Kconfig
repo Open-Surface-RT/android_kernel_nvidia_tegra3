@@ -254,3 +254,4 @@ endmenu
 
 source "drivers/bluetooth/sd8897/Kconfig"
 source "drivers/bluetooth/sd8797/Kconfig"
+source "drivers/bluetooth/mbtc/Kconfig"

@@ -42,6 +42,10 @@
 
 #define DRV_NAME "tegra-pcm-audio"
 
+#define PERIOD_BYTES_MAX	(PAGE_SIZE * 8)
+#define PERIODS_MAX		128
+
+
 static const struct snd_pcm_hardware tegra_pcm_hardware = {
 	.info			= SNDRV_PCM_INFO_MMAP |
 				  SNDRV_PCM_INFO_MMAP_VALID |
@@ -54,11 +58,11 @@ static const struct snd_pcm_hardware tegra_pcm_hardware = {
 				  SNDRV_PCM_FMTBIT_S32_LE,
 	.channels_min		= 1,
 	.channels_max		= 2,
-	.period_bytes_min	= 128,
-	.period_bytes_max	= PAGE_SIZE * 2,
+	.period_bytes_min	= 512,
+	.period_bytes_max	= PERIOD_BYTES_MAX,
 	.periods_min		= 1,
-	.periods_max		= 8,
-	.buffer_bytes_max	= PAGE_SIZE * 8,
+	.periods_max		= PERIODS_MAX,
+	.buffer_bytes_max	= PERIOD_BYTES_MAX * PERIODS_MAX,
 	.fifo_size		= 4,
 };
 
@@ -260,7 +264,6 @@ int tegra_pcm_hw_params(struct snd_pcm_substream *substream,
 
 	return 0;
 }
-
 int tegra_pcm_hw_free(struct snd_pcm_substream *substream)
 {
 	snd_pcm_set_runtime_buffer(substream, NULL);
@@ -466,7 +469,7 @@ err_free_play:
 err:
 	return ret;
 }
-
+EXPORT_SYMBOL(tegra_pcm_dma_allocate);
 int tegra_pcm_new(struct snd_soc_pcm_runtime *rtd)
 {
 	return tegra_pcm_dma_allocate(rtd ,
@@ -511,6 +514,17 @@ static struct platform_driver tegra_pcm_driver = {
 	.probe = tegra_pcm_platform_probe,
 	.remove = __devexit_p(tegra_pcm_platform_remove),
 };
+
+
+EXPORT_SYMBOL(tegra_pcm_hw_params);
+EXPORT_SYMBOL(tegra_pcm_close);
+EXPORT_SYMBOL(tegra_pcm_mmap);
+EXPORT_SYMBOL(tegra_pcm_hw_free);
+EXPORT_SYMBOL(tegra_pcm_allocate);
+EXPORT_SYMBOL(tegra_pcm_trigger);
+EXPORT_SYMBOL(tegra_pcm_pointer);
+EXPORT_SYMBOL(tegra_pcm_free);
+
 module_platform_driver(tegra_pcm_driver);
 
 MODULE_AUTHOR("Stephen Warren <swarren@nvidia.com>");

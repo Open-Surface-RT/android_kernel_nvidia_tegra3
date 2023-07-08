@@ -53,3 +53,4 @@ obj-$(CONFIG_HEADSET_FUNCTION)	+= headset.o
 obj-$(CONFIG_ARCH_ACER_T30) += acer_audio_common.o
 obj-$(CONFIG_ARCH_ACER_T30) += acer_audio_control_t30.o
 obj-$(CONFIG_ACER_ES305)    += acer_a1026.o
+obj-$(CONFIG_SND_SOC_TEGRA_WM8962) += tegra_wm8962.o

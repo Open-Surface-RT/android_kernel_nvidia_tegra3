@@ -48,6 +48,10 @@
 #include <asm/hardware/gic.h>
 #include <mach/hardware.h>
 
+//#include <linux/mbtc_plat.h>
+#include <sound/wm8962.h>
+#include <mach/tegra_wm8962_pdata.h>
+
 #include <mach/clk.h>
 #include <mach/iomap.h>
 #include <mach/irqs.h>
@@ -76,8 +80,9 @@
 #include "pm.h"
 #include "common.h"
 #include "tegra-board-id.h"
-#include "board-touch-raydium.h"
-/*
+
+
+
 #ifdef CONFIG_BT_BLUESLEEP
 static struct rfkill_gpio_platform_data roth_bt_rfkill_pdata = {
 		.name           = "bt_rfkill",
@@ -174,7 +179,7 @@ static noinline void __init roth_setup_bluedroid_pm(void)
 	platform_device_register(&roth_bluedroid_pm_device);
 }
 #endif
-*/
+
 static __initdata struct tegra_clk_init_table roth_clk_init_table[] = {
 	/* name		parent		rate		enabled */
 	{ "pll_m",	NULL,		0,		false},
@@ -182,7 +187,9 @@ static __initdata struct tegra_clk_init_table roth_clk_init_table[] = {
 	{ "hda2codec_2x", "pll_p",	48000000,	false},
 	{ "pwm",	"pll_p",	37000000,	false},
 	{ "blink",	"clk_32k",	32768,		true},
+	{ "i2s0",	"pll_a_out0",	0,		false},
 	{ "i2s1",	"pll_a_out0",	0,		false},
+	{ "i2s2",	"pll_a_out0",	0,		false},
 	{ "i2s3",	"pll_a_out0",	0,		false},
 	{ "i2s4",	"pll_a_out0",	0,		false},
 	{ "spdif_out",	"pll_a_out0",	0,		false},
@@ -191,7 +198,11 @@ static __initdata struct tegra_clk_init_table roth_clk_init_table[] = {
 	{ "dam1",	"clk_m",	12000000,	false},
 	{ "dam2",	"clk_m",	12000000,	false},
 	{ "audio1",	"i2s1_sync",	0,		false},
+	{ "audio2",	"i2s2_sync",	0,		false},
 	{ "audio3",	"i2s3_sync",	0,		false},
+	{ "audio4",	"i2s4_sync",	0,		false},
+	{ "pll_p",	NULL,		0,		false},
+	{ "pll_c",       NULL,           0,              false},
 	/* Setting vi_sensor-clk to true for validation purpose, will imapact
 	 * power, later set to be false.*/
 	{ "vi_sensor",	"pll_p",	150000000,	false},
@@ -218,7 +229,7 @@ static struct tegra_i2c_platform_data roth_i2c1_platform_data = {
 static struct tegra_i2c_platform_data roth_i2c2_platform_data = {
 	.adapter_nr	= 1,
 	.bus_count	= 1,
-	.bus_clk_rate	= { 100000, 0 },
+	.bus_clk_rate	= { 400000, 0 },
 	.is_clkon_always = true,
 	.scl_gpio		= {TEGRA_GPIO_I2C2_SCL, 0},
 	.sda_gpio		= {TEGRA_GPIO_I2C2_SDA, 0},
@@ -246,26 +257,12 @@ static struct tegra_i2c_platform_data roth_i2c4_platform_data = {
 static struct tegra_i2c_platform_data roth_i2c5_platform_data = {
 	.adapter_nr	= 4,
 	.bus_count	= 1,
-	.bus_clk_rate	= { 400000, 0 },
+	.bus_clk_rate	= { 1400000, 0 },
 	.scl_gpio		= {TEGRA_GPIO_I2C5_SCL, 0},
 	.sda_gpio		= {TEGRA_GPIO_I2C5_SDA, 0},
 	.arb_recovery = arb_lost_recovery,
 };
-/*
-#if defined(CONFIG_ARCH_TEGRA_11x_SOC)
-static struct i2c_board_info __initdata rt5640_board_info = {
-	I2C_BOARD_INFO("rt5640", 0x1c),
-};
 
-static struct i2c_board_info __initdata roth_codec_tfa9887R_info = {
-	I2C_BOARD_INFO("tfa9887R", 0x37),
-};
-
-static struct i2c_board_info __initdata roth_codec_tfa9887L_info = {
-	I2C_BOARD_INFO("tfa9887L", 0x34),
-};
-#endif
-*/
 static void roth_i2c_init(void)
 {
 	tegra11_i2c_device1.dev.platform_data = &roth_i2c1_platform_data;
@@ -280,9 +277,6 @@ static void roth_i2c_init(void)
 	platform_device_register(&tegra11_i2c_device2);
 	platform_device_register(&tegra11_i2c_device1);
 
-//	i2c_register_board_info(0, &rt5640_board_info, 1);
-//	i2c_register_board_info(0, &roth_codec_tfa9887R_info, 1);
-//	i2c_register_board_info(0, &roth_codec_tfa9887L_info, 1);
 }
 
 static struct platform_device *roth_uart_devices[] __initdata = {
@@ -367,35 +361,6 @@ static struct platform_device tegra_rtc_device = {
 	.num_resources = ARRAY_SIZE(tegra_rtc_resources),
 };
 /*
-static struct tegra_asoc_platform_data roth_audio_pdata = {
-	.gpio_spkr_en		= TEGRA_GPIO_SPKR_EN,
-	.gpio_hp_det		= TEGRA_GPIO_HP_DET,
-	.gpio_hp_mute		= -1,
-	.gpio_int_mic_en	= TEGRA_GPIO_INT_MIC_EN,
-	.gpio_ext_mic_en	= TEGRA_GPIO_EXT_MIC_EN,
-	.gpio_ldo1_en		= TEGRA_GPIO_LDO1_EN,
-	.gpio_codec1 = TEGRA_GPIO_CODEC1_EN,
-	.gpio_codec2 = TEGRA_GPIO_CODEC2_EN,
-	.gpio_codec3 = TEGRA_GPIO_CODEC3_EN,
-	.i2s_param[HIFI_CODEC]	= {
-		.audio_port_id	= 1,
-		.is_i2s_master	= 1,
-		.i2s_mode	= TEGRA_DAIFMT_I2S,
-	},
-	.i2s_param[BT_SCO]	= {
-		.audio_port_id	= 3,
-		.is_i2s_master	= 1,
-		.i2s_mode	= TEGRA_DAIFMT_DSP_A,
-	},
-};
-
-static struct platform_device roth_audio_device = {
-	.name	= "tegra-snd-rt5640",
-	.id	= 0,
-	.dev	= {
-		.platform_data = &roth_audio_pdata,
-	},
-};
 
 static struct platform_device tegra_camera = {
 	.name = "tegra_camera",
@@ -453,6 +418,65 @@ static struct platform_device roth_leds_gpio_device = {
 };
 #endif
 */
+
+
+
+
+static struct wm8962_pdata surface_2_wm8962_pdata = {
+	.irq_active_low = 0,
+	.mic_cfg = 0,
+	.gpio_base = SURFACE_2_GPIO_WM8962(0),
+	//.gpio_init = {
+		// Needs to be filled for digital Mic's //
+	//},
+};
+
+static struct i2c_board_info __initdata surface_2_codec_wm8962_info = {
+	I2C_BOARD_INFO("wm8962", 0x1a),
+	.platform_data = &surface_2_wm8962_pdata,
+};
+
+static void surface_2_sound_init(void)
+
+{
+       // surface_2_codec_wm8962_info.irq = gpio_to_irq(TEGRA_GPIO_CDC_IRQ);
+        i2c_register_board_info(2, &surface_2_codec_wm8962_info, 1);
+
+        printk(KERN_INFO "Surface 2 Sound Init \n");
+}
+
+static struct tegra_asoc_platform_data surface_2_audio_wm8962_pdata = {
+//        .gpio_spkr_en           = TEGRA_GPIO_SPKR_EN,
+        .gpio_hp_det            = TEGRA_GPIO_HP_DET,
+        .gpio_hp_mute           = -1,
+        .gpio_int_mic_en        = -1,
+        .gpio_ext_mic_en        = -1,
+//      .gpio_bypass_switch_en  = TEGRA_GPIO_BYPASS_SWITCH_EN,
+//      .gpio_debug_switch_en   = TEGRA_GPIO_DEBUG_SWITCH_EN,
+        .i2s_param[HIFI_CODEC]  = {
+                .audio_port_id  = 0,
+                .is_i2s_master  = 1,
+                .i2s_mode       = TEGRA_DAIFMT_I2S,
+        },
+//      .i2s_param[BASEBAND]    = {
+//              .audio_port_id  = -1,
+//      },
+//      .i2s_param[BT_SCO]      = {
+//              .audio_port_id  = 3,
+//              .is_i2s_master  = 1,
+//              .i2s_mode       = TEGRA_DAIFMT_DSP_A,
+//      },
+};
+
+static struct platform_device surface_2_audio_wm8962_device = {
+        .name   = "tegra-snd-wm8962",
+        .id     = 0,
+        .dev    = {
+                .platform_data = &surface_2_audio_wm8962_pdata,
+        },
+};
+
+
 static struct platform_device *roth_devices[] __initdata = {
 	&tegra_pmu_device,
 	&tegra_rtc_device,
@@ -471,19 +495,22 @@ static struct platform_device *roth_devices[] __initdata = {
 	&tegra_dam_device0,
 	&tegra_dam_device1,
 	&tegra_dam_device2,
+	&tegra_i2s_device0,	
 	&tegra_i2s_device1,
+	&tegra_i2s_device2,
 	&tegra_i2s_device3,
 	&tegra_i2s_device4,
 	&tegra_spdif_device,
 	&spdif_dit_device,
 	&bluetooth_dit_device,
 	&tegra_pcm_device,
-	//&roth_audio_device,
+
+	&surface_2_audio_wm8962_device,
+
 	&tegra_hda_device,
 #if defined(CONFIG_CRYPTO_DEV_TEGRA_AES)
 	&tegra_aes_device,
 #endif
-
 
 };
 
@@ -495,7 +522,7 @@ static struct tegra_usb_platform_data tegra_udc_pdata = {
 	.op_mode = TEGRA_USB_OPMODE_DEVICE,
 	.u_data.dev = {
 		.vbus_pmu_irq = 0,
-		.vbus_gpio = -1,
+		.vbus_gpio = TEGRA_GPIO_PK1,
 		.charging_supported = false,
 		.remote_wakeup_supported = false,
 	},
@@ -519,7 +546,7 @@ static struct tegra_usb_platform_data tegra_ehci1_utmi_pdata = {
 	.phy_intf = TEGRA_USB_PHY_INTF_UTMI,
 	.op_mode = TEGRA_USB_OPMODE_HOST,
 	.u_data.host = {
-		.vbus_gpio = -1,
+		.vbus_gpio = TEGRA_GPIO_PK1,
 		.hot_plug = true,
 		.remote_wakeup_supported = true,
 		.power_off_on_suspend = false,
@@ -537,7 +564,7 @@ static struct tegra_usb_platform_data tegra_ehci1_utmi_pdata = {
 		.vbus_oc_map = 0x4,
 	},
 };
-
+/*
 static struct tegra_usb_platform_data tegra_ehci3_utmi_pdata = {
 	.port_otg = false,
 	.has_hostpc = true,
@@ -563,7 +590,7 @@ static struct tegra_usb_platform_data tegra_ehci3_utmi_pdata = {
 		.vbus_oc_map = 0x5,
 	},
 };
-
+*/
 static struct tegra_usb_otg_data tegra_otg_pdata = {
 	.ehci_device = &tegra_ehci1_device,
 	.ehci_pdata = &tegra_ehci1_utmi_pdata,
@@ -577,8 +604,8 @@ static void roth_usb_init(void)
 	// Setup the udc platform data //
 	tegra_udc_device.dev.platform_data = &tegra_udc_pdata;
 
-	tegra_ehci3_device.dev.platform_data = &tegra_ehci3_utmi_pdata;
-	platform_device_register(&tegra_ehci3_device);
+	//tegra_ehci1_device.dev.platform_data = &tegra_ehci1_utmi_pdata;
+	//platform_device_register(&tegra_ehci1_device);
 }
 
 #else
@@ -597,7 +624,7 @@ static void roth_audio_init(void)
 
 
 static struct platform_device *roth_spi_devices[] __initdata = {
-	&tegra11_spi_device4,
+	//&tegra11_spi_device4,
 };
 
 struct spi_clk_parent spi_parent_clk_roth[] = {
@@ -634,9 +661,34 @@ static void __init roth_spi_init(void)
 	roth_spi_pdata.parent_clk_list = spi_parent_clk_roth;
 	roth_spi_pdata.parent_clk_count = ARRAY_SIZE(spi_parent_clk_roth);
 	roth_spi_pdata.is_dma_based = true;
-	tegra11_spi_device4.dev.platform_data = &roth_spi_pdata;
+	//tegra11_spi_device4.dev.platform_data = &roth_spi_pdata;
 	platform_add_devices(roth_spi_devices,
 		ARRAY_SIZE(roth_spi_devices));
+}
+*/
+
+/*
+
+static void surface_2_ec_init(void)
+
+{
+	int ret;
+	ret = gpio_request(TEGRA_BATTERY_EN, "ec_gpio");
+	if (ret)
+	{
+		pr_err("EC gpio request failed:%d\n", ret);
+		return ;
+	}
+	else
+	{
+		gpio_direction_output(TEGRA_BATTERY_EN, 1);
+		mdelay(100);
+ 	        gpio_set_value(TEGRA_BATTERY_EN, 1);
+		mdelay(100);
+		ret = gpio_get_value(TEGRA_BATTERY_EN);
+
+		printk(KERN_INFO "Set Surface 2 EC GPIO : %d\n",ret);
+	}
 }
 
 */
@@ -649,10 +701,10 @@ static void __init tegra_roth_init(void)
 	tegra_enable_pinmux();
 	roth_pinmux_init();
 	roth_i2c_init();
-	//roth_spi_init();
+//	roth_spi_init();
 	roth_usb_init();
 	roth_uart_init();
-	//roth_audio_init();
+	surface_2_sound_init();
 	platform_add_devices(roth_devices, ARRAY_SIZE(roth_devices));
 	tegra_ram_console_debug_init();
 	tegra_io_dpd_init();
@@ -665,10 +717,11 @@ static void __init tegra_roth_init(void)
 	/* roth will pass a null board id to panel_init */
 	roth_panel_init(0);
 	roth_kbc_init();
+	//surface_2_ec_init();
 	//roth_pmon_init();
 #ifdef CONFIG_BT_BLUESLEEP
-	//roth_setup_bluesleep();
-	//roth_setup_bt_rfkill();
+	roth_setup_bluesleep();
+	roth_setup_bt_rfkill();
 #elif defined CONFIG_BLUEDROID_PM
 	//roth_setup_bluedroid_pm();
 #endif
@@ -677,8 +730,8 @@ static void __init tegra_roth_init(void)
 	//tegra_wdt_recovery_init();
 #endif
 	tegra_serial_debug_init(TEGRA_UARTA_BASE, INT_WDT_CPU, NULL, -1, -1);
-	roth_sensors_init();
-	roth_soctherm_init();
+	//roth_sensors_init();
+	//roth_soctherm_init();
 	//roth_fan_init();
 	surface_rt_i2c_hid_init();
 	tegra_register_fuse();

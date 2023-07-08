@@ -1159,8 +1159,8 @@ static int __devexit nct1008_remove(struct i2c_client *client)
 {
 	struct nct1008_data *data = i2c_get_clientdata(client);
 
-	if (data->dent)
-		debugfs_remove(data->dent);
+//	if (data->dent)
+//		debugfs_remove(data->dent);
 
 	free_irq(data->client->irq, data);
 	cancel_work_sync(&data->work);

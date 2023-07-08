@@ -35,6 +35,11 @@ struct wifi_platform_data {
 #if defined(CONFIG_BCMDHD_EDP_SUPPORT)
 	struct edp_client client_info;
 #endif
+
+        int host_sleep_cond;
+        int host_sleep_gpio;
+        int host_sleep_gap;
+
 };
 
 #endif

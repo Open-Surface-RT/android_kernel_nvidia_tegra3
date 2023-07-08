@@ -191,6 +191,7 @@ static struct i2c_board_info roth_i2c4_nct1008_board_info[] = {
 	}
 };
 
+
 #define VI_PINMUX(_pingroup, _mux, _pupd, _tri, _io, _lock, _ioreset) \
 	{							\
 		.pingroup	= TEGRA_PINGROUP_##_pingroup,	\

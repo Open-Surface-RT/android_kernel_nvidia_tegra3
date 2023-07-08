@@ -55,15 +55,76 @@
 #define PMC_CTRL		0x0
 #define PMC_CTRL_INTR_LOW	(1 << 17)
 
+#define TPS65090_CHARGER_INT	TEGRA_GPIO_PJ0
+
 /*TPS65090 consumer rails */
 
 static struct regulator_consumer_supply tps65090_dcdc1_supply[] = {
 	REGULATOR_SUPPLY("vdd_sys_5v0", NULL),
+
 };
 
 static struct regulator_consumer_supply tps65090_dcdc2_supply[] = {
 	REGULATOR_SUPPLY("vdd_sys_3v3", NULL),
-
+	REGULATOR_SUPPLY("vdd_lvds", NULL),
+	REGULATOR_SUPPLY("vdd_pnl", NULL),
+	REGULATOR_SUPPLY("vcom_3v3", NULL),
+	REGULATOR_SUPPLY("vdd_3v3", NULL),
+	REGULATOR_SUPPLY("vcore_mmc", NULL),
+	REGULATOR_SUPPLY("vddio_pex_ctl", NULL),
+	REGULATOR_SUPPLY("pwrdet_pex_ctl", NULL),
+	REGULATOR_SUPPLY("hvdd_pex_pmu", NULL),
+	REGULATOR_SUPPLY("avdd_hdmi", NULL),
+	REGULATOR_SUPPLY("vpp_fuse", NULL),
+	REGULATOR_SUPPLY("vdd_ddr_rx", NULL),
+	REGULATOR_SUPPLY("vcore_nand", NULL),
+	REGULATOR_SUPPLY("hvdd_sata", NULL),
+	REGULATOR_SUPPLY("vddio_gmi_pmu", NULL),
+	REGULATOR_SUPPLY("pwrdet_nand", NULL),
+	REGULATOR_SUPPLY("avdd_cam1", NULL),
+	REGULATOR_SUPPLY("vdd_af", NULL),
+	REGULATOR_SUPPLY("avdd_cam2", NULL),
+	REGULATOR_SUPPLY("vdd_acc", NULL),
+	REGULATOR_SUPPLY("vdd_phtl", NULL),
+	REGULATOR_SUPPLY("vddio_tp", NULL),
+	REGULATOR_SUPPLY("vdd_led", NULL),
+	REGULATOR_SUPPLY("vddio_cec", NULL),
+	REGULATOR_SUPPLY("vdd_cmps", NULL),
+	REGULATOR_SUPPLY("vdd_temp", NULL),
+	REGULATOR_SUPPLY("vpp_kfuse", NULL),
+	REGULATOR_SUPPLY("vddio_ts", NULL),
+	REGULATOR_SUPPLY("vdd_ir_led", NULL),
+	REGULATOR_SUPPLY("vddio_1wire", NULL),
+	REGULATOR_SUPPLY("avddio_audio", NULL),
+	REGULATOR_SUPPLY("vdd_ec", NULL),
+	REGULATOR_SUPPLY("vcom_pa", NULL),
+	REGULATOR_SUPPLY("vdd_3v3_devices", NULL),
+	REGULATOR_SUPPLY("vdd_3v3_dock", NULL),
+	REGULATOR_SUPPLY("vdd_3v3_edid", NULL),
+	REGULATOR_SUPPLY("vdd_3v3_hdmi_cec", NULL),
+	REGULATOR_SUPPLY("vdd_3v3_gmi", NULL),
+	REGULATOR_SUPPLY("vdd_3v3_sensor", NULL),
+	REGULATOR_SUPPLY("vdd_3v3_cam", NULL),
+	REGULATOR_SUPPLY("vdd_3v3_als", NULL),
+	REGULATOR_SUPPLY("debug_cons", NULL),
+	REGULATOR_SUPPLY("vdd", "4-004c"),
+	REGULATOR_SUPPLY("pwrdet_sdmmc4", NULL),
+	REGULATOR_SUPPLY("pwrdet_sdmmc3", NULL),
+	REGULATOR_SUPPLY("vddio_audio", NULL),
+	REGULATOR_SUPPLY("pwrdet_audio", NULL),
+	REGULATOR_SUPPLY("ldo6", NULL),
+	REGULATOR_SUPPLY("ldo7", NULL),
+	REGULATOR_SUPPLY("ldo8", NULL),
+	REGULATOR_SUPPLY("vcore_audio", NULL),
+	REGULATOR_SUPPLY("avcore_audio", NULL),
+	REGULATOR_SUPPLY("MICVDD", NULL),
+	REGULATOR_SUPPLY("SPKVDD1", NULL),
+	REGULATOR_SUPPLY("SPKVDD2", NULL),
+	REGULATOR_SUPPLY("DCVDD", NULL),
+	REGULATOR_SUPPLY("DBVDD", NULL),
+	REGULATOR_SUPPLY("AVDD", NULL),
+	REGULATOR_SUPPLY("CPVDD", NULL),
+	REGULATOR_SUPPLY("PLLVDD", NULL),
 
 };
 
@@ -73,6 +134,12 @@ static struct regulator_consumer_supply tps65090_dcdc3_supply[] = {
 
 static struct regulator_consumer_supply tps65090_ldo1_supply[] = {
 	REGULATOR_SUPPLY("vdd_sby_5v0", NULL),
+	REGULATOR_SUPPLY("avdd_usb", NULL),
+	REGULATOR_SUPPLY("avdd_ic_usb", NULL),
+	REGULATOR_SUPPLY("avdd_usb", "tegra-udc.0"),
+	REGULATOR_SUPPLY("avdd_usb", "tegra-ehci.0"),
+	REGULATOR_SUPPLY("avdd_usb", "tegra-ehci.1"),
+	REGULATOR_SUPPLY("avdd_usb", "tegra-ehci.2"),
 };
 
 static struct regulator_consumer_supply tps65090_ldo2_supply[] = {
@@ -86,7 +153,7 @@ static struct regulator_consumer_supply tps65090_fet1_supply[] = {
 };
 
 static struct regulator_consumer_supply tps65090_fet2_supply[] = {
-	
+
 };
 
 static struct regulator_consumer_supply tps65090_fet3_supply[] = {
@@ -235,7 +302,7 @@ static struct regulator_consumer_supply palmas_smps10_supply[] = {
 //	REGULATOR_SUPPLY("vdd_5v0", NULL),
 };
 static struct regulator_consumer_supply palmas_ldo1_supply[] = {
-
+//	REGULATOR_SUPPLY("avdd_usb_pll", NULL), // crash!
 };
 static struct regulator_consumer_supply palmas_ldo2_supply[] = {
 //	REGULATOR_SUPPLY("avdd_lcd", NULL),
@@ -259,7 +326,7 @@ static struct regulator_consumer_supply palmas_ldo5_supply[] = {
 
 static struct regulator_consumer_supply palmas_ldo6_supply[] = {
 //	REGULATOR_SUPPLY("vdd_sensor_2v85", NULL),
-//	REGULATOR_SUPPLY("vdd", "0-004c"),
+	REGULATOR_SUPPLY("vdd", "2-004c"),
 //	REGULATOR_SUPPLY("vdd", "1-004c"),
 //	REGULATOR_SUPPLY("vdd", "1-004d"),
 //	REGULATOR_SUPPLY("vdd", "0-0068"),
@@ -276,7 +343,8 @@ static struct regulator_consumer_supply palmas_ldo9_supply[] = {
 	REGULATOR_SUPPLY("pwrdet_sdmmc3", NULL),
 };
 static struct regulator_consumer_supply palmas_ldoln_supply[] = {
-
+//	REGULATOR_SUPPLY("hvdd_usb", "tegra-ehci.2"),//hangs
+//	REGULATOR_SUPPLY("hvdd_usb", "tegra-xhci"),//hangs
 };
 static struct regulator_consumer_supply palmas_ldousb_supply[] = {
 	REGULATOR_SUPPLY("avdd_usb", "tegra-udc.0"),
@@ -463,6 +531,14 @@ static struct palmas_platform_data palmas_pdata = {
 	.pmic_pdata = &pmic_platform,
 	.use_power_off = true,
 	.pinctrl_pdata = &palmas_pinctrl_pdata,
+/*
+	#ifndef CONFIG_ANDROID
+	.long_press_delay = PALMAS_LONG_PRESS_KEY_TIME_8SECONDS,
+	#else
+	// Retaining default value, 12 Seconds //
+	.long_press_delay = PALMAS_LONG_PRESS_KEY_TIME_DEFAULT,
+	#endif
+*/
 };
 
 static struct i2c_board_info palma_device[] = {

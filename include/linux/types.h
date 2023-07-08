@@ -10,7 +10,7 @@
 	unsigned long name[BITS_TO_LONGS(bits)]
 #else
 #ifndef __EXPORTED_HEADERS__
-#warning "Attempt to use kernel headers from user space, see http://kernelnewbies.org/KernelHeaders"
+//#warning "Attempt to use kernel headers from user space, see http://kernelnewbies.org/KernelHeaders"
 #endif /* __EXPORTED_HEADERS__ */
 #endif
 

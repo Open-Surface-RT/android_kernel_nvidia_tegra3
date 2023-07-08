@@ -67,7 +67,7 @@ static void 		detection_work(struct work_struct *work);
 static int               	jack_config_gpio(void);
 static void 		lineout_work_queue(struct work_struct *work);
 static void		dock_work_queue(struct work_struct *work);
-static int               	lineout_config_gpio(u32 project_info);
+//static int               	lineout_config_gpio(u32 project_info);
 static void 		detection_work(struct work_struct *work);
 static int               	btn_config_gpio(void);
 static int                      switch_config_gpio(void);
@@ -114,7 +114,7 @@ struct work_struct headset_work;
 struct work_struct lineout_work;
 struct work_struct dock_work;
 static bool UART_enable = false;
-static unsigned int revision;
+//static unsigned int revision;
 static u32 lineout_gpio;
 static int gpio_dock_in = 0;
 
@@ -365,6 +365,7 @@ static void dock_work_queue(struct work_struct *work)
 **  Return value: IRQ_HANDLED
 **
 ************************************************************/
+/*
 static int lineout_config_gpio(u32 project_info)
 {
 	int ret;
@@ -383,7 +384,7 @@ static int lineout_config_gpio(u32 project_info)
 
 	return 0;
 }
-
+*/
 static int switch_config_gpio()
 {
         int ret;
@@ -445,18 +446,18 @@ static int codec_micbias_power(int on)
 {
 	if(on){
 		//for ALC5642
-		if(rt5640_audio_codec == NULL){
-			printk("HEADSET: %s: No rt5640_audio_codec - set micbias on fail\n", __func__);
-			return 0;
-		}
+//		if(rt5640_audio_codec == NULL){
+//			printk("HEADSET: %s: No rt5640_audio_codec - set micbias on fail\n", __func__);
+//			return 0;
+//		}
 	}else{
 		//for ALC5642
-		if(rt5640_audio_codec == NULL){
-			printk("HEADSET: %s: No rt5640_audio_codec - set micbias off fail\n", __func__);
-			return 0;
-		}
-		snd_soc_update_bits(rt5640_audio_codec, RT5640_PWR_ANLG2, RT5640_PWR_MB1, 0); /* Disable MicBias1 */
-		snd_soc_update_bits(rt5640_audio_codec, RT5640_PWR_ANLG1, RT5640_PWR_LDO2, 0); /* Disable LDO2 */
+//		if(rt5640_audio_codec == NULL){
+//			printk("HEADSET: %s: No rt5640_audio_codec - set micbias off fail\n", __func__);
+//			return 0;
+//		}
+//		snd_soc_update_bits(rt5640_audio_codec, RT5640_PWR_ANLG2, RT5640_PWR_MB1, 0); /* Disable MicBias1 */
+//		snd_soc_update_bits(rt5640_audio_codec, RT5640_PWR_ANLG1, RT5640_PWR_LDO2, 0); /* Disable LDO2 */
 	}
 	return 0;
 }
@@ -489,23 +490,23 @@ EXPORT_SYMBOL(hs_micbias_power);
 static int __init headset_init(void)
 {
 	int ret;
-	u32 project_info = grouper_get_project_id();
-	u32 pmic_id = grouper_query_pmic_id();
+//	u32 project_info = grouper_get_project_id();
+//	u32 pmic_id = grouper_query_pmic_id();
 
 	printk(KERN_INFO "%s+ #####\n", __func__);
 
 	printk("HEADSET: Headset detection init\n");
 
-	if (project_info == GROUPER_PROJECT_BACH)
-		gpio_dock_in = TEGRA_GPIO_PO5;
-	else
+//	if (project_info == GROUPER_PROJECT_BACH)
+//		gpio_dock_in = TEGRA_GPIO_PO5;
+//	else
 		gpio_dock_in = TEGRA_GPIO_PU4;
 
-	if(project_info == GROUPER_PROJECT_BACH ||
-		(project_info == GROUPER_PROJECT_NAKASI && pmic_id == GROUPER_PMIC_TI))
-		UART_enable = true;
+//	if(project_info == GROUPER_PROJECT_BACH ||
+//		(project_info == GROUPER_PROJECT_NAKASI && pmic_id == GROUPER_PMIC_TI))
+//		UART_enable = true;
 
-	revision = grouper_query_pcba_revision();
+//	revision = grouper_query_pcba_revision();
 
 	hs_data = kzalloc(sizeof(struct headset_data), GFP_KERNEL);
 	if (!hs_data)
@@ -531,7 +532,7 @@ static int __init headset_init(void)
 	hs_data->timer.function = detect_event_timer_func;
 
 	printk("HEADSET: Headset detection mode\n");
-	lineout_config_gpio(project_info);
+//	lineout_config_gpio(project_info);
 	btn_config_gpio();/*Config hook detection GPIO*/
 	switch_config_gpio(); /*Config uart and headphone switch*/
 	jack_config_gpio();/*Config jack detection GPIO*/

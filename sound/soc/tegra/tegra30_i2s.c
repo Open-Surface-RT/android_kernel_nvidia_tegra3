@@ -55,9 +55,7 @@ static struct tegra30_i2s  i2scont[TEGRA30_NR_I2S_IFC];
 
 static inline void tegra30_i2s_write(struct tegra30_i2s *i2s, u32 reg, u32 val)
 {
-#ifdef CONFIG_PM
-	i2s->reg_cache[reg >> 2] = val;
-#endif
+
 	__raw_writel(val, i2s->regs + reg);
 }
 
@@ -918,22 +916,11 @@ static int tegra30_i2s_trigger(struct snd_pcm_substream *substream, int cmd,
 static int tegra30_i2s_probe(struct snd_soc_dai *dai)
 {
 	struct tegra30_i2s *i2s = snd_soc_dai_get_drvdata(dai);
-#ifdef CONFIG_PM
-	int i;
-#endif
 
 	dai->capture_dma_data = &i2s->capture_dma_data;
 	dai->playback_dma_data = &i2s->playback_dma_data;
 
-#ifdef CONFIG_PM
-	tegra30_i2s_enable_clocks(i2s);
 
-	/*cache the POR values of i2s regs*/
-	for (i = 0; i < ((TEGRA30_I2S_CIF_TX_CTRL>>2) + 1); i++)
-		i2s->reg_cache[i] = tegra30_i2s_read(i2s, i<<2);
-
-	tegra30_i2s_disable_clocks(i2s);
-#endif
 
 	/* Default values for DSP mode */
 	i2s->dsp_config.num_slots = 1;
@@ -965,30 +952,9 @@ int tegra30_i2s_set_tdm_slot(struct snd_soc_dai *cpu_dai,
 	return 0;
 }
 
-#ifdef CONFIG_PM
-int tegra30_i2s_resume(struct snd_soc_dai *cpu_dai)
-{
-	struct tegra30_i2s *i2s = snd_soc_dai_get_drvdata(cpu_dai);
-	int i, ret = 0;
 
-	tegra30_i2s_enable_clocks(i2s);
-
-	/*restore the i2s regs*/
-	for (i = 0; i < ((TEGRA30_I2S_CIF_TX_CTRL>>2) + 1); i++)
-		tegra30_i2s_write(i2s, i<<2, i2s->reg_cache[i]);
-
-	tegra30_ahub_apbif_resume();
-
-	tegra30_i2s_disable_clocks(i2s);
-
-	if (i2s->dam_ch_refcount)
-		ret = tegra30_dam_resume(i2s->dam_ifc);
-
-	return ret;
-}
-#else
 #define tegra30_i2s_resume NULL
-#endif
+
 
 static struct snd_soc_dai_ops tegra30_i2s_dai_ops = {
 	.startup	= tegra30_i2s_startup,

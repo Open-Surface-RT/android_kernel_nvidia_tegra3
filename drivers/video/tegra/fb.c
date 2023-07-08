@@ -144,8 +144,9 @@ static int tegra_fb_set_par(struct fb_info *info)
 		//HACK FOR SURFACE 2 PANEL & HDMI SIMULTANEOUS
 		// WILL NEED A HACK TO GET TWRP WORKING AGAIN
 		// AS ONLY AOSP NEEDS THIS HACK
+#ifdef CONFIG_S2_PANEL_BYPASS
 		if(dc->out->type != TEGRA_DC_OUT_HDMI) return 0;
-
+#endif
 	if (var->pixclock) {
 		bool stereo;
 		unsigned old_len = 0;
@@ -643,11 +644,22 @@ struct tegra_fb_info *tegra_fb_register(struct platform_device *ndev,
 	tegra_dc_to_fb_videomode(&m, &dc->mode);
 	fb_videomode_to_var(&info->var, &m);
 	info->var.xres_virtual		= fb_data->xres;
-	info->var.yres_virtual		= fb_data->yres * 2;
+
+//#ifdef CONFIG_FRAMEBUFFER_CONSOLE
+
+//	info->var.yres_virtual		= fb_data->yres;
+
+//#else
+
+        info->var.yres_virtual          = fb_data->yres * 2;
+
+//#endif
 	info->var.bits_per_pixel	= fb_data->bits_per_pixel;
 	info->var.activate		= FB_ACTIVATE_VBL;
 	info->var.height		= tegra_dc_get_out_height(dc);
 	info->var.width			= tegra_dc_get_out_width(dc);
+
+/*
 #ifdef CONFIG_MACH_GROUPER
 	info->var.pixclock		= 0;
 	info->var.left_margin		= 0;
@@ -656,7 +668,7 @@ struct tegra_fb_info *tegra_fb_register(struct platform_device *ndev,
 	info->var.lower_margin		= 0;
 	info->var.hsync_len		= 0;
 	info->var.vsync_len		= 0;
-#endif
+#endif*/
 
 	win->x.full = dfixed_const(0);
 	win->y.full = dfixed_const(0);
@@ -665,14 +677,22 @@ struct tegra_fb_info *tegra_fb_register(struct platform_device *ndev,
 	/* TODO: set to output res dc */
 	win->out_x = 0;
 	win->out_y = 0;
-	win->out_w = fb_data->xres;
+
+
+        win->out_w = fb_data->xres;
+
+
+
 	win->out_h = fb_data->yres;
 	win->z = 0;
 	win->phys_addr = fb_phys;
 	win->virt_addr = fb_base;
 	win->phys_addr_u = 0;
 	win->phys_addr_v = 0;
-	win->stride = info->fix.line_length;
+
+     win->stride = info->fix.line_length;
+
+
 	win->stride_uv = 0;
 	win->flags = TEGRA_WIN_FLAG_ENABLED;
 	win->global_alpha = 0xFF;

@@ -1,0 +1,16 @@
+kernel/drivers/base/regmap/regmap-spi.ko:
+kernel/drivers/scsi/scsi_wait_scan.ko:
+kernel/drivers/net/wireless/sd8xxx/mlan.ko:
+kernel/drivers/net/wireless/sd8xxx/sd8xxx.ko: kernel/drivers/net/wireless/sd8xxx/mlan.ko
+kernel/sound/core/snd-timer.ko:
+kernel/sound/core/snd-pcm.ko: kernel/sound/core/snd-page-alloc.ko kernel/sound/core/snd-timer.ko
+kernel/sound/core/snd-page-alloc.ko:
+kernel/sound/soc/snd-soc-core.ko: kernel/sound/core/snd-pcm.ko kernel/sound/core/snd-page-alloc.ko kernel/sound/core/snd-timer.ko kernel/drivers/base/regmap/regmap-spi.ko
+kernel/sound/soc/codecs/snd-soc-wm8962.ko: kernel/sound/soc/snd-soc-core.ko kernel/sound/core/snd-pcm.ko kernel/sound/core/snd-page-alloc.ko kernel/sound/core/snd-timer.ko kernel/drivers/base/regmap/regmap-spi.ko
+kernel/sound/soc/tegra/snd-soc-tegra-pcm.ko: kernel/sound/soc/snd-soc-core.ko kernel/sound/core/snd-pcm.ko kernel/sound/core/snd-page-alloc.ko kernel/sound/core/snd-timer.ko kernel/drivers/base/regmap/regmap-spi.ko
+kernel/sound/soc/tegra/snd-soc-tegra-utils.ko: kernel/sound/soc/snd-soc-core.ko kernel/sound/core/snd-pcm.ko kernel/sound/core/snd-page-alloc.ko kernel/sound/core/snd-timer.ko kernel/drivers/base/regmap/regmap-spi.ko
+kernel/sound/soc/tegra/snd-soc-tegra-tdm-pcm.ko: kernel/sound/soc/tegra/snd-soc-tegra-pcm.ko kernel/sound/soc/snd-soc-core.ko kernel/sound/core/snd-pcm.ko kernel/sound/core/snd-page-alloc.ko kernel/sound/core/snd-timer.ko kernel/drivers/base/regmap/regmap-spi.ko
+kernel/sound/soc/tegra/snd-soc-tegra30-ahub.ko: kernel/sound/soc/snd-soc-core.ko kernel/sound/core/snd-pcm.ko kernel/sound/core/snd-page-alloc.ko kernel/sound/core/snd-timer.ko kernel/drivers/base/regmap/regmap-spi.ko
+kernel/sound/soc/tegra/snd-soc-tegra30-dam.ko: kernel/sound/soc/tegra/snd-soc-tegra30-ahub.ko kernel/sound/soc/snd-soc-core.ko kernel/sound/core/snd-pcm.ko kernel/sound/core/snd-page-alloc.ko kernel/sound/core/snd-timer.ko kernel/drivers/base/regmap/regmap-spi.ko
+kernel/sound/soc/tegra/snd-soc-tegra30-i2s.ko: kernel/sound/soc/tegra/snd-soc-tegra30-dam.ko kernel/sound/soc/tegra/snd-soc-tegra30-ahub.ko kernel/sound/soc/snd-soc-core.ko kernel/sound/core/snd-pcm.ko kernel/sound/core/snd-page-alloc.ko kernel/sound/core/snd-timer.ko kernel/drivers/base/regmap/regmap-spi.ko
+kernel/sound/soc/tegra/tegra_wm8962.ko: kernel/sound/soc/tegra/snd-soc-tegra-utils.ko kernel/sound/soc/codecs/snd-soc-wm8962.ko kernel/sound/soc/snd-soc-core.ko kernel/sound/core/snd-pcm.ko kernel/sound/core/snd-page-alloc.ko kernel/sound/core/snd-timer.ko kernel/drivers/base/regmap/regmap-spi.ko
