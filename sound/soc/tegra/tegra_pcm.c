@@ -43,7 +43,7 @@
 #define DRV_NAME "tegra-pcm-audio"
 
 #define PERIOD_BYTES_MAX	(PAGE_SIZE * 8)
-#define PERIODS_MAX		128
+#define PERIODS_MAX		512
 
 
 static const struct snd_pcm_hardware tegra_pcm_hardware = {
@@ -58,7 +58,7 @@ static const struct snd_pcm_hardware tegra_pcm_hardware = {
 				  SNDRV_PCM_FMTBIT_S32_LE,
 	.channels_min		= 1,
 	.channels_max		= 2,
-	.period_bytes_min	= 512,
+	.period_bytes_min	= 1024,
 	.period_bytes_max	= PERIOD_BYTES_MAX,
 	.periods_min		= 1,
 	.periods_max		= PERIODS_MAX,

@@ -31,6 +31,7 @@
 #include <linux/gpio.h>
 #include <linux/input.h>
 #include <linux/platform_data/tegra_usb.h>
+#include <linux/platform_data/tegra_xusb.h>
 #include <linux/spi/spi.h>
 #include <linux/spi/rm31080a_ts.h>
 #include <linux/spi-tegra.h>
@@ -522,7 +523,7 @@ static struct tegra_usb_platform_data tegra_udc_pdata = {
 	.op_mode = TEGRA_USB_OPMODE_DEVICE,
 	.u_data.dev = {
 		.vbus_pmu_irq = 0,
-		.vbus_gpio = TEGRA_GPIO_PK1,
+		.vbus_gpio = -1,
 		.charging_supported = false,
 		.remote_wakeup_supported = false,
 	},
@@ -572,7 +573,7 @@ static struct tegra_usb_platform_data tegra_ehci3_utmi_pdata = {
 	.phy_intf = TEGRA_USB_PHY_INTF_UTMI,
 	.op_mode = TEGRA_USB_OPMODE_HOST,
 	.u_data.host = {
-		.vbus_gpio = -1,
+		.vbus_gpio = TEGRA_GPIO_PK1,
 		.hot_plug = true,
 		.remote_wakeup_supported = true,
 		.power_off_on_suspend = false,
@@ -604,14 +605,48 @@ static void roth_usb_init(void)
 	// Setup the udc platform data //
 	tegra_udc_device.dev.platform_data = &tegra_udc_pdata;
 
-	//tegra_ehci1_device.dev.platform_data = &tegra_ehci1_utmi_pdata;
-	//platform_device_register(&tegra_ehci1_device);
+	//	tegra_ehci3_device.dev.platform_data = &tegra_ehci3_utmi_pdata;
+	//	platform_device_register(&tegra_ehci3_device);
 }
 
 #else
 static void roth_usb_init(void) { }
 #endif
 /*
+static struct tegra_xusb_pad_data xusb_padctl_data = {
+	.pad_mux = (0x1 << 2),
+	.port_cap = (0x1 << 4),
+	.snps_oc_map = (0x1fc << 0),
+	.usb2_oc_map = (0x2f << 0),
+	.ss_port_map = (0x1 << 0),
+	.oc_det = (0x2c << 10),
+	.rx_wander = (0xf << 4),
+	.rx_eq = (0x3070 << 8),
+	.cdr_cntl = (0x26 << 24),
+	.dfe_cntl = 0x002008EE,
+	.hs_slew = (0xE << 6),
+	.ls_rslew = (0x3 << 14),
+	.otg_pad0_ctl0 = (0x7 << 19),
+	.otg_pad1_ctl0 = (0x0 << 19),
+	.otg_pad0_ctl1 = (0x0 << 0),
+	.otg_pad1_ctl1 = (0x0 << 0),
+	.hs_disc_lvl = (0x5 << 2),
+	.hsic_pad0_ctl0 = (0x00 << 8),
+	.hsic_pad0_ctl1 = (0x00 << 8),
+};
+
+static void dalmore_xusb_init(void)
+{
+
+		tegra_xhci_device.dev.platform_data = &xusb_padctl_data;
+		platform_device_register(&tegra_xhci_device);
+	
+}
+
+
+
+
+
 static void roth_audio_init(void)
 {
 	struct board_info board_info;
@@ -702,7 +737,7 @@ static void __init tegra_roth_init(void)
 	roth_pinmux_init();
 	roth_i2c_init();
 //	roth_spi_init();
-	roth_usb_init();
+
 	roth_uart_init();
 	surface_2_sound_init();
 	platform_add_devices(roth_devices, ARRAY_SIZE(roth_devices));
@@ -710,12 +745,15 @@ static void __init tegra_roth_init(void)
 	tegra_io_dpd_init();
 	roth_regulator_init();
 	roth_sdhci_init();
+
 	roth_suspend_init();
 	roth_emc_init();
 	roth_edp_init();
 	//roth_touch_init();
 	/* roth will pass a null board id to panel_init */
 	roth_panel_init(0);
+	roth_usb_init();
+	///dalmore_xusb_init();
 	roth_kbc_init();
 	//surface_2_ec_init();
 	//roth_pmon_init();

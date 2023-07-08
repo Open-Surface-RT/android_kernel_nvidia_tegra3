@@ -26,19 +26,20 @@
 #include <linux/regulator/driver.h>
 #include <linux/regulator/fixed.h>
 #include <linux/mfd/palmas.h>
+#include <linux/mfd/tps65090.h>
 #include <linux/regulator/tps65090-regulator.h>
 #include <linux/gpio.h>
 #include <linux/interrupt.h>
 #include <linux/regulator/userspace-consumer.h>
-
 #include <asm/mach-types.h>
+
+#include <linux/power/sbs-battery.h>
 
 #include <mach/iomap.h>
 #include <mach/irqs.h>
 #include <mach/edp.h>
 #include <mach/gpio-tegra.h>
 #include <mach/hardware.h>
-
 #include "cpu-tegra.h"
 #include "pm.h"
 #include "tegra-board-id.h"
@@ -211,15 +212,15 @@ static struct tps65090_regulator_platform_data				\
 TPS65090_PDATA_INIT(DCDC1, dcdc1, NULL, 1, 1, 0, true, -1, -1);
 TPS65090_PDATA_INIT(DCDC2, dcdc2, NULL, 1, 1, 0, true, -1, -1);
 TPS65090_PDATA_INIT(DCDC3, dcdc3, NULL, 1, 1, 0, true, -1, -1);
-TPS65090_PDATA_INIT(LDO1, ldo1, tps65090_rails(DCDC1), 1, 1, 0, false, -1, -1);
-TPS65090_PDATA_INIT(LDO2, ldo2, tps65090_rails(DCDC2), 1, 1, 0, false, -1, -1);
-TPS65090_PDATA_INIT(FET1, fet1, NULL, 1, 1, 0, false, -1, 800);
+TPS65090_PDATA_INIT(LDO1, ldo1, NULL, 1, 1, 0, false, -1, -1);
+TPS65090_PDATA_INIT(LDO2, ldo2, NULL, 1, 1, 0, false, -1, -1);
+TPS65090_PDATA_INIT(FET1, fet1, NULL, 0, 0, 0, false, -1, 800);
 TPS65090_PDATA_INIT(FET2, fet2, NULL, 1, 1, 0, false, -1, 0);
-TPS65090_PDATA_INIT(FET3, fet3, NULL, 1, 1, 0, false, -1, 0);
-TPS65090_PDATA_INIT(FET4, fet4, NULL, 1, 1, 0, false, -1, 0);
-TPS65090_PDATA_INIT(FET5, fet5, NULL, 1, 1, 0, false, -1, 0);
-TPS65090_PDATA_INIT(FET6, fet6, NULL, 1, 1, 0, false, -1, 0);
-TPS65090_PDATA_INIT(FET7, fet7, NULL, 1, 1, 0, false, -1, 0);
+TPS65090_PDATA_INIT(FET3, fet3, tps65090_rails(DCDC2), 0, 0, 0, false, -1, 0);
+TPS65090_PDATA_INIT(FET4, fet4, tps65090_rails(DCDC2), 0, 0, 0, false, -1, 0);
+TPS65090_PDATA_INIT(FET5, fet5, tps65090_rails(DCDC2), 0, 0, 0, false, -1, 0);
+TPS65090_PDATA_INIT(FET6, fet6, tps65090_rails(DCDC2), 1, 0, 0, false, -1, 0);
+TPS65090_PDATA_INIT(FET7, fet7, tps65090_rails(DCDC2), 0, 0, 0, false, -1, 0);
 
 #define ADD_TPS65090_REG(_name) (&tps65090_regulator_pdata_##_name)
 static struct tps65090_regulator_platform_data *tps65090_reg_pdata[] = {
@@ -240,11 +241,17 @@ static struct tps65090_regulator_platform_data *tps65090_reg_pdata[] = {
 
 };
 
+static struct tps65090_charger_data bcharger_pdata = {
+	.irq_base = TPS65090_TEGRA_IRQ_BASE,
+	.update_status = sbs_update,
+};
+
 static struct tps65090_platform_data tps65090_pdata = {
 	.irq_base = TPS65090_TEGRA_IRQ_BASE,
 	.irq_flag = IRQF_ONESHOT | IRQF_TRIGGER_FALLING,
 	.num_reg_pdata =  ARRAY_SIZE(tps65090_reg_pdata),
 	.reg_pdata = tps65090_reg_pdata,
+	.charger_pdata = &bcharger_pdata,
 };
 
 static struct i2c_board_info __initdata tps65090_regulators[] = {
@@ -290,6 +297,9 @@ static struct regulator_consumer_supply palmas_smps8_supply[] = {
 //	REGULATOR_SUPPLY("avdd_hdmi_pll", "tegradc.1"),
 //	REGULATOR_SUPPLY("avdd_usb_pll", "tegra-ehci.2"),
 //	REGULATOR_SUPPLY("avddio_usb", "tegra-ehci.2"),
+	REGULATOR_SUPPLY("avdd_usb_pll", "tegra-udc.0"),
+	REGULATOR_SUPPLY("avdd_usb_pll", "tegra-ehci.0"),
+	REGULATOR_SUPPLY("avdd_usb_pll", "tegra-ehci.1"),
 };
 
 static struct regulator_consumer_supply palmas_smps9_supply[] = {
@@ -340,18 +350,15 @@ static struct regulator_consumer_supply palmas_ldo8_supply[] = {
 
 static struct regulator_consumer_supply palmas_ldo9_supply[] = {
 	REGULATOR_SUPPLY("vddio_sdmmc", "sdhci-tegra.2"),
-	REGULATOR_SUPPLY("pwrdet_sdmmc3", NULL),
 };
 static struct regulator_consumer_supply palmas_ldoln_supply[] = {
 //	REGULATOR_SUPPLY("hvdd_usb", "tegra-ehci.2"),//hangs
 //	REGULATOR_SUPPLY("hvdd_usb", "tegra-xhci"),//hangs
 };
 static struct regulator_consumer_supply palmas_ldousb_supply[] = {
-	REGULATOR_SUPPLY("avdd_usb", "tegra-udc.0"),
-	REGULATOR_SUPPLY("avdd_usb", "tegra-ehci.0"),
-	REGULATOR_SUPPLY("avdd_usb", "tegra-ehci.1"),
-	REGULATOR_SUPPLY("avdd_usb", "tegra-ehci.2"),
-	REGULATOR_SUPPLY("pwrdet_hv", NULL),
+	REGULATOR_SUPPLY("hvdd_usb", "tegra-ehci.2"),
+	REGULATOR_SUPPLY("hvdd_usb", "tegra-xhci"),
+
 };
 
 static struct regulator_consumer_supply palmas_regen1_supply[] = {
@@ -517,6 +524,10 @@ static struct palmas_pinctrl_config palmas_pincfg[] = {
 	PALMAS_PINMUX(GPIO7, GPIO, DEFAULT, DEFAULT),
 */
 };
+static struct palmas_rtc_platform_data rtc_platform = {
+//	.enable_charging = 1,
+//	.charging_current_ua = 100,
+};
 
 static struct palmas_pinctrl_platform_data palmas_pinctrl_pdata = {
 	.pincfg = palmas_pincfg,
@@ -529,8 +540,9 @@ static struct palmas_platform_data palmas_pdata = {
 	.gpio_base = PALMAS_TEGRA_GPIO_BASE,
 	.irq_base = PALMAS_TEGRA_IRQ_BASE,
 	.pmic_pdata = &pmic_platform,
-	.use_power_off = true,
+	.use_power_off = false,
 	.pinctrl_pdata = &palmas_pinctrl_pdata,
+	.rtc_pdata = &rtc_platform,
 /*
 	#ifndef CONFIG_ANDROID
 	.long_press_delay = PALMAS_LONG_PRESS_KEY_TIME_8SECONDS,
@@ -715,32 +727,30 @@ int __init roth_palmas_regulator_init(void)
 			ARRAY_SIZE(palma_device));
 	return 0;
 }
-/*
 static int ac_online(void)
 {
 	return 1;
 }
 
-static struct resource roth_pda_resources[] = {
+static struct resource dalmore_pda_resources[] = {
 	[0] = {
 		.name	= "ac",
 	},
 };
 
-static struct pda_power_pdata roth_pda_data = {
+static struct pda_power_pdata dalmore_pda_data = {
 	.is_ac_online	= ac_online,
 };
 
-static struct platform_device roth_pda_power_device = {
+static struct platform_device dalmore_pda_power_device = {
 	.name		= "pda-power",
 	.id		= -1,
-	.resource	= roth_pda_resources,
-	.num_resources	= ARRAY_SIZE(roth_pda_resources),
+	.resource	= dalmore_pda_resources,
+	.num_resources	= ARRAY_SIZE(dalmore_pda_resources),
 	.dev	= {
-		.platform_data	= &roth_pda_data,
+		.platform_data	= &dalmore_pda_data,
 	},
 };
-*/
 static struct tegra_suspend_platform_data roth_suspend_data = {
 	.cpu_timer	= 500,
 	.cpu_off_timer	= 300,
@@ -828,6 +838,7 @@ subsys_initcall_sync(roth_fixed_regulator_init);
 
 int __init roth_regulator_init(void)
 {
+	int err;
 	struct board_info board_info;
 #ifdef CONFIG_ARCH_TEGRA_HAS_CL_DVFS
 	roth_cl_dvfs_init();
@@ -835,12 +846,28 @@ int __init roth_regulator_init(void)
 	tegra_get_board_info(&board_info);
 	roth_palmas_regulator_init();
 
+
+
+	err = gpio_request(TPS65090_CHARGER_INT, "CHARGER_INT");
+	if (err < 0) {
+		pr_err("%s: gpio_request failed %d\n", __func__, err);
+		goto fail_init_irq;
+	}
+
+	err = gpio_direction_input(TPS65090_CHARGER_INT);
+	if (err < 0) {
+		pr_err("%s: gpio_direction_input failed %d\n", __func__, err);
+		goto fail_init_irq;
+	}
+
+	tps65090_regulators[0].irq = gpio_to_irq(TPS65090_CHARGER_INT);
+fail_init_irq:
 //	bq2419x_boardinfo[0].irq = gpio_to_irq(TEGRA_GPIO_PJ0);
 	i2c_register_board_info(4, tps65090_regulators, 1);
 //	i2c_register_board_info(0, max17048_boardinfo, 1);
 //	i2c_register_board_info(0, bq2419x_boardinfo, 1);
 //	platform_device_register(&psy_extcon_device);
-//	platform_device_register(&roth_pda_power_device);
+	platform_device_register(&dalmore_pda_power_device);
 	return 0;
 }
 
