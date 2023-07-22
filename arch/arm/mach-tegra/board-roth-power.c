@@ -212,6 +212,22 @@ static struct tps65090_regulator_platform_data				\
 TPS65090_PDATA_INIT(DCDC1, dcdc1, NULL, 1, 1, 0, true, -1, -1);
 TPS65090_PDATA_INIT(DCDC2, dcdc2, NULL, 1, 1, 0, true, -1, -1);
 TPS65090_PDATA_INIT(DCDC3, dcdc3, NULL, 1, 1, 0, true, -1, -1);
+TPS65090_PDATA_INIT(LDO1, ldo1, tps65090_rails(DCDC1), 1, 1, 0, false, -1, -1);
+TPS65090_PDATA_INIT(LDO2, ldo2, tps65090_rails(DCDC2), 1, 1, 0, false, -1, -1);
+TPS65090_PDATA_INIT(FET1, fet1, NULL, 1, 1, 0, false, -1, 800);
+TPS65090_PDATA_INIT(FET2, fet2, NULL, 1, 1, 0, false, -1, 0);
+TPS65090_PDATA_INIT(FET3, fet3, NULL, 1, 1, 0, false, -1, 0);
+TPS65090_PDATA_INIT(FET4, fet4, NULL, 1, 1, 0, false, -1, 0);
+TPS65090_PDATA_INIT(FET5, fet5, NULL, 1, 1, 0, false, -1, 0);
+TPS65090_PDATA_INIT(FET6, fet6, NULL, 1, 1, 0, false, -1, 0);
+TPS65090_PDATA_INIT(FET7, fet7, NULL, 1, 1, 0, false, -1, 0);
+
+/*
+
+
+TPS65090_PDATA_INIT(DCDC1, dcdc1, NULL, 1, 1, 0, true, -1, -1);
+TPS65090_PDATA_INIT(DCDC2, dcdc2, NULL, 1, 1, 0, true, -1, -1);
+TPS65090_PDATA_INIT(DCDC3, dcdc3, NULL, 1, 1, 0, true, -1, -1);
 TPS65090_PDATA_INIT(LDO1, ldo1, NULL, 1, 1, 0, false, -1, -1);
 TPS65090_PDATA_INIT(LDO2, ldo2, NULL, 1, 1, 0, false, -1, -1);
 TPS65090_PDATA_INIT(FET1, fet1, NULL, 0, 0, 0, false, -1, 800);
@@ -221,6 +237,8 @@ TPS65090_PDATA_INIT(FET4, fet4, tps65090_rails(DCDC2), 0, 0, 0, false, -1, 0);
 TPS65090_PDATA_INIT(FET5, fet5, tps65090_rails(DCDC2), 0, 0, 0, false, -1, 0);
 TPS65090_PDATA_INIT(FET6, fet6, tps65090_rails(DCDC2), 1, 0, 0, false, -1, 0);
 TPS65090_PDATA_INIT(FET7, fet7, tps65090_rails(DCDC2), 0, 0, 0, false, -1, 0);
+*/
+
 
 #define ADD_TPS65090_REG(_name) (&tps65090_regulator_pdata_##_name)
 static struct tps65090_regulator_platform_data *tps65090_reg_pdata[] = {
@@ -727,6 +745,7 @@ int __init roth_palmas_regulator_init(void)
 			ARRAY_SIZE(palma_device));
 	return 0;
 }
+/*
 static int ac_online(void)
 {
 	return 1;
@@ -751,6 +770,8 @@ static struct platform_device dalmore_pda_power_device = {
 		.platform_data	= &dalmore_pda_data,
 	},
 };
+
+*/
 static struct tegra_suspend_platform_data roth_suspend_data = {
 	.cpu_timer	= 500,
 	.cpu_off_timer	= 300,
@@ -867,7 +888,7 @@ fail_init_irq:
 //	i2c_register_board_info(0, max17048_boardinfo, 1);
 //	i2c_register_board_info(0, bq2419x_boardinfo, 1);
 //	platform_device_register(&psy_extcon_device);
-	platform_device_register(&dalmore_pda_power_device);
+//	platform_device_register(&dalmore_pda_power_device);
 	return 0;
 }
 

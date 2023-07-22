@@ -207,8 +207,8 @@ static struct tegra_sdhci_platform_data tegra_sdhci_platform_data2 = {
 	.power_gpio = -1,
 	.tap_delay = 0x3,
 	.trim_delay = 0x3,
-	.ddr_clk_limit = 41000000,
-	.max_clk_limit = 156000000,
+	.ddr_clk_limit = 50000000,
+	.max_clk_limit = 200000000,
 	.uhs_mask = MMC_UHS_MASK_DDR50,
 };
 
@@ -219,10 +219,10 @@ static struct tegra_sdhci_platform_data tegra_sdhci_platform_data3 = {
 	.power_gpio = -1,
 	.is_8bit = 1,
 	.tap_delay = 0x5,
-	.trim_delay = 0xA,
+	.trim_delay = 0x3,
 
-	.ddr_clk_limit = 41000000,
-	.max_clk_limit = 156000000,
+	.ddr_clk_limit = 100000000,
+	.max_clk_limit = 200000000,
 	.mmc_data = {
 		.built_in = 1,
 		.ocr_mask = MMC_OCR_1V8_MASK,

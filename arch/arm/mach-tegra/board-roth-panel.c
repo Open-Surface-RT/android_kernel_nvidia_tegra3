@@ -62,7 +62,7 @@ struct platform_device * __init roth_host1x_init(void)
 #define DSI_PANEL_RESET		1
 
 #define DSI_PANEL_RST_GPIO	TEGRA_GPIO_PH3
-#define DSI_PANEL_BL_PWM	TEGRA_GPIO_PH1 //last PH0
+#define DSI_PANEL_BL_PWM	TEGRA_GPIO_PH0 //last PH0
 
 #define DC_CTRL_MODE	TEGRA_DC_OUT_CONTINUOUS_MODE
 
@@ -915,14 +915,13 @@ int __init roth_panel_init(int board_id)
 	if (err)
 		return err;
 
-#if IS_EXTERNAL_PWM
+
 	err = platform_add_devices(roth_bl_device,
 				ARRAY_SIZE(roth_bl_device));
 	if (err) {
 		pr_err("disp1 bl device registration failed");
 		return err;
 	}
-#endif
 
 #ifdef CONFIG_TEGRA_NVAVP
 	nvavp_device.dev.parent = &phost1x->dev;

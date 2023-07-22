@@ -97,10 +97,10 @@ static int tegra_wm8962_hw_params(struct snd_pcm_substream *substream,
 	case 64000:
 	case 88200:
 	case 96000:
-		mclk = 128 * srate;
+		mclk = 256 * srate;
 		break;
 	default:
-		mclk = 384 * srate;
+		mclk = 128 * srate;
 		break;
 	}
 

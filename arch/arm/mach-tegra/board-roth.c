@@ -230,7 +230,7 @@ static struct tegra_i2c_platform_data roth_i2c1_platform_data = {
 static struct tegra_i2c_platform_data roth_i2c2_platform_data = {
 	.adapter_nr	= 1,
 	.bus_count	= 1,
-	.bus_clk_rate	= { 400000, 0 },
+	.bus_clk_rate	= { 1400000, 0 },
 	.is_clkon_always = true,
 	.scl_gpio		= {TEGRA_GPIO_I2C2_SCL, 0},
 	.sda_gpio		= {TEGRA_GPIO_I2C2_SDA, 0},
@@ -459,9 +459,6 @@ static struct tegra_asoc_platform_data surface_2_audio_wm8962_pdata = {
                 .is_i2s_master  = 1,
                 .i2s_mode       = TEGRA_DAIFMT_I2S,
         },
-//      .i2s_param[BASEBAND]    = {
-//              .audio_port_id  = -1,
-//      },
 //      .i2s_param[BT_SCO]      = {
 //              .audio_port_id  = 3,
 //              .is_i2s_master  = 1,
@@ -523,7 +520,7 @@ static struct tegra_usb_platform_data tegra_udc_pdata = {
 	.op_mode = TEGRA_USB_OPMODE_DEVICE,
 	.u_data.dev = {
 		.vbus_pmu_irq = 0,
-		.vbus_gpio = -1,
+		.vbus_gpio = TEGRA_GPIO_PK1,
 		.charging_supported = false,
 		.remote_wakeup_supported = false,
 	},
@@ -565,6 +562,7 @@ static struct tegra_usb_platform_data tegra_ehci1_utmi_pdata = {
 		.vbus_oc_map = 0x4,
 	},
 };
+
 /*
 static struct tegra_usb_platform_data tegra_ehci3_utmi_pdata = {
 	.port_otg = false,
@@ -595,6 +593,8 @@ static struct tegra_usb_platform_data tegra_ehci3_utmi_pdata = {
 static struct tegra_usb_otg_data tegra_otg_pdata = {
 	.ehci_device = &tegra_ehci1_device,
 	.ehci_pdata = &tegra_ehci1_utmi_pdata,
+	.vbus_extcon_dev_name = "palmas-extcon",
+	.id_extcon_dev_name = "palmas-extcon",
 };
 
 static void roth_usb_init(void)
@@ -634,17 +634,16 @@ static struct tegra_xusb_pad_data xusb_padctl_data = {
 	.hsic_pad0_ctl0 = (0x00 << 8),
 	.hsic_pad0_ctl1 = (0x00 << 8),
 };
-
+*/
 static void dalmore_xusb_init(void)
 {
 
-		tegra_xhci_device.dev.platform_data = &xusb_padctl_data;
-		platform_device_register(&tegra_xhci_device);
+//		tegra_xhci_device.dev.platform_data = &xusb_padctl_data;
+	//	platform_device_register(&tegra_xhci_device);
 	
 }
 
-
-
+/*
 
 
 static void roth_audio_init(void)
@@ -702,11 +701,18 @@ static void __init roth_spi_init(void)
 }
 */
 
-/*
+static struct i2c_board_info __initdata macallan_i2c0_battery_by_EC_board_info[] = {
+        {
+                I2C_BOARD_INFO("sbs-battery", 0x0B),
+        },
+};
 
-static void surface_2_ec_init(void)
+static void surface_2_battery_init(void)
 
 {
+
+/*
+
 	int ret;
 	ret = gpio_request(TEGRA_BATTERY_EN, "ec_gpio");
 	if (ret)
@@ -724,9 +730,14 @@ static void surface_2_ec_init(void)
 
 		printk(KERN_INFO "Set Surface 2 EC GPIO : %d\n",ret);
 	}
+*/
+		printk(KERN_INFO "Surface 2 BATTERY\n");
+	i2c_register_board_info(2, macallan_i2c0_battery_by_EC_board_info,
+			ARRAY_SIZE(macallan_i2c0_battery_by_EC_board_info));
+
+
 }
 
-*/
 
 static void __init tegra_roth_init(void)
 {
@@ -753,9 +764,9 @@ static void __init tegra_roth_init(void)
 	/* roth will pass a null board id to panel_init */
 	roth_panel_init(0);
 	roth_usb_init();
-	///dalmore_xusb_init();
+	dalmore_xusb_init();
 	roth_kbc_init();
-	//surface_2_ec_init();
+	surface_2_battery_init();
 	//roth_pmon_init();
 #ifdef CONFIG_BT_BLUESLEEP
 	roth_setup_bluesleep();
@@ -768,7 +779,7 @@ static void __init tegra_roth_init(void)
 	//tegra_wdt_recovery_init();
 #endif
 	tegra_serial_debug_init(TEGRA_UARTA_BASE, INT_WDT_CPU, NULL, -1, -1);
-	//roth_sensors_init();
+	roth_sensors_init();
 	//roth_soctherm_init();
 	//roth_fan_init();
 	surface_rt_i2c_hid_init();

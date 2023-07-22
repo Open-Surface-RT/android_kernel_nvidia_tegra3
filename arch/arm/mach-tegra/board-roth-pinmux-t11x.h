@@ -18,7 +18,7 @@
  */
 
 static __initdata struct tegra_pingroup_config roth_pinmux_common[] = {
-/*
+//
 	// EXTPERIPH1 pinmux //
 	DEFAULT_PINMUX(CLK1_OUT,      EXTPERIPH1,  NORMAL,    NORMAL,   OUTPUT),
 
@@ -40,11 +40,11 @@ static __initdata struct tegra_pingroup_config roth_pinmux_common[] = {
 	DEFAULT_PINMUX(DAP4_DOUT,     I2S3,        NORMAL,    NORMAL,   INPUT),
 	DEFAULT_PINMUX(DAP4_FS,       I2S3,        NORMAL,    NORMAL,   INPUT),
 	DEFAULT_PINMUX(DAP4_SCLK,     I2S3,        NORMAL,    NORMAL,   INPUT),
-*/
+//
 	// CLDVFS pinmux //
 	DEFAULT_PINMUX(DVFS_PWM,      CLDVFS,      NORMAL,    NORMAL,   OUTPUT),
 	DEFAULT_PINMUX(DVFS_CLK,      CLDVFS,      NORMAL,    NORMAL,   OUTPUT),
-/*
+//
 	// ULPI pinmux //
 	DEFAULT_PINMUX(ULPI_CLK,      ULPI,        NORMAL,    NORMAL,   INPUT),
 	DEFAULT_PINMUX(ULPI_DATA0,    ULPI,        NORMAL,    NORMAL,   INPUT),
@@ -86,7 +86,7 @@ static __initdata struct tegra_pingroup_config roth_pinmux_common[] = {
 	DEFAULT_PINMUX(GMI_AD5,       SPI4,        NORMAL,    NORMAL,   INPUT),
 	DEFAULT_PINMUX(GMI_AD6,       SPI4,        PULL_UP,   NORMAL,   INPUT),
 	DEFAULT_PINMUX(GMI_AD7,       SPI4,        PULL_UP,   NORMAL,   INPUT),
-	DEFAULT_PINMUX(GMI_AD12,      RSVD1,       NORMAL,    NORMAL,   OUTPUT),
+	//DEFAULT_PINMUX(GMI_AD12,      RSVD1,       NORMAL,    NORMAL,   OUTPUT),
 	DEFAULT_PINMUX(GMI_CS6_N,     SPI4,        NORMAL,    NORMAL,   INPUT),
 	DEFAULT_PINMUX(GMI_WR_N,      SPI4,        NORMAL,    NORMAL,   INPUT),
 
@@ -100,7 +100,7 @@ static __initdata struct tegra_pingroup_config roth_pinmux_common[] = {
 
 	// EXTPERIPH2 pinmux //
 	DEFAULT_PINMUX(CLK2_OUT,      EXTPERIPH2,  NORMAL,    NORMAL,   OUTPUT),
-*/
+//
 	// SDMMC1 pinmux //
 	DEFAULT_PINMUX(SDMMC1_CLK,    SDMMC1,      NORMAL,    NORMAL,   INPUT),
 	DEFAULT_PINMUX(SDMMC1_CMD,    SDMMC1,      PULL_UP,   NORMAL,   INPUT),
@@ -132,7 +132,11 @@ static __initdata struct tegra_pingroup_config roth_pinmux_common[] = {
 	DEFAULT_PINMUX(SDMMC4_DAT5,   SDMMC4,      PULL_UP,   NORMAL,   INPUT),
 	DEFAULT_PINMUX(SDMMC4_DAT6,   SDMMC4,      PULL_UP,   NORMAL,   INPUT),
 	DEFAULT_PINMUX(SDMMC4_DAT7,   SDMMC4,      PULL_UP,   NORMAL,   INPUT),
-/*
+
+
+
+
+//
 	// BLINK pinmux //
 	DEFAULT_PINMUX(CLK_32K_OUT,   BLINK,       NORMAL,    NORMAL,   OUTPUT),
 
@@ -146,10 +150,10 @@ static __initdata struct tegra_pingroup_config roth_pinmux_common[] = {
 	DEFAULT_PINMUX(KB_ROW8,       KBC,         PULL_UP,   NORMAL, INPUT),
 
 	//Audio Codec//
-	DEFAULT_PINMUX(DAP3_DIN,      RSVD,   NORMAL,    TRISTATE,    OUTPUT),
-	DEFAULT_PINMUX(DAP3_SCLK,     RSVD,   NORMAL,    TRISTATE,    OUTPUT),
-	DEFAULT_PINMUX(GPIO_PV0,      RSVD,   NORMAL,    TRISTATE,    OUTPUT),
-	DEFAULT_PINMUX(KB_ROW7,       RSVD,   PULL_UP,   NORMAL,      INPUT),
+	//DEFAULT_PINMUX(DAP3_DIN,      RSVD,   NORMAL,    TRISTATE,    OUTPUT),
+	//DEFAULT_PINMUX(DAP3_SCLK,     RSVD,   NORMAL,    TRISTATE,    OUTPUT),
+	//DEFAULT_PINMUX(GPIO_PV0,      RSVD,   NORMAL,    TRISTATE,    OUTPUT),
+	//DEFAULT_PINMUX(KB_ROW7,       RSVD,   PULL_UP,   NORMAL,      INPUT),
 
 	// UARTA pinmux //
 	DEFAULT_PINMUX(KB_ROW10,      UARTA,       NORMAL,    TRISTATE, INPUT),
@@ -226,7 +230,7 @@ static __initdata struct tegra_pingroup_config roth_pinmux_common[] = {
 
 	//Fan PWM//
 	DEFAULT_PINMUX(GPIO_PU3,   PWM0,        NORMAL,   NORMAL, OUTPUT),
-*/
+//
 };
 
 static __initdata struct tegra_pingroup_config unused_pins_lowpower[] = {
@@ -235,6 +239,8 @@ static __initdata struct tegra_pingroup_config unused_pins_lowpower[] = {
 };
 
 static struct gpio_init_pin_info init_gpio_mode_roth_common[] = {
+
+	GPIO_INIT_PIN_MODE(TEGRA_GPIO_PK1, true, 0),
 /*
 	//GPIO_INIT_PIN_MODE(TEGRA_GPIO_PX4, false, 0),
 	GPIO_INIT_PIN_MODE(TEGRA_GPIO_PX5, true, 0),
@@ -264,7 +270,7 @@ static struct gpio_init_pin_info init_gpio_mode_roth_common[] = {
 	GPIO_INIT_PIN_MODE(TEGRA_GPIO_PG3, true, 0),
 	GPIO_INIT_PIN_MODE(TEGRA_GPIO_PG4, false, 0),
 	GPIO_INIT_PIN_MODE(TEGRA_GPIO_PH0, false, 0),
-	GPIO_INIT_PIN_MODE(TEGRA_GPIO_PK1, false, 0),
+
 	GPIO_INIT_PIN_MODE(TEGRA_GPIO_PK3, false, 0),
 	GPIO_INIT_PIN_MODE(TEGRA_GPIO_PK4, false, 0),
 	GPIO_INIT_PIN_MODE(TEGRA_GPIO_PK2, true, 0),
